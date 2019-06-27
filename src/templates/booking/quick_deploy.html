@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap4 %}
+{% block content %}
+<style>
+    .grid_container {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        padding: 30px;
+    }
+    .grid_element {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin: 10px;
+        padding: 7px;
+    }
+    .grid_element_wide {
+        grid-column-start: span 12;
+    }
+    .grid_element_half {
+        grid-column-start: span 6;
+    }
+    .grid_element_1third {
+        grid-column-start: span 4;
+    }
+    .grid_element_2third {
+        grid-column-start: span 8;
+    }
+    .collaborator_pane {
+        display: flex;
+        flex-direction: column;
+    }
+    #id_length {
+        -moz-appearance: none;
+        border: none;
+        box-shadow: none;
+    }
+
+    input[type=range]::-moz-range-track {
+        background: #cccccc;
+    }
+
+    .grid_element {
+        overflow: hidden;
+    }
+</style>
+{% bootstrap_form_errors form type='non_fields' %}
+<form id="quick_booking_form" action="/booking/quick/" method="POST" class="form">
+{% csrf_token %}
+<div class="grid_container">
+<div class="grid_element host_select_pane grid_element_wide">
+<p>Please select a host type you wish to book. Only available types are shown.</p>
+{% bootstrap_field form.filter_field show_label=False %}
+</div>
+<div class="grid_element booking_info_pane grid_element_1third">
+    {% bootstrap_field form.purpose %}
+    {% bootstrap_field form.project %}
+    {% bootstrap_field form.length %}
+    <p style="display:inline;">Days: </p><output id="daysout" style="display:inline;">0</output>
+    <script>
+        document.getElementById("id_length").setAttribute("oninput", "daysout.value=this.value");
+        document.getElementById("daysout").value = document.getElementById("id_length").value;
+    </script>
+</div>
+<div class="grid_element collaborator_pane grid_element_1third">
+        <label>Collaborators</label>
+        {{ form.users }}
+</div>
+<div class="grid_element_1third">
+    <div class="configuration_pane grid_element">
+        {% bootstrap_field form.hostname %}
+        {% bootstrap_field form.image %}
+    </div>
+    <div class="configuration_pane grid_element">
+        <strong>OPNFV: (Optional)</strong>
+        {% bootstrap_field form.installer %}
+        {% bootstrap_field form.scenario %}
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+
+    function submit_form()
+    {
+        //formats data for form submission
+        multi_filter_widget.finish();
+    }
+
+    function hide_dropdown(drop_id) {
+        var drop = document.getElementById(drop_id);
+        //select 'blank' option
+        for( var i=0; i < drop.length; i++ )
+        {
+            if ( drop.options[i].text == '---------' )
+                drop.selectedIndex = i;
+        }
+
+        //cross browser hide children
+        $('#id_image').children().hide();
+        for( var i = 0; i < drop.childNodes.length; i++ )
+        {
+            drop.childNodes[i].disabled = true; // closest we can get on safari to hiding it outright
+        }
+    }
+
+    function get_selected_value(key){
+        for( var attr in multi_filter_widget.result[key] ){
+            if(!(attr in {}) )
+                return attr;
+        }
+        return null;
+    }
+
+    var sup_image_dict = {{ image_filter|safe }};
+    var sup_installer_dict = {{ installer_filter|safe }};
+    var sup_scenario_dict = {{ scenario_filter|safe }};
+
+    function imageHider() {
+        var drop = document.getElementById("id_image");
+
+        hide_dropdown("id_image");
+
+        var lab_pk = get_selected_value("lab");
+        var host_pk = get_selected_value("host");
+
+        for ( var i=0; i < drop.childNodes.length; i++ )
+        {
+            var image_object = sup_image_dict[drop.childNodes[i].value];
+            if( image_object ) //weed out empty option
+            {
+                if( image_object.host_profile == host_pk && image_object.lab == lab_pk )
+                {
+                    drop.childNodes[i].style.display = "inherit";
+                    drop.childNodes[i].disabled = false;
+                }
+            }
+        }
+    }
+
+    imageHider();
+    $('#id_installer').children().hide();
+    $('#id_scenario').children().hide();
+
+
+    Array.from(document.getElementsByClassName("grid-item-select-btn")).forEach(function(element) {
+        element.addEventListener('click', imageHider);
+    });
+
+    function installerHider() {
+        dropFilter("id_installer", sup_installer_dict, "id_image");
+        scenarioHider();
+    }
+    document.getElementById('id_image').addEventListener('change', installerHider);
+
+    function scenarioHider() {
+        dropFilter("id_scenario", sup_scenario_dict, "id_installer");
+    }
+    document.getElementById('id_installer').addEventListener('change', scenarioHider);
+
+    function dropFilter(target, target_filter, master) {
+        var dropdown = document.getElementById(target);
+
+        hide_dropdown(target);
+
+        var drop = document.getElementById(master);
+        var opts = target_filter[drop.options[drop.selectedIndex].value];
+        if (!opts) {
+            opts = {};
+        }
+
+        var map = Object.create(null);
+        for (var i = 0; i < opts.length; i++) {
+            var j = opts[i];
+            map[j] = true;
+        }
+
+        for (var i = 0; i < dropdown.childNodes.length; i++) {
+            if (dropdown.childNodes[i].value in opts && !(dropdown.childNodes[i].value in {}) ) {
+                dropdown.childNodes[i].style.display = "inherit";
+                dropdown.childNodes[i].disabled = false;
+            }
+        }
+    }
+</script>
+    <button id="quick_booking_confirm" onclick="submit_form();" class="btn btn-success">Confirm</button>
+</form>
+{% endblock %}

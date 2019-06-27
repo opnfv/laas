@@ -1,0 +1,236 @@
+{% extends "layout.html" %}
+{% load bootstrap4 %}
+{% load staticfiles %}
+{% block extrahead %}
+
+
+<!-- Custom CSS -->
+<link href="{% static "css/detail_view.css" %}" rel="stylesheet">
+<link href="{% static "css/base.css" %}" rel="stylesheet">
+<script type="text/javascript">
+    function cwf(type) {
+        $.ajax({
+            type: "POST",
+            url: "/",
+            data: {
+                "create": type
+            },
+            beforeSend: function (request) {
+                request.setRequestHeader("X-CSRFToken",
+                    $('input[name="csrfmiddlewaretoken"]').val()
+                );
+            }
+        }).done(function (data) {
+            window.location.replace("/wf/");
+        }).fail(function (jqxHR, textstatus) {
+            alert("Something went wrong...");
+        });
+    }
+
+    function continue_wf() {
+        window.location.replace("/wf/");
+    }
+
+    function toggle_create_drop() {
+        drop_div = document.getElementById("create_drop");
+
+        if (drop_div.style.display === "none") {
+            drop_div.style.display = "inherit";
+        } else {
+            drop_div.style.display = "none";
+        }
+    }
+</script>
+<style>
+    .navbar {
+        min-width: 200px;
+    }
+
+    .create_drop {
+        display: none;
+        width: 100%;
+    }
+
+    .create_drop button {
+        width: 100%;
+    }
+
+    .drop_btn {
+        border-radius: 0px;
+        background-color: CCCCCC
+    }
+
+    .drop_btn:hover {
+        color: #555;
+        border-top: 1px solid #E7E7E7;
+        border-bottom: 1px solid #E7E7E7;
+    }
+
+    #wrapper {
+        height: 100vh;
+    }
+</style>
+
+{% endblock %}
+{% block basecontent %}
+<div id="wrapper" class="d-flex flex-column">
+    <!-- Navigation -->
+    <nav class="navbar navbar-light bg-light navbar-fixed-top border-bottom py-0" role="navigation" style="margin-bottom: 0">
+        <div class="container-fluid">
+            <div class="col order-2 order-lg-1 text-center text-lg-left">
+                <a href="https://www.opnfv.org/" class="navbar-brand">
+                    <img src="{% static "img/opnfv-logo.png" %}">
+                </a>
+                <a class="navbar-brand" href={% url 'dashboard:index' %}>
+                    Pharos Dashboard
+                </a>
+            </div>
+            <!-- /.navbar-header -->
+            <div class="col-2 order-1 order-lg-3 d-lg-none">
+                <button class="btn border" type="button" data-toggle="collapse" data-target="#sidebar"
+                    aria-expanded="false" aria-controls="sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="col-2 order-3">
+                <ul class="nav ml-auto">
+                    <li class="dropdown ml-auto">
+                        <a class="nav-link p-0 text-dark p-2" data-toggle="dropdown" href="#">
+                            {% if request.user.username %}
+                                {{request.user.username}}
+                            {% else %}
+                                <i class="fas fa-user"></i>
+                            {% endif %}
+                            <i class="fas fa-caret-down rotate"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'account:settings' %}" class="text-dark dropdown-item">
+                                    <i class="fas fa-cog"></i>
+                                    Settings
+                                </a>
+                                <a href="{% url 'account:logout' %}?next={{ request.path }}" class="text-dark dropdown-item">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Logout
+                                </a>
+                            {% else %}
+                                <a href="{% url 'account:login' %}" class="text-dark dropdown-item">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    Login with Jira
+                                </a>
+                            {% endif %}
+                        </div> <!-- End dropdown-menu -->
+                    </li> <!-- End dropdown -->
+                </ul>
+            </div> <!-- End top right account menu -->
+        </div>
+    </nav>
+    <!-- /.navbar-top-links -->
+
+    <!-- Page Content -->
+    <div class="container-fluid d-lg-flex flex-lg-grow-1 px-0">
+        <div class="row h-100 w-100 mx-0">
+            <div class="col-12 col-lg-auto px-0 border-right border-left bg-light" role="navigation">
+                <nav class="navbar navbar-expand-lg border-bottom p-0 w-100">
+                    <div class="collapse navbar-collapse" id="sidebar">
+                        <div class="list-group list-group-flush w-100 bg-light">
+                            <a href="/" class="list-group-item list-group-item-action bg-light">
+                                Home
+                            </a>
+                            {% csrf_token %}
+                            <a class="list-group-item list-group-item-action bg-light" data-toggle="collapse"
+                                href="#createList" role="button">
+                                Create <i class="fas fa-angle-down rotate"></i>
+                            </a>
+                            <div class="collapse" id="createList">
+                                <a href="/booking/quick/" class="list-group-item list-group-item-action list-group-item-secondary">
+                                    Express Booking
+                                </a>
+                                <a href="#" onclick="cwf(0)" class="list-group-item list-group-item-action list-group-item-secondary">
+                                    Book a Pod
+                                </a>
+                                <a href="#" onclick="cwf(1)" class="list-group-item list-group-item-action list-group-item-secondary">
+                                    Design a Pod
+                                </a>
+                                <a href="#" onclick="cwf(2)" class="list-group-item list-group-item-action list-group-item-secondary">
+                                    Configure a Pod
+                                </a>
+                                <a href="#" onclick="cwf(3)" class="list-group-item list-group-item-action list-group-item-secondary">
+                                    Create a Snapshot
+                                </a>
+                                <a href="#" onclick="cwf(4)" class="list-group-item list-group-item-action list-group-item-secondary">
+                                    Configure OPNFV
+                                </a>
+                            </div>
+                            <a href="{% url 'resource:hosts' %}" class="list-group-item list-group-item-action bg-light">
+                                Hosts
+                            </a>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'account:users' %}" class="list-group-item list-group-item-action bg-light">
+                                    User List
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'booking:list' %}" class="list-group-item list-group-item-action bg-light">
+                                Booking List
+                            </a>
+                            <a href="{% url 'booking:stats' %}" class="list-group-item list-group-item-action bg-light">
+                                Booking Statistics
+                            </a>
+                            <!-- <a href="{% url 'account:my-account' %}" class="list-group-item list-group-item-action bg-light">
+                                Account
+                            </a> -->
+                            <a class="list-group-item list-group-item-action bg-light" data-toggle="collapse"
+                                href="#accountList" role="button">
+                                Account <i class="fas fa-angle-down rotate"></i>
+                            </a>
+                            <div class="collapse" id="accountList">
+                                <a href="{% url 'account:my-resources' %}" class="list-group-item list-group-item-action list-group-item-secondary">
+                                    My Resources
+                                </a>
+                                <a href="{% url 'account:my-bookings' %}" class="list-group-item list-group-item-action list-group-item-secondary">
+                                    My Bookings
+                                </a>
+                                <a href="{% url 'account:my-configurations' %}" class="list-group-item list-group-item-action list-group-item-secondary">
+                                    My Configurations
+                                </a>
+                                <a href="{% url 'account:my-images' %}" class="list-group-item list-group-item-action list-group-item-secondary">
+                                    My Snapshots
+                                </a>
+                            </div>
+                            <a href="{% url 'dashboard:all_labs' %}" class="list-group-item list-group-item-action bg-light">
+                                Lab Info
+                            </a>
+                            <a href="{% url 'notifier:messages' %}" class="list-group-item list-group-item-action bg-light">
+                                Inbox
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+                <!--/.well -->
+            </div>
+            <!--/span-->
+
+            <div class="col flex-grow-1 d-flex flex-column">
+                {% if title %}
+                <div class="row flex-shrink-1">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">{{ title }}</h1>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                {% endif %}
+                <div id="bsm">{% bootstrap_messages %}</div>
+                <!-- Content block placed here -->
+                {% block content %}
+                {% endblock content %}
+            </div>
+            <!--/span-->
+
+
+        </div>
+        <!--/row-->
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+{% endblock basecontent %}
