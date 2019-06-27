@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "029e77e1_170385ef",
+        "filename": "src/templates/booking/quick_deploy.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-06-27T20:15:41Z",
+      "side": 1,
+      "message": "for(const childNode of drop.childNodes)",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 56
+      },
+      "revId": "490e36b5ba3cfd024770430388e8abd0c8df8edf",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c158fc0f_8b996ce1",
+        "filename": "src/templates/booking/steps/booking_meta.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-06-27T20:15:41Z",
+      "side": 1,
+      "message": "Could you set oninput directly rather than using setAttribute?",
+      "range": {
+        "startLine": 19,
+        "startChar": 53,
+        "endLine": 19,
+        "endChar": 105
+      },
+      "revId": "490e36b5ba3cfd024770430388e8abd0c8df8edf",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dbe9afb_270038a7",
+        "filename": "src/templates/snapshot_workflow/steps/select_host.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-06-27T20:15:41Z",
+      "side": 1,
+      "message": "for(const host of hosts)",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 32
+      },
+      "revId": "490e36b5ba3cfd024770430388e8abd0c8df8edf",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
