@@ -68,6 +68,23 @@
       "revId": "b50e58a9a4451c39a8f30e547924d8a41254849d",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7ac19abd_3f045fbc",
+        "filename": "src/resource_inventory/tests/test_managers.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 2034
+      },
+      "writtenOn": "2019-06-28T14:26:05Z",
+      "side": 1,
+      "message": "Might want to consider parameterized test for this instead: https://pypi.org/project/parameterized/",
+      "revId": "b50e58a9a4451c39a8f30e547924d8a41254849d",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
