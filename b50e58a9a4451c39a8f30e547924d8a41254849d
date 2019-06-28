@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "c5fadcd1_b692e7ce",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-06-28T14:22:10Z",
+      "side": 1,
+      "message": "remove quantifier here because on verification failure it forces backtracking so \"hostname_\" would start matching all of the first and zero of the second then all-1, 1 and so on until the start. Since the second part is a superset of the first we can just do r\u0027^[a-Z0-9][a-Z0-9\\-]*",
+      "range": {
+        "startLine": 179,
+        "startChar": 26,
+        "endLine": 179,
+        "endChar": 27
+      },
+      "revId": "b50e58a9a4451c39a8f30e547924d8a41254849d",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed5919f5_0020343f",
         "filename": "src/resource_inventory/tests/test_managers.py",
         "patchSetId": 1
