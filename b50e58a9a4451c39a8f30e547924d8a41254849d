@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fee25262_3664f9bc",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-06-28T14:18:40Z",
+      "side": 1,
+      "message": "should be removed",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 178,
+        "endChar": 84
+      },
+      "revId": "b50e58a9a4451c39a8f30e547924d8a41254849d",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed5919f5_0020343f",
+        "filename": "src/resource_inventory/tests/test_managers.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-06-28T14:18:40Z",
+      "side": 1,
+      "message": "is this 63 chars?",
+      "range": {
+        "startLine": 270,
+        "startChar": 62,
+        "endLine": 270,
+        "endChar": 127
+      },
+      "revId": "b50e58a9a4451c39a8f30e547924d8a41254849d",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
