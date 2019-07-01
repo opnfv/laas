@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3dd6d0ca_52cc9e3d",
+        "filename": "src/workflow/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T17:05:16Z",
+      "side": 1,
+      "message": "unused",
+      "range": {
+        "startLine": 11,
+        "startChar": 38,
+        "endLine": 11,
+        "endChar": 55
+      },
+      "revId": "ac7682b94e8dc806d9b0506f2262bc8f74716c96",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53a9cb79_20f29d29",
+        "filename": "src/workflow/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T17:05:16Z",
+      "side": 1,
+      "message": "indentation",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 58
+      },
+      "revId": "ac7682b94e8dc806d9b0506f2262bc8f74716c96",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
