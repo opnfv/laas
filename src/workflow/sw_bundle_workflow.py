@@ -153,6 +153,55 @@ class Define_Software(WorkflowStep):
 
         return self.render(request)
 
+    def post(self, post_data, user):
+        models = self.repo_get(self.repo.CONFIG_MODELS, {})
+        if "bundle" not in models:
+            models['bundle'] = ConfigBundle(owner=self.repo_get(self.repo.SESSION_USER))
+
+        confirm = self.repo_get(self.repo.CONFIRMATION, {})
+
+        hosts = self.get_host_list()
+        models['headnode_index'] = post_data.get("headnode", 1)
+        formset = self.create_hostformset(hosts, data=post_data)
+        has_headnode = False
+        if formset.is_valid():
+            models['host_configs'] = []
+            confirm_hosts = []
+            for i, form in enumerate(formset):
+                host = hosts[i]
+                image = form.cleaned_data['image']
+                headnode = form.cleaned_data['headnode']
+                if headnode:
+                    has_headnode = True
+                bundle = models['bundle']
+                hostConfig = HostConfiguration(
+                    host=host,
+                    image=image,
+                    bundle=bundle,
+                    is_head_node=headnode
+                )
+                models['host_configs'].append(hostConfig)
+                confirm_hosts.append({
+                    "name": host.resource.name,
+                    "image": image.name,
+                    "headnode": headnode
+                })
+
+            if not has_headnode:
+                self.set_invalid('Must have one "Headnode" per POD')
+                return self.message
+
+            self.repo_put(self.repo.CONFIG_MODELS, models)
+            if "configuration" not in confirm:
+                confirm['configuration'] = {}
+            confirm['configuration']['hosts'] = confirm_hosts
+            self.repo_put(self.repo.CONFIRMATION, confirm)
+            self.set_valid("Completed")
+        else:
+            self.set_invalid("Please complete all fields")
+
+        return self.message
+
 
 class Config_Software(WorkflowStep):
     template = 'config_bundle/steps/config_software.html'
@@ -196,3 +245,28 @@ class Config_Software(WorkflowStep):
         self.repo_put(self.repo.CONFIRMATION, confirm)
 
         return self.render(request)
+
+    def post(self, post_data, user):
+        models = self.repo_get(self.repo.CONFIG_MODELS, {})
+        if "bundle" not in models:
+            models['bundle'] = ConfigBundle(owner=self.repo_get(self.repo.SESSION_USER))
+
+        confirm = self.repo_get(self.repo.CONFIRMATION, {})
+        if "configuration" not in confirm:
+            confirm['configuration'] = {}
+
+        form = BasicMetaForm(post_data)
+        if form.is_valid():
+            models['bundle'].name = form.cleaned_data['name']
+            models['bundle'].description = form.cleaned_data['description']
+
+            confirm['configuration']['name'] = form.cleaned_data['name']
+            confirm['configuration']['description'] = form.cleaned_data['description']
+            self.set_valid("Complete")
+        else:
+            self.set_invalid("Please correct the errors shown below")
+
+        self.repo_put(self.repo.CONFIG_MODELS, models)
+        self.repo_put(self.repo.CONFIRMATION, confirm)
+
+        return self.message

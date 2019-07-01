@@ -225,6 +225,9 @@ class WorkflowStep(object):
     def post_render(self, request):
         return self.render(request)
 
+    def post(self, post_content):
+        raise Exception("WorkflowStep subclass of type " + str(type(self)) + " has no concrete post() method")
+
     def test_render(self, request):
         if request.method == "POST":
             return self.post_render(request)
@@ -279,6 +282,22 @@ class AbstractSelectOrCreate(WorkflowStep):
             messages.add_message(request, messages.ERROR, "Form Didn't Validate", fail_silently=True)
 
         return self.render(request)
+
+    def post(self, post_data, user):
+        context = self.get_context()
+        form = self.form(post_data, queryset=self.get_form_queryset())
+        if form.is_valid():
+            bundle = form.get_validated_bundle()
+            if not bundle:
+                self.alert_bundle_missing()
+                return render(post_data, self.template, context)
+            self.repo_put(self.select_repo_key, bundle)
+            self.put_confirm_info(bundle)
+            self.set_valid("Step Completed")
+            return "Form Validated"
+        else:
+            self.alert_bundle_missing()
+            return "Form Didn't Validate"
 
     def get_context(self):
         default = []

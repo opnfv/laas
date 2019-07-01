@@ -218,3 +218,50 @@ class Booking_Meta(WorkflowStep):
             messages.add_message(request, messages.ERROR, "Form didn't validate", fail_silently=True)
             self.set_invalid("Please complete the fields highlighted in red to continue")
         return self.render(request)
+
+    def post(self, post_data, user):
+        form = BookingMetaForm(data=post_data, owner=user)
+
+        forms = self.repo_get(self.repo.BOOKING_FORMS, {})
+
+        forms["meta_form"] = form
+        self.repo_put(self.repo.BOOKING_FORMS, forms)
+
+        if form.is_valid():
+            models = self.repo_get(self.repo.BOOKING_MODELS, {})
+            if "booking" not in models:
+                models['booking'] = Booking()
+            models['collaborators'] = []
+            confirm = self.repo_get(self.repo.CONFIRMATION)
+            if "booking" not in confirm:
+                confirm['booking'] = {}
+
+            models['booking'].start = timezone.now()
+            models['booking'].end = timezone.now() + timedelta(days=int(form.cleaned_data['length']))
+            models['booking'].purpose = form.cleaned_data['purpose']
+            models['booking'].project = form.cleaned_data['project']
+            for key in ['length', 'project', 'purpose']:
+                confirm['booking'][key] = form.cleaned_data[key]
+
+            if form.cleaned_data["deploy_opnfv"]:
+                self.repo_get(self.repo.SESSION_MANAGER).set_step_statuses(OPNFV_EnablePicker, desired_enabled=True)
+            else:
+                self.repo_get(self.repo.SESSION_MANAGER).set_step_statuses(OPNFV_EnablePicker, desired_enabled=False)
+
+            userprofile_list = form.cleaned_data['users']
+            confirm['booking']['collaborators'] = []
+            for userprofile in userprofile_list:
+                models['collaborators'].append(userprofile.user)
+                confirm['booking']['collaborators'].append(userprofile.user.username)
+
+            info_file = form.cleaned_data.get("info_file", False)
+            if info_file:
+                self.repo_put(self.repo.BOOKING_INFO_FILE, info_file)
+
+            self.repo_put(self.repo.BOOKING_MODELS, models)
+            self.repo_put(self.repo.CONFIRMATION, confirm)
+            self.set_valid("Step Completed")
+            return 'Form Validated'
+        else:
+            self.set_invalid("Please complete the fields highlighted in red to continue")
+            return "Form didn't validate"

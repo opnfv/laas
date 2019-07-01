@@ -78,6 +78,35 @@ class Select_Host_Step(WorkflowStep):
         self.set_valid("Success")
         return self.render(request)
 
+    def post(self, post_data, user):
+        host_data = post_data.get("host")
+        if not host_data:
+            self.set_invalid("Please select a host")
+            return self.message
+        host = json.loads(host_data)
+        if 'name' not in host or 'booking' not in host:
+            self.set_invalid("Invalid host selected")
+            return self.message
+        name = host['name']
+        booking_id = host['booking']
+        booking = Booking.objects.get(pk=booking_id)
+        host = Host.objects.get(bundle=booking.resource, template__resource__name=name)
+        models = self.repo_get(self.repo.SNAPSHOT_MODELS, {})
+        if "host" not in models:
+            models['host'] = host
+        if 'snapshot' not in models:
+            models['snapshot'] = Image()
+        self.repo_put(self.repo.SNAPSHOT_MODELS, models)
+        self.repo_put(self.repo.SNAPSHOT_BOOKING_ID, booking_id)
+
+        confirm = self.repo_get(self.repo.CONFIRMATION, {})
+        snap_confirm = confirm.get("snapshot", {})
+        snap_confirm['host'] = name
+        confirm['snapshot'] = snap_confirm
+        self.repo_put(self.repo.CONFIRMATION, confirm)
+        self.set_valid("Success")
+        return self.message
+
 
 class Image_Meta_Step(WorkflowStep):
     template = "snapshot_workflow/steps/meta.html"
@@ -117,3 +146,24 @@ class Image_Meta_Step(WorkflowStep):
             self.set_invalid("Please Fill out the Form")
 
         return self.render(request)
+
+    def post(self, post_data, user):
+        form = BasicMetaForm(post_data)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            self.repo_put(self.repo.SNAPSHOT_NAME, name)
+            description = form.cleaned_data['description']
+            self.repo_put(self.repo.SNAPSHOT_DESC, description)
+
+            confirm = self.repo_get(self.repo.CONFIRMATION, {})
+            snap_confirm = confirm.get("snapshot", {})
+            snap_confirm['name'] = name
+            snap_confirm['description'] = description
+            confirm['snapshot'] = snap_confirm
+            self.repo_put(self.repo.CONFIRMATION, confirm)
+
+            self.set_valid("Success")
+        else:
+            self.set_invalid("Please Fill out the Form")
+
+        return self.message

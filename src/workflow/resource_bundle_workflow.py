@@ -125,6 +125,24 @@ class Define_Hardware(WorkflowStep):
         self.context = self.get_context()
         return render(request, self.template, self.context)
 
+    def post(self, post_data, user):
+        try:
+            self.form = HardwareDefinitionForm(post_data)
+            if self.form.is_valid():
+                self.update_models(self.form.cleaned_data)
+                self.update_confirmation()
+                self.context = self.get_context()
+                self.set_valid("Step Completed")
+                return "Form Validated"
+            else:
+                self.set_invalid("Please complete the fields highlighted in red to continue")
+                self.context = self.get_context()
+                return "Form Didn't Validate"
+        except Exception as e:
+            self.set_invalid(str(e))
+            self.context = self.get_context()
+            return "Form Didn't Validate"
+
 
 class Define_Nets(WorkflowStep):
     template = 'resource/steps/pod_definition.html'
@@ -221,6 +239,22 @@ class Define_Nets(WorkflowStep):
         except Exception as e:
             self.set_invalid("An error occurred when applying networks: " + str(e))
         return self.render(request)
+
+    def post(self, post_data, user):
+        models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
+        if 'hosts' in models:
+            host_set = set([h.resource.name + "*" + h.profile.name for h in models['hosts']])
+            self.repo_put(self.repo.GRB_LAST_HOSTLIST, host_set)
+        try:
+            xmlData = post_data.get("xml")
+            self.updateModels(xmlData)
+            # update model with xml
+            self.set_valid("Networks applied successfully")
+        except ResourceAvailabilityException:
+            self.set_invalid("Public network not availble")
+        except Exception as e:
+            self.set_invalid("An error occurred when applying networks: " + str(e))
+        return self.message
 
     def updateModels(self, xmlData):
         models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
@@ -408,56 +442,30 @@ class Resource_Meta_Info(WorkflowStep):
             pass
         return self.render(request)
 
-
-class Host_Meta_Info(WorkflowStep):
-    template = "resource/steps/host_info.html"
-    title = "Host Info"
-    description = "We need a little bit of information about your chosen machines"
-    short_title = "host info"
-
-    def __init__(self, *args, **kwargs):
-        super(Host_Meta_Info, self).__init__(*args, **kwargs)
-        self.formset = formset_factory(GenericHostMetaForm, extra=0)
-
-    def get_context(self):
-        context = super(Host_Meta_Info, self).get_context()
-        GenericHostFormset = self.formset
-        models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
-        initial_data = []
-        if "hosts" not in models:
-            context['error'] = "Please go back and select your hosts"
-        else:
-            for host in models['hosts']:
-                profile = host.profile.name
-                name = host.resource.name
-                if not name:
-                    name = ""
-                initial_data.append({"host_profile": profile, "host_name": name})
-        context['formset'] = GenericHostFormset(initial=initial_data)
-        return context
-
-    def post_render(self, request):
-        models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
-        if 'hosts' not in models:
-            models['hosts'] = []
-        hosts = models['hosts']
-        i = 0
-        confirm_hosts = []
-        GenericHostFormset = self.formset
-        formset = GenericHostFormset(request.POST)
-        if formset.is_valid():
-            for form in formset:
-                host = hosts[i]
-                host.resource.name = form.cleaned_data['host_name']
-                i += 1
-                confirm_hosts.append({"name": host.resource.name, "profile": host.profile.name})
-            models['hosts'] = hosts
+    def post(self, post_data, user):
+        form = ResourceMetaForm(post_data)
+        if form.is_valid():
+            models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
+            name = form.cleaned_data['bundle_name']
+            desc = form.cleaned_data['bundle_description']
+            bundle = models.get("bundle", GenericResourceBundle(owner=self.repo_get(self.repo.SESSION_USER)))
+            bundle.name = name
+            bundle.description = desc
+            models['bundle'] = bundle
             self.repo_put(self.repo.GRESOURCE_BUNDLE_MODELS, models)
-            confirm = self.repo_get(self.repo.CONFIRMATION, {})
+            confirm = self.repo_get(self.repo.CONFIRMATION)
             if "resource" not in confirm:
                 confirm['resource'] = {}
-            confirm['resource']['hosts'] = confirm_hosts
+            confirm_info = confirm['resource']
+            confirm_info["name"] = name
+            tmp = desc
+            if len(tmp) > 60:
+                tmp = tmp[:60] + "..."
+            confirm_info["description"] = tmp
             self.repo_put(self.repo.CONFIRMATION, confirm)
+            self.set_valid("Step Completed")
+
         else:
+            self.set_invalid("Please correct the fields highlighted in red to continue")
             pass
-        return self.render(request)
+        return self.message

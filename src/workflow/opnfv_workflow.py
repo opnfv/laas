@@ -88,7 +88,21 @@ class Pick_Installer(WorkflowStep):
         else:
             self.set_invalid("Please select an Installer and Scenario")
 
-        return self.render(request)
+    def post(self, post_data, user):
+        form = OPNFVSelectionForm(post_data)
+        if form.is_valid():
+            installer = form.cleaned_data['installer']
+            scenario = form.cleaned_data['scenario']
+            models = self.repo_get(self.repo.OPNFV_MODELS, {})
+            models['installer_chosen'] = installer
+            models['scenario_chosen'] = scenario
+            self.repo_put(self.repo.OPNFV_MODELS, models)
+            self.update_confirmation()
+            self.set_valid("Step Completed")
+            return 'Form Validated'
+        else:
+            self.set_invalid("Please select an Installer and Scenario")
+            return "Form Didn't Validate"
 
 
 class Assign_Network_Roles(WorkflowStep):
@@ -169,6 +183,27 @@ class Assign_Network_Roles(WorkflowStep):
         else:
             self.set_invalid("Please complete all fields")
         return self.render(request)
+
+    def post(self, post_data, user):
+        models = self.repo_get(self.repo.OPNFV_MODELS, {})
+        config_bundle = self.repo_get(self.repo.SELECTED_CONFIG_BUNDLE)
+        roles = OPNFV_SETTINGS.NETWORK_ROLES
+        net_role_formset = self.create_netformset(roles, config_bundle, data=post_data)
+        if net_role_formset.is_valid():
+            results = []
+            for form in net_role_formset:
+                results.append({
+                    "role": form.cleaned_data['role'],
+                    "network": form.cleaned_data['network']
+                })
+            models['network_roles'] = results
+            self.set_valid("Completed")
+            self.repo_put(self.repo.OPNFV_MODELS, models)
+            self.update_confirmation()
+            return 'Form Validated'
+        else:
+            self.set_invalid("Please complete all fields")
+            return "Form Didn't Validate"
 
 
 class Assign_Host_Roles(WorkflowStep):  # taken verbatim from Define_Software in sw workflow, merge the two?
@@ -256,6 +291,36 @@ class Assign_Host_Roles(WorkflowStep):  # taken verbatim from Define_Software in
 
         return self.render(request)
 
+    def post(self, post_data, user):
+        formset = self.create_host_role_formset(data=post_data)
+
+        models = self.repo_get(self.repo.OPNFV_MODELS, {})
+        host_roles = models.get("host_roles", [])
+
+        has_jumphost = False
+        if formset.is_valid():
+            for form in formset:
+                hostname = form.cleaned_data['host_name']
+                role = form.cleaned_data['role']
+                mapping = self.get_host_role_mapping(host_roles, hostname)
+                mapping['role'] = role
+                if "jumphost" in role.name.lower():
+                    has_jumphost = True
+
+            models['host_roles'] = host_roles
+            self.repo_put(self.repo.OPNFV_MODELS, models)
+            self.update_confirmation()
+
+            if not has_jumphost:
+                self.set_invalid('Must have at least one "Jumphost" per POD')
+                return "Step Didn't Validate"
+            else:
+                self.set_valid("Completed")
+                return 'Step Validated'
+        else:
+            self.set_invalid("Please complete all fields")
+            return "Step Didn't Validate"
+
 
 class MetaInfo(WorkflowStep):
     template = 'config_bundle/steps/config_software.html'
@@ -279,6 +344,25 @@ class MetaInfo(WorkflowStep):
         confirm['name'] = meta['name']
         confirm['description'] = meta['description']
         self.repo_put(self.repo.CONFIRMATION, confirm)
+
+    def post(self, post_data, user):
+        models = self.repo_get(self.repo.OPNFV_MODELS, {})
+        info = models.get("meta", {})
+
+        form = BasicMetaForm(post_data)
+        if form.is_valid():
+            info['name'] = form.cleaned_data['name']
+            info['description'] = form.cleaned_data['description']
+            models['meta'] = info
+            self.repo_put(self.repo.OPNFV_MODELS, models)
+            self.update_confirmation()
+            self.set_valid("Complete")
+            self.repo_put(self.repo.OPNFV_MODELS, models)
+            return 'Step Validated'
+        else:
+            self.set_invalid("Please correct the errors shown below")
+            self.repo_put(self.repo.OPNFV_MODELS, models)
+            return "Step Didn't Validate"
 
     def post_render(self, request):
         models = self.repo_get(self.repo.OPNFV_MODELS, {})
