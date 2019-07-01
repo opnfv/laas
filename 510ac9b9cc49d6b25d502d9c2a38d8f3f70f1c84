@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7edc9ee8_5b43d575",
+        "filename": "src/workflow/models.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T21:47:02Z",
+      "side": 1,
+      "message": "redundant return",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 283,
+        "endChar": 18
+      },
+      "revId": "510ac9b9cc49d6b25d502d9c2a38d8f3f70f1c84",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78d522b0_1465ef44",
+        "filename": "src/workflow/models.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T21:47:02Z",
+      "side": 1,
+      "message": "redundant return",
+      "range": {
+        "startLine": 286,
+        "startChar": 0,
+        "endLine": 286,
+        "endChar": 18
+      },
+      "revId": "510ac9b9cc49d6b25d502d9c2a38d8f3f70f1c84",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56d9f6f4_cb1c79a8",
+        "filename": "src/workflow/models.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T21:47:02Z",
+      "side": 1,
+      "message": "returns",
+      "range": {
+        "startLine": 344,
+        "startChar": 8,
+        "endLine": 344,
+        "endChar": 26
+      },
+      "revId": "510ac9b9cc49d6b25d502d9c2a38d8f3f70f1c84",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa37cedf_9f775173",
+        "filename": "src/workflow/opnfv_workflow.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T21:47:02Z",
+      "side": 1,
+      "message": "Why duplicate these statments and move them into the if/else?",
+      "range": {
+        "startLine": 290,
+        "startChar": 0,
+        "endLine": 292,
+        "endChar": 57
+      },
+      "revId": "510ac9b9cc49d6b25d502d9c2a38d8f3f70f1c84",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15ffb618_39bfacd8",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T21:47:02Z",
+      "side": 1,
+      "message": "setting self.context is pointless",
+      "range": {
+        "startLine": 117,
+        "startChar": 0,
+        "endLine": 124,
+        "endChar": 45
+      },
+      "revId": "510ac9b9cc49d6b25d502d9c2a38d8f3f70f1c84",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
