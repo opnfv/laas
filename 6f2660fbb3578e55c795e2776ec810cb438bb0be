@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d9a6d4b_e02b73a8",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:12:00Z",
+      "side": 1,
+      "message": "Is there a reason to put this here rather than the step that needs it?",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 74
+      },
+      "revId": "6f2660fbb3578e55c795e2776ec810cb438bb0be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "edaf49f8_0f0ed617",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:12:00Z",
+      "side": 1,
+      "message": "duplicate",
+      "range": {
+        "startLine": 134,
+        "startChar": 3,
+        "endLine": 134,
+        "endChar": 64
+      },
+      "revId": "6f2660fbb3578e55c795e2776ec810cb438bb0be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b9eda90b_beb0464b",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:12:00Z",
+      "side": 1,
+      "message": "duplicate",
+      "range": {
+        "startLine": 271,
+        "startChar": 0,
+        "endLine": 271,
+        "endChar": 56
+      },
+      "revId": "6f2660fbb3578e55c795e2776ec810cb438bb0be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76707c67_83955261",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:12:00Z",
+      "side": 1,
+      "message": "Duplicate. We should have a function that is the only place to touch the contents of formContainer. Future changes will make parsing and setting contents slightly more complicated.",
+      "range": {
+        "startLine": 277,
+        "startChar": 25,
+        "endLine": 277,
+        "endChar": 28
+      },
+      "revId": "6f2660fbb3578e55c795e2776ec810cb438bb0be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "225121ef_5a50f54a",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:12:00Z",
+      "side": 1,
+      "message": "duplicate",
+      "range": {
+        "startLine": 320,
+        "startChar": 0,
+        "endLine": 320,
+        "endChar": 47
+      },
+      "revId": "6f2660fbb3578e55c795e2776ec810cb438bb0be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
