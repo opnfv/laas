@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "7b33411a_badc04fb",
+        "filename": "src/workflow/workflow_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T18:21:48Z",
+      "side": 1,
+      "message": "That is already handled in the go_next() method.",
+      "parentUuid": "3e47c706_645279af",
+      "range": {
+        "startLine": 95,
+        "startChar": 41,
+        "endLine": 95,
+        "endChar": 51
+      },
+      "revId": "ac7682b94e8dc806d9b0506f2262bc8f74716c96",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "611611ca_76db407e",
         "filename": "src/workflow/workflow_manager.py",
         "patchSetId": 1
@@ -82,6 +106,24 @@
       "writtenOn": "2019-07-01T17:40:52Z",
       "side": 1,
       "message": "Probably want to return the page the user came from. If the errors don\u0027t already show up per templated field, then use the messages api with the content of form.errors.",
+      "revId": "ac7682b94e8dc806d9b0506f2262bc8f74716c96",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32b87ef7_9f87aba0",
+        "filename": "src/workflow/workflow_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T18:21:48Z",
+      "side": 1,
+      "message": "This form is generated entirely by the front end AJAX code. An error here means a bug in the front end code rather than a user\u0027s correctable mistake.",
+      "parentUuid": "611611ca_76db407e",
       "revId": "ac7682b94e8dc806d9b0506f2262bc8f74716c96",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
