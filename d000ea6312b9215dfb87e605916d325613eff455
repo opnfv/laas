@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "110bc538_09e5ec39",
+        "filename": "src/workflow/booking_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "redundant",
+      "range": {
+        "startLine": 215,
+        "startChar": 12,
+        "endLine": 215,
+        "endChar": 18
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "691bd375_8c3f8129",
+        "filename": "src/workflow/booking_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "redundant",
+      "range": {
+        "startLine": 218,
+        "startChar": 12,
+        "endLine": 218,
+        "endChar": 18
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05c387fc_e4c75149",
+        "filename": "src/workflow/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "should accept user",
+      "range": {
+        "startLine": 229,
+        "startChar": 26,
+        "endLine": 229,
+        "endChar": 33
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e5828256_c570f848",
+        "filename": "src/workflow/opnfv_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "redundant",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 18
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6240376_2744df49",
+        "filename": "src/workflow/opnfv_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "not needed",
+      "range": {
+        "startLine": 169,
+        "startChar": 4,
+        "endLine": 169,
+        "endChar": 18
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a0772d4_f10cc49f",
+        "filename": "src/workflow/opnfv_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "not needed",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 253,
+        "endChar": 22
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2974a0cc_24e7cd95",
+        "filename": "src/workflow/opnfv_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "nope",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 298,
+        "endChar": 18
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48e1f2a5_5419c839",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "redundant",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 18
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b59a075_298d59d4",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "return",
+      "range": {
+        "startLine": 226,
+        "startChar": 0,
+        "endLine": 226,
+        "endChar": 14
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f0aac151_3deb4808",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "return",
+      "range": {
+        "startLine": 410,
+        "startChar": 0,
+        "endLine": 410,
+        "endChar": 14
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a9dfbc9a_70e25e26",
+        "filename": "src/workflow/snapshot_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "ret",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 14
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0fbd9993_7e086ef7",
+        "filename": "src/workflow/snapshot_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "ret",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 14
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "60597584_dc341584",
+        "filename": "src/workflow/sw_bundle_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "ret",
+      "range": {
+        "startLine": 154,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 14
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "306379d2_a76a3041",
+        "filename": "src/workflow/sw_bundle_workflow.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-01T20:25:13Z",
+      "side": 1,
+      "message": "ret",
+      "range": {
+        "startLine": 197,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 14
+      },
+      "revId": "d000ea6312b9215dfb87e605916d325613eff455",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
