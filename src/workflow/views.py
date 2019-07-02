@@ -8,7 +8,7 @@
 ##############################################################################
 
 
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -91,23 +91,37 @@ def manager_view(request):
 
 
 def viewport_view(request):
+    print("viewport view")
     if not request.user.is_authenticated:
         return login(request)
 
+    print("viewport view2")
     manager = attempt_auth(request)
     if manager is None:
         return no_workflow(request)
 
-    if request.method == 'GET':
-        return render(request, 'workflow/viewport-base.html')
-    else:
-        pass
+    print("viewport view3")
+    if request.method != 'GET':
+        return HttpResponse(status=405)
+    return render(request, 'workflow/viewport-base.html')
+
+
+def create_workflow(request):
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+    workflow_type = request.POST.get('workflow_type', None)
+    try:
+        workflow_type = int(workflow_type)
+    except Exception:
+        return HttpResponse(status=400)
+    mgr_uuid = create_session(workflow_type, request=request,)
+    request.session['manager_session'] = mgr_uuid
+    return HttpResponse()
 
 
 def create_session(wf_type, request):
-    wf = int(wf_type)
     smgr = SessionManager(request=request)
-    smgr.add_workflow(workflow_type=wf, target_id=request.POST.get("target"))
+    smgr.add_workflow(workflow_type=wf_type, target_id=request.POST.get("target"))
     manager_uuid = uuid.uuid4().hex
     ManagerTracker.getInstance().managers[manager_uuid] = smgr
 
