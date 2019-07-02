@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e85e2be_66a7f2d8",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 1138,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-02T17:55:00Z",
+      "side": 1,
+      "message": "I believe the issue is that you have a closure on item_id. By using setAttribute, you are templating item_id into a string and are not affected by the closure. I don\u0027t know enough JS to point out an obvious solution.",
+      "range": {
+        "startLine": 1135,
+        "startChar": 0,
+        "endLine": 1138,
+        "endChar": 111
+      },
+      "revId": "e399390329cea075e36b914879801e485ccedfaa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
