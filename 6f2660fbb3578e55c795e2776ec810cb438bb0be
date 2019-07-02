@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "23d94058_da644aa8",
+        "filename": "src/templates/layout.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-02T12:30:53Z",
+      "side": 1,
+      "message": "this is only used for the networking step right? If so it should at least be moved to load with the rest of the workflow as a user doesn\u0027t go through that area of the site on the average visit.",
+      "range": {
+        "startLine": 24,
+        "startChar": 26,
+        "endLine": 24,
+        "endChar": 48
+      },
+      "revId": "6f2660fbb3578e55c795e2776ec810cb438bb0be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d9a6d4b_e02b73a8",
         "filename": "src/templates/workflow/viewport-base.html",
         "patchSetId": 1
@@ -13,6 +36,30 @@
       "writtenOn": "2019-07-01T20:12:00Z",
       "side": 1,
       "message": "Is there a reason to put this here rather than the step that needs it?",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 74
+      },
+      "revId": "6f2660fbb3578e55c795e2776ec810cb438bb0be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e1fa79d_e0447d53",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-02T12:30:53Z",
+      "side": 1,
+      "message": "If we assume that the average user is going to make it all the way through the workflow containing this step then it does reduce loading time once they reach that step, but it should probably be moved so it executes after every other script that may be needed before it.",
+      "parentUuid": "8d9a6d4b_e02b73a8",
       "range": {
         "startLine": 89,
         "startChar": 0,
