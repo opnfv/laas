@@ -4,14 +4,14 @@
 
 form_submission_callbacks = [];  //all runnables will be executed before form submission
 
-
 ///////////////////
 // Global Functions
 ///////////////////
 
 function updatePage(data){
     updateBreadcrumbs(data['meta']);
-    $("formContainer").html(data['content']);
+    console.log(data);
+    $("#formContainer").html(data['content']);
 }
 
 function submitStepForm(next_step = "current"){
@@ -35,6 +35,27 @@ function run_form_callbacks(){
     for(f of form_submission_callbacks)
         f();
     form_submission_callbacks = [];
+}
+
+function create_workflow(type) {
+    $.ajax({
+        type: "POST",
+        url: "/workflow/create/",
+        data: {
+            "workflow_type": type
+        },
+        headers: {
+            "X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').val()
+        }
+    }).done(function (data, textStatus, jqXHR) {
+        window.location.replace("/workflow/");
+    }).fail(function (jqxHR, textstatus) {
+        alert("Something went wrong...");
+    });
+}
+
+function continue_wf() {
+    window.location.replace("/workflow/");
 }
 
 ///////////////////

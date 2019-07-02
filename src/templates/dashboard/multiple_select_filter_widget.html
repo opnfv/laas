@@ -35,6 +35,7 @@
 </div>
 <script>
 function multipleSelectFilterWidgetEntry() {
+    console.log("msfw running");
     const graph_neighbors = {{ neighbors|safe }};
     const filter_items = {{ filter_items|safe }};
     const initial_value = {{ initial_value|default_if_none:"{}"|safe }};

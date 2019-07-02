@@ -99,46 +99,6 @@
         delete_manager();
     }
 </script>
-<script>
-    function fixVlans() {
-        document.getElementById("vlan_input").value = "True";
-        var form = $("#vlan_form");
-        var formData = form.serialize();
-        var req = new XMLHttpRequest();
-        req.open("POST", "/wf/workflow/", false);
-        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        req.onerror = function() { alert("problem submitting form"); }
-        req.onreadystatechange = function() { //replaces current page with response
-            if(req.readyState === 4 ) {
-                var d = document.getElementById("vlan_warning").innerHTML = "";
-                document.getElementById("confirm_button").disabled = false;
-                document.getElementById("cancel_button").disabled = false;
-            }
-        }
-        req.send(formData);
-    }
-    var problem = {{vlan_warning|default:'false'}};
-    if(problem){
-        var d = document.getElementById("vlan_warning");
-        var h3 = document.createElement("h3");
-        h3.innerHTML = "WARNING: Vlans not available";
-        var h4 = document.createElement("h4");
-        h4.innerHTML = "The vlans you selected are not currently available. Would you like to automatically change them?";
-        var button1 = document.createElement("button");
-        button1.innerHTML = "Correct Vlans For Me";
-        button1.onclick = function() { fixVlans(); }
-
-        var button2 = document.createElement("button");
-        button2.innerHTML = "Cancel. I will change my vlans";
-        button2.onclick = function() { formcancel(); }
-        d.appendChild(h3);
-        d.appendChild(h4);
-        d.appendChild(button1);
-        d.appendChild(button2);
-        document.getElementById("confirm_button").disabled = true;
-        document.getElementById("cancel_button").disabled = true;
-    }
-</script>
 {% block element_messages %}
 
 {% endblock element_messages %}
