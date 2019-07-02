@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36107866_9c3e251b",
+        "filename": "src/templates/config_bundle/steps/table_formset.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-02T17:33:58Z",
+      "side": 1,
+      "message": "I think it will still behave as any other form in this context",
+      "range": {
+        "startLine": 21,
+        "startChar": 58,
+        "endLine": 21,
+        "endChar": 97
+      },
+      "revId": "7cb4c3f79394a59e0276510261550ca6bb3a4fdf",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
