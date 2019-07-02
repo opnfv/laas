@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a5b0fcad_18fed4cf",
+        "filename": "src/templates/dashboard/multiple_select_filter_widget.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-02T17:08:02Z",
+      "side": 1,
+      "message": "on the line above.",
+      "parentUuid": "9f314ba0_8700e7e2",
+      "range": {
+        "startLine": 44,
+        "startChar": 39,
+        "endLine": 44,
+        "endChar": 55
+      },
+      "revId": "2236c53b35ca6f6485f711cc0de952b99daf81dd",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20c66d38_1f5716ca",
         "filename": "src/templates/resource/steps/pod_definition.html",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-07-02T16:19:27Z",
       "side": 1,
       "message": "is this defined anywhere?",
+      "range": {
+        "startLine": 80,
+        "startChar": 40,
+        "endLine": 80,
+        "endChar": 64
+      },
+      "revId": "2236c53b35ca6f6485f711cc0de952b99daf81dd",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "499f4c27_ad0c250f",
+        "filename": "src/templates/resource/steps/pod_definition.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-02T17:08:02Z",
+      "side": 1,
+      "message": "The network step is defined by the previous statement. The class definition defines the methods.",
+      "parentUuid": "20c66d38_1f5716ca",
       "range": {
         "startLine": 80,
         "startChar": 40,
