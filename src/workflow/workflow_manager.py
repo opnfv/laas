@@ -82,7 +82,7 @@ class SessionManager():
 
     def handle_post(self, request):
         form = ManagerForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             self.get_active_step().post(
                 QueryDict(form.cleaned_data['step_form']),
                 user=request.user
@@ -98,11 +98,11 @@ class SessionManager():
     def handle_request(self, request):
         if request.method == 'POST':
             self.handle_post(request)
-        return self.render()
+        return self.render(request)
 
     def render(self, request, **kwargs):
         return JsonResponse({
-            "meta": self.status(),
+            "meta": self.status(request),
             "content": self.get_active_step().render_to_string(request)
         })
 
