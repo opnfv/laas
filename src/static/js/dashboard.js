@@ -1,3 +1,40 @@
+///////////////////
+// Global Variables
+///////////////////
+
+form_submission_callbacks = [];  //all runnables will be executed before form submission
+
+
+///////////////////
+// Global Functions
+///////////////////
+
+function updatePage(data){
+    updateBreadcrumbs(data['meta']);
+    $("formContainer").html(data['content']);
+}
+
+function submitStepForm(){
+    run_form_callbacks();
+    const form_data = $("#step_form").serialize();
+    $.post(
+        '/workflow/manager/',
+        form_data,
+        (data) => updatePage(data),
+        'json'
+    ).fail(() => alert("failure"));
+}
+
+function run_form_callbacks(){
+    for(f of form_submission_callbacks)
+        f();
+    form_submission_callbacks = [];
+}
+
+///////////////////
+//Class Definitions
+///////////////////
+
 class MultipleSelectFilterWidget {
 
     constructor(neighbors, items, initial) {
@@ -826,16 +863,9 @@ class NetworkStep {
         this.graph.refresh(host);
     }
 
-    submitForm() {
-        const form = document.getElementById("xml_form");
+    prepareForm() {
         const input_elem = document.getElementById("hidden_xml_input");
         input_elem.value = this.encodeGraph(this.graph);
-        const req = new XMLHttpRequest();
-        req.open("POST", "/wf/workflow/", false);
-        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        req.onerror = function() { alert("problem with form submission"); }
-        const formData = $("#xml_form").serialize();
-        req.send(formData);
     }
 }
 
