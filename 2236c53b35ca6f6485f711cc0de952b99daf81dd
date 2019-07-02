@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f314ba0_8700e7e2",
+        "filename": "src/templates/dashboard/multiple_select_filter_widget.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-02T16:19:27Z",
+      "side": 1,
+      "message": "where is this defined?",
+      "range": {
+        "startLine": 44,
+        "startChar": 39,
+        "endLine": 44,
+        "endChar": 55
+      },
+      "revId": "2236c53b35ca6f6485f711cc0de952b99daf81dd",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20c66d38_1f5716ca",
+        "filename": "src/templates/resource/steps/pod_definition.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-02T16:19:27Z",
+      "side": 1,
+      "message": "is this defined anywhere?",
+      "range": {
+        "startLine": 80,
+        "startChar": 40,
+        "endLine": 80,
+        "endChar": 64
+      },
+      "revId": "2236c53b35ca6f6485f711cc0de952b99daf81dd",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71ba89a1_be19b9a7",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-02T16:19:27Z",
+      "side": 1,
+      "message": "the go() function can probably be replaced since we\u0027re handling both posting the form and our intent to move in the same request. Maybe add an expressIntent() function instead that also handles calling the form...prepare and form...serialize functions",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 26
+      },
+      "revId": "2236c53b35ca6f6485f711cc0de952b99daf81dd",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c34b53d1_dd237333",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-02T16:19:27Z",
+      "side": 1,
+      "message": "this function does more than just updating breadcrumbs",
+      "range": {
+        "startLine": 167,
+        "startChar": 17,
+        "endLine": 167,
+        "endChar": 31
+      },
+      "revId": "2236c53b35ca6f6485f711cc0de952b99daf81dd",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
