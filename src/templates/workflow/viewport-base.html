@@ -91,10 +91,9 @@
     update_context();
     var step = 0;
     var page_count = 0;
-    var context_data = false;
 
     function go(to) {
-        step_on_leave();
+        submitStepForm(to);
         request_leave(to);
     }
 
@@ -165,8 +164,7 @@
         });
     }
 
-    function update_page(data) {
-        context_data = data;
+    function updateBreadcrumbs(data) {
         update_breadcrumbs(data);
         if (data["workflow_count"] == 1) {
             document.getElementById("cancel_btn").innerText = "Exit Workflow";
