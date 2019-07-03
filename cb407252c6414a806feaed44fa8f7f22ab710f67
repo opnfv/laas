@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "cbf74ddc_d832893d",
+        "filename": "src/templates/dashboard/multiple_select_filter_widget.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-03T13:28:08Z",
+      "side": 1,
+      "message": "This is a lambda so that `this` is correctly set in the finish function. I could not get bind() to work for whatever reason",
+      "parentUuid": "ae437153_4c499e14",
+      "range": {
+        "startLine": 44,
+        "startChar": 35,
+        "endLine": 44,
+        "endChar": 41
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b86408e1_7ff46c62",
         "filename": "src/templates/workflow/viewport-base.html",
         "patchSetId": 1
@@ -117,6 +141,30 @@
     },
     {
       "key": {
+        "uuid": "2b08236e_4caefd05",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-03T13:28:08Z",
+      "side": 1,
+      "message": "Yup, this function and all references can probably be deleted.",
+      "parentUuid": "dbe9c60e_2b0f228e",
+      "range": {
+        "startLine": 134,
+        "startChar": 8,
+        "endLine": 134,
+        "endChar": 15
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6c557213_1bca7a1c",
         "filename": "src/templates/workflow/viewport-base.html",
         "patchSetId": 1
@@ -151,6 +199,30 @@
       "writtenOn": "2019-07-03T12:18:14Z",
       "side": 1,
       "message": "can we just pass in content here rather than expecting a dict with content as the only needed key/val?",
+      "range": {
+        "startLine": 244,
+        "startChar": 33,
+        "endLine": 244,
+        "endChar": 53
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d77a68a1_9dfc20be",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-03T13:28:08Z",
+      "side": 1,
+      "message": "If we did that, we would have to parse and manipulate the dictionary in a dozen different places. This way there is only one line of code coupled to our current data structure.",
+      "parentUuid": "3de9cad9_13185ec7",
       "range": {
         "startLine": 244,
         "startChar": 33,
@@ -220,6 +292,30 @@
       "writtenOn": "2019-07-03T12:18:14Z",
       "side": 1,
       "message": "is this supposed to be a function call?",
+      "range": {
+        "startLine": 85,
+        "startChar": 24,
+        "endLine": 85,
+        "endChar": 26
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "54fd4250_ffa57fff",
+        "filename": "src/workflow/workflow_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-03T13:28:08Z",
+      "side": 1,
+      "message": "Yes. It was an error before",
+      "parentUuid": "2d427daf_11f88d5a",
       "range": {
         "startLine": 85,
         "startChar": 24,
