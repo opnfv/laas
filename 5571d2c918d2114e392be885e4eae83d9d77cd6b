@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf428b2a_111e4c76",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-03T19:34:15Z",
+      "side": 1,
+      "message": "const",
+      "range": {
+        "startLine": 23,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 35
+      },
+      "revId": "5571d2c918d2114e392be885e4eae83d9d77cd6b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c80d5587_4382c794",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-03T19:34:15Z",
+      "side": 1,
+      "message": "topcrumb is assigned unconditionally",
+      "range": {
+        "startLine": 67,
+        "startChar": 6,
+        "endLine": 69,
+        "endChar": 5
+      },
+      "revId": "5571d2c918d2114e392be885e4eae83d9d77cd6b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04ef561d_7da8c2f5",
+        "filename": "src/workflow/views.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-03T19:34:15Z",
+      "side": 1,
+      "message": "This *was* the last workflow, so delete the reference to it in the tracker",
+      "range": {
+        "startLine": 41,
+        "startChar": 33,
+        "endLine": 41,
+        "endChar": 88
+      },
+      "revId": "5571d2c918d2114e392be885e4eae83d9d77cd6b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
