@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f8f50a01_559b43b6",
+        "filename": "src/templates/dashboard/multiple_select_filter_widget.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-03T19:06:58Z",
+      "side": 0,
+      "message": "deleting this will break the resource workflow step. We should add the event listener in the MultipleSelectFilterWidget class and the add an additional event listener on the quick booking page.",
+      "range": {
+        "startLine": 15,
+        "startChar": 89,
+        "endLine": 15,
+        "endChar": 144
+      },
+      "revId": "e0b8bb3ee3c218a65562acdc5e76f714aab92926",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
