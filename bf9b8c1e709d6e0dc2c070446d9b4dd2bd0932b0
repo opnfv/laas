@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e24b21c7_e2d55f17",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-03T20:08:02Z",
+      "side": 1,
+      "message": "Not a minus, but you could also use the fetch api for new code instead of ajax if you don\u0027t care about ie11.",
+      "revId": "bf9b8c1e709d6e0dc2c070446d9b4dd2bd0932b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd77eb78_aa80bd75",
+        "filename": "src/templates/workflow/confirm.html",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-03T20:08:02Z",
+      "side": 1,
+      "message": "I could go either way with this.\nYou could do `confirm_succeeded|yesno:\"true,false\"`, then in the Python code, it doesn\u0027t need to be `\"true\"`, and instead, just `True`. A bit more intuitive imo.",
+      "revId": "bf9b8c1e709d6e0dc2c070446d9b4dd2bd0932b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f721ec0e_70a53d10",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 5
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-03T20:08:02Z",
+      "side": 1,
+      "message": "I just noticed this, but shouldn\u0027t this use Django\u0027s static tag? (+ All the other places were static files are used)",
+      "revId": "bf9b8c1e709d6e0dc2c070446d9b4dd2bd0932b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d68d71e6_ddeeb0c0",
+        "filename": "src/workflow/workflow_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-03T20:08:02Z",
+      "side": 1,
+      "message": "something inside of me is saying to reverse() your homepage.",
+      "revId": "bf9b8c1e709d6e0dc2c070446d9b4dd2bd0932b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c3a6402_ac840121",
+        "filename": "src/workflow/workflow_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-03T20:08:02Z",
+      "side": 1,
+      "message": "Parens not needed",
+      "revId": "bf9b8c1e709d6e0dc2c070446d9b4dd2bd0932b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4858e654_d69e241a",
+        "filename": "src/workflow/workflow_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-03T20:08:02Z",
+      "side": 1,
+      "message": "len() can be removed, since a list is truthy",
+      "revId": "bf9b8c1e709d6e0dc2c070446d9b4dd2bd0932b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
