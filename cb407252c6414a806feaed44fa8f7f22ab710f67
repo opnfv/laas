@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dba06536_95af4253",
+        "filename": "src/templates/config_bundle/steps/define_software.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 1,
+      "message": "whoops, onleave starts up here",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 1
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8492579_9a6b1bfc",
+        "filename": "src/templates/dashboard/multiple_select_filter_widget.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 1,
+      "message": "should this be a call or just a function ref",
+      "range": {
+        "startLine": 44,
+        "startChar": 66,
+        "endLine": 44,
+        "endChar": 69
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae437153_4c499e14",
+        "filename": "src/templates/dashboard/multiple_select_filter_widget.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 1,
+      "message": "what\u0027s going on here?",
+      "range": {
+        "startLine": 44,
+        "startChar": 35,
+        "endLine": 44,
+        "endChar": 41
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b86408e1_7ff46c62",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 1,
+      "message": "prints",
+      "range": {
+        "startLine": 79,
+        "startChar": 6,
+        "endLine": 79,
+        "endChar": 15
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dbe9c60e_2b0f228e",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 1,
+      "message": "noop?",
+      "range": {
+        "startLine": 134,
+        "startChar": 8,
+        "endLine": 134,
+        "endChar": 15
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c557213_1bca7a1c",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 1,
+      "message": "name should be changed, as this does more than update breadcrumbs",
+      "range": {
+        "startLine": 137,
+        "startChar": 19,
+        "endLine": 137,
+        "endChar": 30
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3de9cad9_13185ec7",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 1,
+      "message": "can we just pass in content here rather than expecting a dict with content as the only needed key/val?",
+      "range": {
+        "startLine": 244,
+        "startChar": 33,
+        "endLine": 244,
+        "endChar": 53
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fff8b956_30dc1237",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 1,
+      "message": "should be /workflow/..., maybe just make it relative though since we don\u0027t have the weird inconsistency in URL base from the iframe",
+      "range": {
+        "startLine": 262,
+        "startChar": 19,
+        "endLine": 262,
+        "endChar": 22
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9eb2161_2488e0c7",
+        "filename": "src/workflow/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 1,
+      "message": "prints",
+      "range": {
+        "startLine": 94,
+        "startChar": 13,
+        "endLine": 94,
+        "endChar": 22
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d427daf_11f88d5a",
+        "filename": "src/workflow/workflow_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 1,
+      "message": "is this supposed to be a function call?",
+      "range": {
+        "startLine": 85,
+        "startChar": 24,
+        "endLine": 85,
+        "endChar": 26
+      },
+      "revId": "cb407252c6414a806feaed44fa8f7f22ab710f67",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}

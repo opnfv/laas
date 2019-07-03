@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3334f97b_a563187d",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-03T12:18:14Z",
+      "side": 0,
+      "message": "oof",
+      "range": {
+        "startLine": 147,
+        "startChar": 10,
+        "endLine": 150,
+        "endChar": 25
+      },
+      "revId": "e3389d42758feef5dad48e0bbcd5a0a3f6af4206",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
