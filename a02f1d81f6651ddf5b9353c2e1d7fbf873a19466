@@ -16,6 +16,29 @@
       "revId": "a02f1d81f6651ddf5b9353c2e1d7fbf873a19466",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "50df675b_19882b48",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 2091
+      },
+      "writtenOn": "2019-07-05T15:39:59Z",
+      "side": 1,
+      "message": "As far as I know, capital letters are also invalid in a hostname",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 178,
+        "endChar": 41
+      },
+      "revId": "a02f1d81f6651ddf5b9353c2e1d7fbf873a19466",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
