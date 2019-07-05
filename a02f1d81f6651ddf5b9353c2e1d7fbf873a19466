@@ -39,6 +39,30 @@
       "revId": "a02f1d81f6651ddf5b9353c2e1d7fbf873a19466",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91738305_edfb7b5c",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 2034
+      },
+      "writtenOn": "2019-07-05T15:42:51Z",
+      "side": 1,
+      "message": "DNS will treat all names as case insensitive, however this is nothing that states a host cannot use uppercase in its own name.  I know I have used hostnames like MyHost and it can be found as myhost or MYHOST equally well.\n\nThe only caveat would be if there is a check somewhere that does not allow duplicate hostnames.  That check would need to be case insensitive to prevent MyHost and myhost from being assigned to two different servers.",
+      "parentUuid": "50df675b_19882b48",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 178,
+        "endChar": 41
+      },
+      "revId": "a02f1d81f6651ddf5b9353c2e1d7fbf873a19466",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
