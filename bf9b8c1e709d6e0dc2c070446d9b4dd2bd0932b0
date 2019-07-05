@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9ddab828_35c7739d",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-05T14:10:47Z",
+      "side": 1,
+      "message": "what does fetch give us beyond what using standard XHR would? Just looking it up it seems fairly similar.",
+      "parentUuid": "e24b21c7_e2d55f17",
+      "revId": "bf9b8c1e709d6e0dc2c070446d9b4dd2bd0932b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd77eb78_aa80bd75",
         "filename": "src/templates/workflow/confirm.html",
         "patchSetId": 5
@@ -47,6 +65,24 @@
       "writtenOn": "2019-07-03T20:08:02Z",
       "side": 1,
       "message": "I just noticed this, but shouldn\u0027t this use Django\u0027s static tag? (+ All the other places were static files are used)",
+      "revId": "bf9b8c1e709d6e0dc2c070446d9b4dd2bd0932b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e98980ea_14a661cd",
+        "filename": "src/templates/workflow/viewport-base.html",
+        "patchSetId": 5
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-05T14:10:47Z",
+      "side": 1,
+      "message": "probably, yeah",
+      "parentUuid": "f721ec0e_70a53d10",
       "revId": "bf9b8c1e709d6e0dc2c070446d9b4dd2bd0932b0",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
