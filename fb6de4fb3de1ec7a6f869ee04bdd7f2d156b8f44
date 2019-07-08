@@ -22,6 +22,30 @@
       "revId": "fb6de4fb3de1ec7a6f869ee04bdd7f2d156b8f44",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49a8b651_48aad17a",
+        "filename": "src/templates/notifier/inbox.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-07-08T15:30:12Z",
+      "side": 1,
+      "message": "you would still need to handle it similarly to this in the front end. the current structure uses two separate lists and the \"all\" button simply just combines the two. this would result in a \"no messages\" along with a list of messages at the same time. if you wanted to handle this in the backend we would need to not filter them out by read/unread but instead just put the whole list in order",
+      "parentUuid": "ffd8fd8b_1377f2a7",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 5
+      },
+      "revId": "fb6de4fb3de1ec7a6f869ee04bdd7f2d156b8f44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
