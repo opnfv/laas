@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "49ffa9d8_c0706043",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-08T12:44:11Z",
+      "side": 1,
+      "message": "Yes, once we can decide on a correct validator implementation there will be another change that actually uses it everywhere.",
+      "parentUuid": "f2277a1b_24f4cb13",
+      "revId": "a02f1d81f6651ddf5b9353c2e1d7fbf873a19466",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50df675b_19882b48",
         "filename": "src/resource_inventory/resource_manager.py",
         "patchSetId": 2
@@ -77,6 +95,30 @@
       "writtenOn": "2019-07-08T11:31:28Z",
       "side": 1,
       "message": "This regex would allow a hostname such as \"host-\" with a trailing hyphen. Is that allowed?",
+      "range": {
+        "startLine": 178,
+        "startChar": 36,
+        "endLine": 178,
+        "endChar": 37
+      },
+      "revId": "a02f1d81f6651ddf5b9353c2e1d7fbf873a19466",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7d09e2a_ba9e73fe",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-08T12:44:11Z",
+      "side": 1,
+      "message": "Yes, that is a valid hostname",
+      "parentUuid": "8a3f7a60_2b961102",
       "range": {
         "startLine": 178,
         "startChar": 36,
