@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffd8fd8b_1377f2a7",
+        "filename": "src/templates/notifier/inbox.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-08T15:11:38Z",
+      "side": 1,
+      "message": "this could probably be handled with django templates to avoid having to do this on the front end",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 5
+      },
+      "revId": "fb6de4fb3de1ec7a6f869ee04bdd7f2d156b8f44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
