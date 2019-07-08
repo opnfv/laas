@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "aa48e478_70342d20",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-08T14:33:11Z",
+      "side": 1,
+      "message": "We will make these actual buttons in a separate change, and clean up the class/attribute adding",
+      "parentUuid": "19d0adb4_3d556e15",
+      "revId": "2f510b46083ff2edd3de3c3c1366a70384e333a2",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b1e050c_9f53ab9c",
         "filename": "src/workflow/views.py",
         "patchSetId": 6
