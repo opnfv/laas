@@ -63,6 +63,29 @@
       "revId": "a02f1d81f6651ddf5b9353c2e1d7fbf873a19466",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8a3f7a60_2b961102",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-08T11:31:28Z",
+      "side": 1,
+      "message": "This regex would allow a hostname such as \"host-\" with a trailing hyphen. Is that allowed?",
+      "range": {
+        "startLine": 178,
+        "startChar": 36,
+        "endLine": 178,
+        "endChar": 37
+      },
+      "revId": "a02f1d81f6651ddf5b9353c2e1d7fbf873a19466",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
