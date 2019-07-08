@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19d0adb4_3d556e15",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-08T14:12:22Z",
+      "side": 1,
+      "message": "I don\u0027t think you need these classes. Bootstrap auto styles the button when the disabled attribute it set.\n\n+ other occurrences.",
+      "revId": "2f510b46083ff2edd3de3c3c1366a70384e333a2",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1b1e050c_9f53ab9c",
+        "filename": "src/workflow/views.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-08T14:12:22Z",
+      "side": 1,
+      "message": "the default is already None",
+      "range": {
+        "startLine": 83,
+        "startChar": 52,
+        "endLine": 83,
+        "endChar": 59
+      },
+      "revId": "2f510b46083ff2edd3de3c3c1366a70384e333a2",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a3f6e4c1_693783c1",
+        "filename": "src/workflow/workflow_manager.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-08T14:12:22Z",
+      "side": 1,
+      "message": "parens not needed",
+      "revId": "2f510b46083ff2edd3de3c3c1366a70384e333a2",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
