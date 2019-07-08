@@ -85,6 +85,24 @@
       "revId": "b50e58a9a4451c39a8f30e547924d8a41254849d",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e65df9f1_d84435e8",
+        "filename": "src/resource_inventory/tests/test_managers.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-08T12:44:11Z",
+      "side": 1,
+      "message": "Interesting, thanks for the link!",
+      "parentUuid": "7ac19abd_3f045fbc",
+      "revId": "b50e58a9a4451c39a8f30e547924d8a41254849d",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
