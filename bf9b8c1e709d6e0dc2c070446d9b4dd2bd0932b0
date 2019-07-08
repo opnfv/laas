@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "26874040_d24df9f2",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-08T13:39:31Z",
+      "side": 1,
+      "message": "OK, I looked over it with Parker and we can do that in a separate change.",
+      "parentUuid": "86c882bd_d04e6a33",
+      "revId": "bf9b8c1e709d6e0dc2c070446d9b4dd2bd0932b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd77eb78_aa80bd75",
         "filename": "src/templates/workflow/confirm.html",
         "patchSetId": 5
