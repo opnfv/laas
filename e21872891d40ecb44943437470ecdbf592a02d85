@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e144761d_71e621f1",
+        "filename": "src/booking/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-09T15:02:39Z",
+      "side": 1,
+      "message": "Which would you recommend, 423 or 409?",
+      "parentUuid": "0e4664ab_e76f4b56",
+      "revId": "e21872891d40ecb44943437470ecdbf592a02d85",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7a598f7_cea58ef0",
         "filename": "src/templates/booking/booking_detail.html",
         "patchSetId": 1
