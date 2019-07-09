@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e4664ab_e76f4b56",
+        "filename": "src/booking/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-09T14:22:38Z",
+      "side": 1,
+      "message": "unauthorized seems like the wrong response?",
+      "revId": "e21872891d40ecb44943437470ecdbf592a02d85",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7a598f7_cea58ef0",
+        "filename": "src/templates/booking/booking_detail.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-09T14:22:38Z",
+      "side": 1,
+      "message": "Bootstrap forms should be used.\n\nIf not bootstrap forms, then bootstrap flex classes should be used.",
+      "revId": "e21872891d40ecb44943437470ecdbf592a02d85",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a599e8af_65481899",
+        "filename": "src/templates/booking/booking_detail.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-07-09T14:22:38Z",
+      "side": 1,
+      "message": "Not sure about other opinions, but I like it when the button says the action that will happen.\n\nSo in this case, it could say \"Reboot host\"",
+      "range": {
+        "startLine": 326,
+        "startChar": 106,
+        "endLine": 326,
+        "endChar": 114
+      },
+      "revId": "e21872891d40ecb44943437470ecdbf592a02d85",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
