@@ -102,3 +102,9 @@ class HostReImageForm(forms.Form):
 
     image_id = forms.IntegerField()
     host_id = forms.IntegerField()
+
+
+class HostSnapshotForm(forms.Form):
+    snapshot_name = forms.CharField(max_length=200)
+    snapshot_description = forms.CharField(widget=forms.Textarea)
+    host_id = forms.IntegerField()
