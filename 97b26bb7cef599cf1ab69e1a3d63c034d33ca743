@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f398887f_08e2b732",
+        "filename": "src/workflow/tests/test_steps.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-09T19:46:59Z",
+      "side": 1,
+      "message": "taken care of",
+      "range": {
+        "startLine": 255,
+        "startChar": 2,
+        "endLine": 255,
+        "endChar": 21
+      },
+      "revId": "97b26bb7cef599cf1ab69e1a3d63c034d33ca743",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
