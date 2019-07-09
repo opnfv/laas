@@ -23,7 +23,7 @@ from resource_inventory.resource_manager import ResourceManager
 from account.models import Lab
 from booking.models import Booking
 from booking.stats import StatisticsManager
-from booking.forms import HostReImageForm
+from booking.forms import HostReImageForm, HostSnapshotForm
 from api.models import JobFactory
 from workflow.views import login
 from booking.forms import QuickBookingForm
@@ -171,11 +171,11 @@ def booking_detail_view(request, booking_id):
 def booking_modify_image(request, booking_id):
     form = HostReImageForm(request.POST)
     if form.is_valid():
-        booking = Booking.objects.get(id=booking_id)
+        booking = get_object_or_404(Booking, id=booking_id)
         if request.user != booking.owner:
-            return HttpResponse("unauthorized")
+            return HttpResponse("unauthorized", status=403)
         if timezone.now() > booking.end:
-            return HttpResponse("unauthorized")
+            return HttpResponse("unauthorized", status=403)
         new_image = Image.objects.get(id=form.cleaned_data['image_id'])
         host = Host.objects.get(id=form.cleaned_data['host_id'])
         host.config.image = new_image
@@ -183,6 +183,38 @@ def booking_modify_image(request, booking_id):
         JobFactory.reimageHost(new_image, booking, host)
         return HttpResponse(new_image.name)
     return HttpResponse("error")
+
+
+def booking_make_snapshot(request, booking_id):
+    form = HostSnapshotForm(request.POST)
+    if form.is_valid():
+        booking = get_object_or_404(Booking, id=booking_id)
+        host = Host.objects.get(id=form.cleaned_data['host_id'])
+        if request.user != booking.owner:
+            return HttpResponse("unauthorized", status=403)
+        if timezone.now() > booking.end:
+            return HttpResponse("resource ownership changed", status=409)
+        image = Image.objects.create(
+            from_lab=booking.lab,
+            name=form.cleaned_data['snapshot_name'],
+            description=form.cleaned_data['snapshot_description'],
+            public=False,
+            lab_id=-1,
+            owner=booking.owner,
+            host_type=host.profile,
+        )
+        try:
+            current_image = host.config.image
+            image.os = current_image.os
+            image.save()
+        except Exception:
+            pass
+
+        JobFactory.makeSnapshotTask(image, booking, host)
+
+        return HttpResponse(image.name)
+    else:
+        return HttpResponse("error", status=422)
 
 
 def booking_stats_view(request):

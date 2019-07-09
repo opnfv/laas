@@ -34,7 +34,8 @@ from booking.views import (
     booking_stats_view,
     booking_stats_json,
     quick_create,
-    booking_modify_image
+    booking_modify_image,
+    booking_make_snapshot
 )
 
 app_name = "booking"
@@ -47,6 +48,7 @@ urlpatterns = [
     url(r'^delete/(?P<booking_id>[0-9]+)/$', BookingDeleteView.as_view(), name='delete'),
     url(r'^delete/(?P<booking_id>[0-9]+)/confirm/$', bookingDelete, name='delete_booking'),
     url(r'^modify/(?P<booking_id>[0-9]+)/image/$', booking_modify_image, name='modify_booking_image'),
+    url(r'^modify/(?P<booking_id>[0-9]+)/snapshot/$', booking_make_snapshot, name='modify_make_snapshot'),
     url(r'^list/$', BookingListView.as_view(), name='list'),
     url(r'^stats/$', booking_stats_view, name='stats'),
     url(r'^stats/json$', booking_stats_json, name='stats_json'),
