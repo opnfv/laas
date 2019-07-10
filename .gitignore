@@ -42,3 +42,7 @@ config.env
 # rsa key files
 src/account/rsa.pem
 src/account/rsa.pub
+
+#coverage testing reports
+htmlcov/
+.coverage

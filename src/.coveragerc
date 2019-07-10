@@ -1,0 +1,20 @@
+[run]
+omit =
+    # don't count migrations
+    */migrations/*
+
+    # don't count django files
+    */urls.py
+    */admin.py
+    */apps.py
+    */settings.py
+    manage.py
+
+    # dont include init files
+    */__init__.py
+
+    # no need to include actual test files
+    */tests/*
+    dashboard/testing_utils.py
+
+source = .
