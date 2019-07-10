@@ -13,4 +13,4 @@ find . -type f -name "*.py" -not -name "manage.py" | xargs flake8 --count --igno
 
 
 # this file should be executed from the dir it is in
-docker exec -it dg01 python manage.py test
+docker exec -it dg01 coverage run --source='.' manage.py test
