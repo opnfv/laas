@@ -47,3 +47,6 @@ log-rmq:
 
 log-worker:
 	docker-compose logs worker
+
+htmlcov:
+	docker exec dg01 coverage html && docker cp -r /pharos_dashboard/htmlcov .
