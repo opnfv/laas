@@ -198,8 +198,8 @@ def make_generic_host(grb, host_profile, hostname):
 
 def make_user(is_superuser=False, username="testuser",
               password="testpassword", email="default_email@user.com"):
-    user = User.objects.get_or_create(username=username, email=email, password=password)[0]
-
+    user = User.objects.get_or_create(username=username, email=email)[0]
+    user.set_password(password)
     user.is_superuser = is_superuser
     user.save()
 
