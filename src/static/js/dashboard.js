@@ -163,7 +163,15 @@ function add_workflow(type) {
     });
 }
 
-function pop_workflow() {
+function pop_workflow(confirm_leave) {
+    // make sure user actually wants to leave
+    if( confirm_leave )
+    {
+        let do_leave = confirm("You have unsaved changes that will be lost, are you sure you want to exit this workflow?");
+        if( !do_leave ) {
+            return;
+        }
+    }
     data = $.ajax({
         type: "POST",
         url: "/workflow/pop/",
