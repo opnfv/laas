@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14e202a8_3d454e3c",
+        "filename": "src/templates/booking/booking_detail.html",
+        "patchSetId": 3
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-10T15:29:41Z",
+      "side": 1,
+      "message": "This error handling should happen based on HTTP Codes. For example, if the booking expires, the responseText is neither \"unauthorized\" nor \"error\". You will then replace the host_image element with some other error message.\nYou should handle our errors explicitly and have a trap for all \u003e\u003d400 errors. (or, of course, you could use jquery / fetch and have most of this done for you.)",
+      "range": {
+        "startLine": 389,
+        "startChar": 1,
+        "endLine": 397,
+        "endChar": 20
+      },
+      "revId": "7ae6045df783f8c31d0445637b9bdd3f6cf6397f",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
