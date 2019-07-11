@@ -51,6 +51,24 @@
       "revId": "dfed5809bbc7f055b7cbfdb81a8b397d4c5454b2",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "894f96d1_09ac1158",
+        "filename": "src/dashboard/testing_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-11T13:17:30Z",
+      "side": 1,
+      "message": "This fixes a bug introduced in https://gerrit.opnfv.org/gerrit/#/c/68199/\n\nWe used to use User.objects.create_user(...), which hashes the password for you. When we switched to get_or_create(...), we stopped getting the password hashing for free. So we have to user the set_password() function to correctly set the password in the database",
+      "parentUuid": "15f2b6a5_cb661cdc",
+      "revId": "dfed5809bbc7f055b7cbfdb81a8b397d4c5454b2",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
