@@ -33,6 +33,24 @@
       "revId": "dfed5809bbc7f055b7cbfdb81a8b397d4c5454b2",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8af04ba_939df59e",
+        "filename": "src/dashboard/testing_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-11T13:16:42Z",
+      "side": 1,
+      "message": "Parker explained it to me this morning, apparently the second one actually hashes the password and stores it while originally it would just store the plain text password and then fail to auth",
+      "parentUuid": "15f2b6a5_cb661cdc",
+      "revId": "dfed5809bbc7f055b7cbfdb81a8b397d4c5454b2",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
