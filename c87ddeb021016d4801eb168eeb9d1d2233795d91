@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c7ebf24_73bdc20d",
+        "filename": "src/.coveragerc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-12T14:54:09Z",
+      "side": 1,
+      "message": "ws",
+      "range": {
+        "startLine": 2,
+        "startChar": 6,
+        "endLine": 2,
+        "endChar": 7
+      },
+      "revId": "c87ddeb021016d4801eb168eeb9d1d2233795d91",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
