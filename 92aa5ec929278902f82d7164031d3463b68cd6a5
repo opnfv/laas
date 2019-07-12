@@ -22,6 +22,75 @@
       "revId": "92aa5ec929278902f82d7164031d3463b68cd6a5",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93c4632b_5c0a7008",
+        "filename": "src/.coveragerc",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-12T12:26:40Z",
+      "side": 1,
+      "message": "I feel as though we should still count urls.py at least to verify that all of these files are at least parsed so we know we don\u0027t have hiding syntax errors",
+      "range": {
+        "startLine": 7,
+        "startChar": 6,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "92aa5ec929278902f82d7164031d3463b68cd6a5",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61769d08_b0812f5f",
+        "filename": "src/.coveragerc",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-12T12:26:40Z",
+      "side": 1,
+      "message": "we do have some logic in a few __init__.py files AFAIK so I wouldn\u0027t exclude them",
+      "range": {
+        "startLine": 13,
+        "startChar": 3,
+        "endLine": 13,
+        "endChar": 17
+      },
+      "revId": "92aa5ec929278902f82d7164031d3463b68cd6a5",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92bec0bd_cf1ac8da",
+        "filename": "test.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-07-12T12:26:40Z",
+      "side": 1,
+      "message": "is this just for jenkins I\u0027m guessing? We\u0027ll probably want a way of extracting the report for development purposes as this report isn\u0027t super useful for seeing *what* was/wasn\u0027t covered",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 36
+      },
+      "revId": "92aa5ec929278902f82d7164031d3463b68cd6a5",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
