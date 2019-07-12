@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "fe95e8d3_45cd0d04",
+        "filename": "src/.coveragerc",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-12T14:32:37Z",
+      "side": 1,
+      "message": "the urls file itself will always be parsed by django in full. If it has a syntax error, that will be caught in tests that make requests to the urls.",
+      "parentUuid": "93c4632b_5c0a7008",
+      "range": {
+        "startLine": 7,
+        "startChar": 6,
+        "endLine": 7,
+        "endChar": 13
+      },
+      "revId": "92aa5ec929278902f82d7164031d3463b68cd6a5",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61769d08_b0812f5f",
         "filename": "src/.coveragerc",
         "patchSetId": 3
@@ -71,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "a488cdc8_663c3c60",
+        "filename": "src/.coveragerc",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-12T14:32:37Z",
+      "side": 1,
+      "message": "But we don\u0027t explicitly test the init files. They are always parsed by the python runtime, so its just clutter in the coverage report",
+      "parentUuid": "61769d08_b0812f5f",
+      "range": {
+        "startLine": 13,
+        "startChar": 3,
+        "endLine": 13,
+        "endChar": 17
+      },
+      "revId": "92aa5ec929278902f82d7164031d3463b68cd6a5",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "92bec0bd_cf1ac8da",
         "filename": "test.sh",
         "patchSetId": 3
@@ -82,6 +130,30 @@
       "writtenOn": "2019-07-12T12:26:40Z",
       "side": 1,
       "message": "is this just for jenkins I\u0027m guessing? We\u0027ll probably want a way of extracting the report for development purposes as this report isn\u0027t super useful for seeing *what* was/wasn\u0027t covered",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 36
+      },
+      "revId": "92aa5ec929278902f82d7164031d3463b68cd6a5",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2c03d76_34a9d14e",
+        "filename": "test.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-12T14:32:37Z",
+      "side": 1,
+      "message": "What would you like to be added to the report? Its pretty congfigurable.\n\nAnd how would you want the report \"extracted\"? We could generate html, but personally I don\u0027t like the overhead of opening a page in firefox when I\u0027m working on the command line. Copying the .coverage file out of the docker container also breaks it because it loses its relative pathing.",
+      "parentUuid": "92bec0bd_cf1ac8da",
       "range": {
         "startLine": 19,
         "startChar": 4,
