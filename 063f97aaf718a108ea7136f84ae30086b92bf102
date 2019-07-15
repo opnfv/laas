@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e6fbecc_ac9ebedc",
+        "filename": "tests/js/jquery-3.4.1.min.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-15T19:29:19Z",
+      "side": 1,
+      "message": "Is this meant to be here?",
+      "revId": "063f97aaf718a108ea7136f84ae30086b92bf102",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08fce94d_bb901ec9",
+        "filename": "tests/package-lock.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-15T19:29:19Z",
+      "side": 1,
+      "message": "Is this meant to be here? And is there any way to trim down the total number of packages we rely on?",
+      "revId": "063f97aaf718a108ea7136f84ae30086b92bf102",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0177d228_9d42b384",
+        "filename": "tests/tests/test.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-15T19:29:19Z",
+      "side": 1,
+      "message": "whitespace",
+      "range": {
+        "startLine": 212,
+        "startChar": 41,
+        "endLine": 212,
+        "endChar": 42
+      },
+      "revId": "063f97aaf718a108ea7136f84ae30086b92bf102",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
