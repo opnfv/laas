@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "28c1cec5_10e45dc9",
+        "filename": "tests/tests/test.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 2034
+      },
+      "writtenOn": "2019-07-16T15:16:42Z",
+      "side": 1,
+      "message": "Reference data items like this could probably go into a file of their own so they can be re-used and maintained as the model they represent changes.",
+      "revId": "02c027bb39f181c6c7cb0331890170e4569b1410",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a310d0a2_cbcb5863",
         "filename": "tests/tests/test.js",
         "patchSetId": 2
