@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a310d0a2_cbcb5863",
+        "filename": "tests/tests/test.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-16T13:33:39Z",
+      "side": 1,
+      "message": "Should probably go in a before() or beforeEach() function, etc. Ideally all code should be wrapped in a mocha function.",
+      "range": {
+        "startLine": 91,
+        "startChar": 6,
+        "endLine": 115,
+        "endChar": 30
+      },
+      "revId": "02c027bb39f181c6c7cb0331890170e4569b1410",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10dd20bd_21acf3f5",
+        "filename": "tests/tests/test.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-16T13:33:39Z",
+      "side": 1,
+      "message": "If this is shared state, it should be reset using an afterEach function. Alternatively, depending on how slow it is, the setup function can be run beforeEach() so that we don\u0027t have to worry about sharing state.",
+      "range": {
+        "startLine": 207,
+        "startChar": 0,
+        "endLine": 208,
+        "endChar": 42
+      },
+      "revId": "02c027bb39f181c6c7cb0331890170e4569b1410",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b44b9be_15da3c3f",
+        "filename": "tests/tests/test.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-07-16T13:33:39Z",
+      "side": 1,
+      "message": "Might be better to click the \u0027okay\u0027 button directly here - That would be a better test of the behavior of the network window",
+      "range": {
+        "startLine": 278,
+        "startChar": 0,
+        "endLine": 278,
+        "endChar": 41
+      },
+      "revId": "02c027bb39f181c6c7cb0331890170e4569b1410",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
