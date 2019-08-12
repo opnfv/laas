@@ -150,6 +150,18 @@ def current_jobs(request, lab_name=""):
     return JsonResponse(lab_manager.get_current_jobs(), safe=False)
 
 
+def lab_downtime(request, lab_name=""):
+    lab_token = request.META.get('HTTP_AUTH_TOKEN')
+    lab_manager = LabManagerTracker.get(lab_name, lab_token)
+    if request.method == "GET":
+        return JsonResponse(lab_manager.get_downtime_json(), safe=False)
+    if request.method == "POST":
+        current_downtime = lab_manager.get_downtime()
+        if current_downtime.exists():
+            return JsonResponse({"error": "Lab is already in downtime"})
+        return lab_manager.create_downtime(request.POST)
+
+
 def done_jobs(request, lab_name=""):
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)

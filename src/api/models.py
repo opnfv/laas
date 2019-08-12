@@ -13,6 +13,7 @@ from django.db import models
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.utils import timezone
 
 import json
 import uuid
@@ -30,6 +31,7 @@ from resource_inventory.models import (
 )
 from resource_inventory.idf_templater import IDFTemplater
 from resource_inventory.pdf_templater import PDFTemplater
+from account.models import Downtime
 
 
 class JobStatus(object):
@@ -66,6 +68,38 @@ class LabManager(object):
 
     def __init__(self, lab):
         self.lab = lab
+
+    def get_downtime(self):
+        return Downtime.objects.filter(start__lt=timezone.now(), end__gt=timezone.now(), lab=self.lab)
+
+    def get_downtime_json(self):
+        downtime = self.get_downtime().first()  # should only be one item in queryset
+        if downtime:
+            return {
+                "is_down": True,
+                "start": downtime.start,
+                "end": downtime.end,
+                "description": downtime.description
+            }
+        return {"is_down": False}
+
+    def create_downtime(self, request_data):
+        """
+        takes in a dictionary that describes the model.
+        {
+          "start": tz-formatted start time in UTC
+          "end": tz-formatted end time in UTC
+          "description": human text (optional)
+        }"""
+        # This function is not complete! There
+        # should be useful errors and strfime conversions
+        Downtime.objects.create(
+            start=request_data.get("start"),
+            end=request_data.get("end"),
+            description=request_data.get("description"),
+            lab=self.lab
+        )
+        return self.get_downtime_json()
 
     def update_host_remote_info(self, data, host_id):
         host = get_object_or_404(Host, labid=host_id, lab=self.lab)
