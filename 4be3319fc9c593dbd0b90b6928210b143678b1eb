@@ -22,6 +22,30 @@
       "revId": "4be3319fc9c593dbd0b90b6928210b143678b1eb",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd72dc2b_98525d85",
+        "filename": "src/api/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-08-13T14:25:23Z",
+      "side": 1,
+      "message": "Also, a way to set a downtime object\u0027s end date to \"now\" or some given date would be cool.",
+      "parentUuid": "ed1d4d06_70e03313",
+      "range": {
+        "startLine": 98,
+        "startChar": 12,
+        "endLine": 98,
+        "endChar": 40
+      },
+      "revId": "4be3319fc9c593dbd0b90b6928210b143678b1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
