@@ -46,6 +46,30 @@
       "revId": "4be3319fc9c593dbd0b90b6928210b143678b1eb",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a56b660a_b319910e",
+        "filename": "src/api/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-08-13T14:49:38Z",
+      "side": 1,
+      "message": "That\u0027s a great question. You could use reasonable defaults most of the time (e.g. 1 day). It might be useful to not have an end time, but then I would be worried about labs forgetting to ever end it manually.\n\nAnd thats a good idea. Maybe a DELETE to this same endpoint.",
+      "parentUuid": "ed1d4d06_70e03313",
+      "range": {
+        "startLine": 98,
+        "startChar": 12,
+        "endLine": 98,
+        "endChar": 40
+      },
+      "revId": "4be3319fc9c593dbd0b90b6928210b143678b1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
