@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99d3a6bb_b76fbf2b",
+        "filename": "src/account/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-08-15T19:58:45Z",
+      "side": 1,
+      "message": "is it a problem for downtime to overlap?",
+      "range": {
+        "startLine": 188,
+        "startChar": 12,
+        "endLine": 188,
+        "endChar": 52
+      },
+      "revId": "d78fcef6ec55dbaa225c6607bdac430539bf3f0b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebf3ed0e_d8ec66ff",
+        "filename": "src/account/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-08-15T19:58:45Z",
+      "side": 1,
+      "message": "should probably do this elsewhere as well, python 3 encourages just using plain super() without any args for the typical case where no multiple inheritance is going on",
+      "range": {
+        "startLine": 190,
+        "startChar": 20,
+        "endLine": 190,
+        "endChar": 36
+      },
+      "revId": "d78fcef6ec55dbaa225c6607bdac430539bf3f0b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebbed228_0fa1814d",
+        "filename": "src/api/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-08-15T19:58:45Z",
+      "side": 1,
+      "message": "nice",
+      "range": {
+        "startLine": 89,
+        "startChar": 8,
+        "endLine": 93,
+        "endChar": 9
+      },
+      "revId": "d78fcef6ec55dbaa225c6607bdac430539bf3f0b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "76a07240_6ba78d9a",
+        "filename": "src/api/views.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-08-15T19:58:45Z",
+      "side": 1,
+      "message": "this operation should probably either be idempotent by extending the current downtime to the proposed end time or otherwise append a new downtime (if we associate a reason with downtime or any other attributes) at the current time. Allowing overlapping downtimes would get around this.",
+      "range": {
+        "startLine": 170,
+        "startChar": 8,
+        "endLine": 170,
+        "endChar": 80
+      },
+      "revId": "d78fcef6ec55dbaa225c6607bdac430539bf3f0b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88600dc3_93a184d3",
+        "filename": "src/api/views.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-08-15T19:58:45Z",
+      "side": 1,
+      "message": "this op could be idempotent so the lab doesn\u0027t have to know what state it was in previously on an event change, and so a retransmit isn\u0027t an issue, just a broadcast of current state",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 76
+      },
+      "revId": "d78fcef6ec55dbaa225c6607bdac430539bf3f0b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
