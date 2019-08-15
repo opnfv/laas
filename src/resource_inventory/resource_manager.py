@@ -144,9 +144,9 @@ class ResourceManager:
         host_full_set = Host.objects.filter(lab__name__exact=labName, profile=genericHost.profile)
         if not host_full_set.first():
             raise ResourceExistenceException("No matching servers found")
-        host_set = host_full_set.filter(booked=False)
+        host_set = host_full_set.filter(booked=False, working=True)
         if not host_set.first():
-            raise ResourceAvailabilityException("No unbooked hosts match requested hosts")
+            raise ResourceAvailabilityException("No unbooked, working hosts match requested hosts")
         host = host_set.first()
         host.booked = True
         host.template = genericHost
