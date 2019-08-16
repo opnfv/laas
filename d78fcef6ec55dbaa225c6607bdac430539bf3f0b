@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5155f444_bdc988e0",
+        "filename": "src/account/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-08-16T13:18:16Z",
+      "side": 1,
+      "message": "It just doesn\u0027t make any sense. A lab can\u0027t be down twice.",
+      "parentUuid": "99d3a6bb_b76fbf2b",
+      "range": {
+        "startLine": 188,
+        "startChar": 12,
+        "endLine": 188,
+        "endChar": 52
+      },
+      "revId": "d78fcef6ec55dbaa225c6607bdac430539bf3f0b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ebf3ed0e_d8ec66ff",
         "filename": "src/account/models.py",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-08-15T19:58:45Z",
       "side": 1,
       "message": "should probably do this elsewhere as well, python 3 encourages just using plain super() without any args for the typical case where no multiple inheritance is going on",
+      "range": {
+        "startLine": 190,
+        "startChar": 20,
+        "endLine": 190,
+        "endChar": 36
+      },
+      "revId": "d78fcef6ec55dbaa225c6607bdac430539bf3f0b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75630c6c_5f079055",
+        "filename": "src/account/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-08-16T13:18:16Z",
+      "side": 1,
+      "message": "This is the recommended way of custom verification (we do this elsewhere) but I can remove the args to super",
+      "parentUuid": "ebf3ed0e_d8ec66ff",
       "range": {
         "startLine": 190,
         "startChar": 20,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "b1eb0222_4c68c8c2",
+        "filename": "src/api/views.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-08-16T13:18:16Z",
+      "side": 1,
+      "message": "Having a way to extend downtime could be useful, but I don\u0027t want overlapping downtime objects.",
+      "parentUuid": "76a07240_6ba78d9a",
+      "range": {
+        "startLine": 170,
+        "startChar": 8,
+        "endLine": 170,
+        "endChar": 80
+      },
+      "revId": "d78fcef6ec55dbaa225c6607bdac430539bf3f0b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88600dc3_93a184d3",
         "filename": "src/api/views.py",
         "patchSetId": 2
@@ -105,6 +177,30 @@
       "writtenOn": "2019-08-15T19:58:45Z",
       "side": 1,
       "message": "this op could be idempotent so the lab doesn\u0027t have to know what state it was in previously on an event change, and so a retransmit isn\u0027t an issue, just a broadcast of current state",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 186,
+        "endChar": 76
+      },
+      "revId": "d78fcef6ec55dbaa225c6607bdac430539bf3f0b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de6566be_4482e6bf",
+        "filename": "src/api/views.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-08-16T13:18:16Z",
+      "side": 1,
+      "message": "You can\u0027t delete something that doesn\u0027t exist. If a lab \"retransmits\" and tries to delete something twice, that\u0027s an error. I would rather not try and hide that.",
+      "parentUuid": "88600dc3_93a184d3",
       "range": {
         "startLine": 178,
         "startChar": 0,
