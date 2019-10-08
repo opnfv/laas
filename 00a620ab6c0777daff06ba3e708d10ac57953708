@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59fe82d6_7b1efb0f",
+        "filename": "docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-10-08T14:15:16Z",
+      "side": 1,
+      "message": "We are going to have to manually rename / copy the volumes over to avoid losing all the data in the pharos-* volumes",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 31
+      },
+      "revId": "00a620ab6c0777daff06ba3e708d10ac57953708",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "babaa8f1_6d75ee05",
+        "filename": "src/resource_inventory/pdf_templater.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-10-08T14:15:16Z",
+      "side": 1,
+      "message": "I just modified the URL, it should be https://wiki.opnfv.org/display/INF/LaaS",
+      "range": {
+        "startLine": 46,
+        "startChar": 50,
+        "endLine": 46,
+        "endChar": 61
+      },
+      "revId": "00a620ab6c0777daff06ba3e708d10ac57953708",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea286336_1b6c2cb9",
+        "filename": "src/templates/dashboard/landing.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-10-08T14:15:16Z",
+      "side": 1,
+      "message": "Pharos is correct here",
+      "range": {
+        "startLine": 29,
+        "startChar": 79,
+        "endLine": 29,
+        "endChar": 84
+      },
+      "revId": "00a620ab6c0777daff06ba3e708d10ac57953708",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
