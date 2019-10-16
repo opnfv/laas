@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c9bd9639_b52d63a9",
+        "filename": "docker-compose.yml",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 6
+      },
+      "writtenOn": "2019-10-16T18:20:02Z",
+      "side": 1,
+      "message": "Do you have access to do these pushes?\n\nNEW:\nopnfv / laas-mq -empty\nopnfv / laas-celery -empty\nopnfv / laas-dashboard -empty\n\nOLD:\nopnfv / pharos-tools-laas-dashboard\nUpdated 4 months ago\nopnfv / pharos-tools-laas-celery\nUpdated 4 months ago\nopnfv / pharos-tools-laas-mq\nUpdated a year ago\n\nI believe these are the last steps before we can merge these patchsets.",
+      "parentUuid": "59fe82d6_7b1efb0f",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 31
+      },
+      "revId": "00a620ab6c0777daff06ba3e708d10ac57953708",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "babaa8f1_6d75ee05",
         "filename": "src/resource_inventory/pdf_templater.py",
         "patchSetId": 2
