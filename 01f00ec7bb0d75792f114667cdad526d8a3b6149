@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ccf960cd_509bab4f",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-11-06T20:01:58Z",
+      "side": 1,
+      "message": "Just a suggestion, but you may want to utilize a per-object level permission library for this:\nhttps://github.com/django-guardian/django-guardian\nGranted, it\u0027s a bit more \"involved\" to use compared to just adding another column to your database.\n\n(I\u0027ll +1 this PR whether or not this is used, since the use case is not very complex)",
+      "revId": "01f00ec7bb0d75792f114667cdad526d8a3b6149",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
