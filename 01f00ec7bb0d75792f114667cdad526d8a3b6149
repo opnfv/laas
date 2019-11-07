@@ -16,6 +16,52 @@
       "revId": "01f00ec7bb0d75792f114667cdad526d8a3b6149",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d55f1017_7c150fdc",
+        "filename": "src/workflow/booking_workflow.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-11-07T15:10:48Z",
+      "side": 1,
+      "message": "If I am reading this right, a resource which is marked as both hidden and public will be displayed. I don\u0027t think this is what we want - the admins should be able to mark anything hidden and have it hide if there is something that needs to be fixed.\n\nI think we want something like:\n(owner | public) \u0026 !hidden",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 101
+      },
+      "revId": "01f00ec7bb0d75792f114667cdad526d8a3b6149",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7b1dcef_cd2e0680",
+        "filename": "src/workflow/booking_workflow.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-11-07T15:10:48Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 86,
+        "startChar": 40,
+        "endLine": 86,
+        "endChar": 41
+      },
+      "revId": "01f00ec7bb0d75792f114667cdad526d8a3b6149",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
