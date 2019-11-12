@@ -116,12 +116,12 @@ class GenericResourceBundle(models.Model):
     public = models.BooleanField(default=False)
     hidden = models.BooleanField(default=False)
 
-    def getHosts(self):
-        return_hosts = []
+    def getResources(self):
+        my_resources = []
         for genericResource in self.generic_resources.all():
-            return_hosts.append(genericResource.getHost())
+            my_resources.append(genericResource.getResource())
 
-        return return_hosts
+        return my_resources
 
     def __str__(self):
         return self.name
@@ -153,12 +153,39 @@ class Vlan(models.Model):
         return str(self.vlan_id) + ("_T" if self.tagged else "")
 
 
+class ConfigState:
+    NEW = 0
+    RESET = 100
+    CLEAN = 200
+
+
+class Resource(models.Model):
+    def get_configuration(self, state):
+        """
+        Returns the desired configuration for this host as a
+        JSON object as defined in the rest api spec.
+        state is a ConfigState
+        TODO: implement
+        TODO: single method, or different methods for hw, network, snapshot, etc?
+        """
+        raise NotImplementedError("Must implement in concrete Resource classes")
+
+    def reserve(self):
+        """
+        Reserves this resource for its currently
+        assigned booking.
+        TODO: implement
+        """
+        raise NotImplementedError("Must implement in concrete Resource classes")
+
+
 class GenericResource(models.Model):
     bundle = models.ForeignKey(GenericResourceBundle, related_name='generic_resources', on_delete=models.CASCADE)
     hostname_validchars = RegexValidator(regex=r'(?=^.{1,253}$)(?=(^([A-Za-z0-9\-\_]{1,62}\.)*[A-Za-z0-9\-\_]{1,63}$))', message="Enter a valid hostname. Full domain name may be 1-253 characters, each hostname 1-63 characters (including suffixed dot), and valid characters for hostnames are A-Z, a-z, 0-9, hyphen (-), and underscore (_)")
     name = models.CharField(max_length=200, validators=[hostname_validchars])
 
-    def getHost(self):
+    def getResource(self):
+        # TODO: This will have to be dealt with
         return self.generic_host
 
     def __str__(self):
@@ -183,7 +210,7 @@ class GenericHost(models.Model):
 
 
 # Physical, actual resources
-class ResourceBundle(models.Model):
+class ResourceBundle(Resource):
     id = models.AutoField(primary_key=True)
     template = models.ForeignKey(GenericResourceBundle, on_delete=models.SET_NULL, null=True)
 
@@ -336,7 +363,7 @@ def get_default_remote_info():
 
 
 # Concrete host, actual machine in a lab
-class Host(models.Model):
+class Host(Resource):
     id = models.AutoField(primary_key=True)
     template = models.ForeignKey(GenericHost, on_delete=models.SET_NULL, null=True)
     booked = models.BooleanField(default=False)
@@ -353,6 +380,18 @@ class Host(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_configuration(self, state):
+        ipmi = state == ConfigState.NEW
+        power = "off" if state == ConfigState.CLEAN else "on"
+
+        return {
+            "id": self.labid,
+            "image": self.config.image.lab_id,
+            "hostname": self.template.resource.name,
+            "power": power,
+            "ipmi_create": str(ipmi)
+        }
 
 
 class Interface(models.Model):
