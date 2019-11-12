@@ -71,7 +71,7 @@ class ResourceManager:
     # public interface
     def deleteResourceBundle(self, resourceBundle):
         for host in Host.objects.filter(bundle=resourceBundle):
-            self.releaseHost(host)
+            host.release()
         resourceBundle.delete()
 
     def get_vlans(self, genericResourceBundle):
@@ -154,12 +154,6 @@ class ResourceManager:
         host.save()
         return host
 
-    def releaseHost(self, host):
-        host.template = None
-        host.bundle = None
-        host.booked = False
-        host.save()
-
     def releaseNetworks(self, grb, vlan_manager, vlans):
         for net_name, vlan_id in vlans.items():
             net = Network.objects.get(name=net_name, bundle=grb)
@@ -172,7 +166,7 @@ class ResourceManager:
         vlan_manager = grb.lab.vlan_manager
         self.releaseNetworks(grb, vlan_manager, vlans)
         for host in hosts:
-            self.releaseHost(host)
+            host.release()
 
 
 class HostNameValidator(object):
