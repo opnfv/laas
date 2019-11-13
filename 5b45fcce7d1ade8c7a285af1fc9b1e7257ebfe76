@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "790cb8be_10919202",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-11-13T21:29:22Z",
+      "side": 1,
+      "message": "Is this in line with the suggested model structure? (IE is a network itself considered a resource?)",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c311e579_598e04ec",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-11-13T21:29:22Z",
+      "side": 1,
+      "message": "is this serialization supposed to be analogous to what a HardwareTask is now? If so, how are we dealing with networking setup?",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
