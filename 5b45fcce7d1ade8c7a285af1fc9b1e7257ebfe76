@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "0d02cb56_237353c3",
+        "filename": "src/api/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-11-13T21:29:22Z",
+      "side": 1,
+      "message": "I\u0027d honestly suggest moving this logic into the resources themselves since they manage their acquisition and state, and just have TaskManager aggregate the result of serializing all resources in the context of a status (so they serialize to an empty string in the context of a status they are a no-op from)",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65462d79_61d74be0",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-11-13T21:29:22Z",
+      "side": 1,
+      "message": "I\u0027d vote single method, it\u0027s the job of a single resource to completely serialize itself if we want to abstract things this way instead of with traits.\n\nThis does complicate things, though, for marking task completion",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "790cb8be_10919202",
         "filename": "src/resource_inventory/models.py",
         "patchSetId": 3
@@ -19,6 +53,23 @@
     },
     {
       "key": {
+        "uuid": "de7cbe25_5553c9be",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-11-13T21:29:22Z",
+      "side": 1,
+      "message": "I\u0027m a bit confused what the utility of this is",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c311e579_598e04ec",
         "filename": "src/resource_inventory/models.py",
         "patchSetId": 3
@@ -30,6 +81,23 @@
       "writtenOn": "2019-11-13T21:29:22Z",
       "side": 1,
       "message": "is this serialization supposed to be analogous to what a HardwareTask is now? If so, how are we dealing with networking setup?",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d34b2ba0_066d6eab",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2019-11-13T21:29:22Z",
+      "side": 1,
+      "message": "definitely cleaner :thumbs up:",
       "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
