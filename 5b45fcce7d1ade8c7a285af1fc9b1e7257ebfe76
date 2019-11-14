@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7109b0d8_66be4ce6",
+        "filename": "src/api/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-11-14T14:57:58Z",
+      "side": 1,
+      "message": "We could do it that way. I thought this was easier because we already have all the api stuff here. I think having the resources keep track of their own \"delta\" could be cumbersome, becuase the resource would have to know its previous states and the success / failure of all the api tasks related to it.\nI think its cleaner to have the resource report \"This is what I want\" and then have the api models massage that into a correct api payload with deltas calculated.\nIf you have a clean solution in mind you can submit it and we can at that.",
+      "parentUuid": "0d02cb56_237353c3",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "65462d79_61d74be0",
         "filename": "src/resource_inventory/models.py",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2019-11-13T21:29:22Z",
       "side": 1,
       "message": "I\u0027d vote single method, it\u0027s the job of a single resource to completely serialize itself if we want to abstract things this way instead of with traits.\n\nThis does complicate things, though, for marking task completion",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "144c7fa3_8eda81f3",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-11-14T14:57:58Z",
+      "side": 1,
+      "message": "Yeah, I go back and forth on this. If each resource presents one complete json object for its whole configuration, the parsing and manipulation of all the configs for a booking will be complicated.\nMaybe the best solution is to reduce the scope of each Resource. The Host Resource only creates a hardware config. The Network Resource creates the network config for all the resources its connected to, etc.",
+      "parentUuid": "65462d79_61d74be0",
       "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "76a4d954_b309fb48",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-11-14T14:57:58Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is the right model (maybe NetworkConnection) but I think it will be useful to treat a network as a resource. That way we can encapsulate the logic of reserving vlans / bandwidth and add features like e.g. TSN in the future.\n\nWhat do you think? We could also just push this responsibility into the resources with are connected to the network. Or maybe a mix of both, where a network has a get_configuration() method which internally calls get_net_config() of its connected resources. That might provide the best flexibility.",
+      "parentUuid": "790cb8be_10919202",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de7cbe25_5553c9be",
         "filename": "src/resource_inventory/models.py",
         "patchSetId": 3
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "09ac1fec_9dd00393",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-11-14T14:57:58Z",
+      "side": 1,
+      "message": "This line of code was used in a few places to check if an image was being used.\n\nIn the spirit of generalized resources, I thought it better to remove the direct query against Host. If we add a different kind of resource that also uses images, this change now only happens in one place.\n\nI was just grepping for uses of the Host model outside of the resource_inventory module to identify places where we need to create an interface to the resources",
+      "parentUuid": "de7cbe25_5553c9be",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c311e579_598e04ec",
         "filename": "src/resource_inventory/models.py",
         "patchSetId": 3
@@ -81,6 +153,24 @@
       "writtenOn": "2019-11-13T21:29:22Z",
       "side": 1,
       "message": "is this serialization supposed to be analogous to what a HardwareTask is now? If so, how are we dealing with networking setup?",
+      "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9357ab57_ead89a6c",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-11-14T14:57:58Z",
+      "side": 1,
+      "message": "Yes, this should be identical to the current hardware task. Per previous comments, networking config is a bit up in the air right now.",
+      "parentUuid": "c311e579_598e04ec",
       "revId": "5b45fcce7d1ade8c7a285af1fc9b1e7257ebfe76",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
