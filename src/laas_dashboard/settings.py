@@ -192,6 +192,10 @@ CELERYBEAT_SCHEDULE = {
         'task': 'dashboard.tasks.free_hosts',
         'schedule': timedelta(minutes=1)
     },
+    'notify_expiring': {
+        'task': 'notifier.tasks.notify_expiring',
+        'schedule': timedelta(hours=1)
+    },
 }
 
 # Notifier Settings
