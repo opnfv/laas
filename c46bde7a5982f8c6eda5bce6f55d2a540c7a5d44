@@ -1,0 +1,170 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3f9717b_866686b9",
+        "filename": "src/api/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-12-05T20:07:05Z",
+      "side": 1,
+      "message": "Since we don\u0027t return J, this is not needed anymore.\nIs \u0027id\u0027 still used anywhere? The method returns a dict with \u0027payload\u0027 but the \u0027id\u0027 key isn\u0027t set",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 299,
+        "endChar": 25
+      },
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1ccbfec_bb3c7e99",
+        "filename": "src/api/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-12-05T20:07:05Z",
+      "side": 1,
+      "message": "Same J and \u0027id\u0027 question here",
+      "range": {
+        "startLine": 337,
+        "startChar": 8,
+        "endLine": 338,
+        "endChar": 25
+      },
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e36977fe_2ea52c7f",
+        "filename": "src/api/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-12-05T20:07:05Z",
+      "side": 1,
+      "message": "I think this needs square brackets so that the argument is one single list",
+      "range": {
+        "startLine": 600,
+        "startChar": 15,
+        "endLine": 600,
+        "endChar": 64
+      },
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa082537_8f9a3dcb",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-12-05T20:07:05Z",
+      "side": 1,
+      "message": "Django asks about \"resource_ptr\" for both Host and ResourceBundle when trying to make migrations, how should this be done?",
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd57731d_969e4718",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-12-05T20:07:05Z",
+      "side": 1,
+      "message": "Needs to be capital K",
+      "range": {
+        "startLine": 197,
+        "startChar": 28,
+        "endLine": 197,
+        "endChar": 29
+      },
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5d325d1_14242637",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-12-05T20:07:05Z",
+      "side": 1,
+      "message": "I\u0027m a bit confused about the difference between Resource and GenericResource. Should we start refactoring to make more models inherit from the new \"Resource\" class?",
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eef29984_c1e15df6",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-12-05T20:07:05Z",
+      "side": 1,
+      "message": "\"id\" field clashes with the one in Resource, same goes for other classes inheriting from Resource",
+      "range": {
+        "startLine": 241,
+        "startChar": 4,
+        "endLine": 241,
+        "endChar": 43
+      },
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "494120e1_5ae1d2ad",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-12-05T20:07:05Z",
+      "side": 1,
+      "message": "Host class needs the release() method implemented",
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
