@@ -160,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "6a4f0e2e_cb96ea56",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-12-12T16:56:09Z",
+      "side": 1,
+      "message": "Note: Resources need to be made through code for the models that inherit from Resource to solve the \"resource_ptr\" issue",
+      "parentUuid": "fa082537_8f9a3dcb",
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd57731d_969e4718",
         "filename": "src/resource_inventory/models.py",
         "patchSetId": 4
@@ -176,6 +194,29 @@
         "startChar": 28,
         "endLine": 197,
         "endChar": 29
+      },
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32c79132_b67a2328",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2019-12-12T16:56:09Z",
+      "side": 1,
+      "message": "Note: Since we change the reference to a PhysicalNetwork instead of Network, we need a way to generate the correct objects to reference",
+      "range": {
+        "startLine": 197,
+        "startChar": 4,
+        "endLine": 197,
+        "endChar": 74
       },
       "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
