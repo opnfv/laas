@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "71318df3_5e712e97",
+        "filename": "src/api/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-12-12T16:45:36Z",
+      "side": 1,
+      "message": "Yeah, this looks like a mistake. We could delete \"J\" and add the id in the return statement",
+      "parentUuid": "c3f9717b_866686b9",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 299,
+        "endChar": 25
+      },
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a1ccbfec_bb3c7e99",
         "filename": "src/api/models.py",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "32ae257e_071de955",
+        "filename": "src/api/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-12-12T16:45:36Z",
+      "side": 1,
+      "message": "same answer",
+      "parentUuid": "a1ccbfec_bb3c7e99",
+      "range": {
+        "startLine": 337,
+        "startChar": 8,
+        "endLine": 338,
+        "endChar": 25
+      },
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e36977fe_2ea52c7f",
         "filename": "src/api/models.py",
         "patchSetId": 4
@@ -59,6 +107,30 @@
       "writtenOn": "2019-12-05T20:07:05Z",
       "side": 1,
       "message": "I think this needs square brackets so that the argument is one single list",
+      "range": {
+        "startLine": 600,
+        "startChar": 15,
+        "endLine": 600,
+        "endChar": 64
+      },
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96770295_2ff17116",
+        "filename": "src/api/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-12-12T16:45:36Z",
+      "side": 1,
+      "message": "correct",
+      "parentUuid": "e36977fe_2ea52c7f",
       "range": {
         "startLine": 600,
         "startChar": 15,
@@ -128,6 +200,24 @@
     },
     {
       "key": {
+        "uuid": "31a34e32_485b86a1",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-12-12T16:45:36Z",
+      "side": 1,
+      "message": "GenericResources are templates that get used over and over. A Resource is a model of a physical piece of hardware. The GenericResource does not change between bookings, but the Resource that implements the GenericResource can be different.",
+      "parentUuid": "b5d325d1_14242637",
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eef29984_c1e15df6",
         "filename": "src/resource_inventory/models.py",
         "patchSetId": 4
@@ -139,6 +229,30 @@
       "writtenOn": "2019-12-05T20:07:05Z",
       "side": 1,
       "message": "\"id\" field clashes with the one in Resource, same goes for other classes inheriting from Resource",
+      "range": {
+        "startLine": 241,
+        "startChar": 4,
+        "endLine": 241,
+        "endChar": 43
+      },
+      "revId": "c46bde7a5982f8c6eda5bce6f55d2a540c7a5d44",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e73c210f_fde63508",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-12-12T16:45:36Z",
+      "side": 1,
+      "message": "This field can likely be renamed or removed without too much hassle, if we need to.",
+      "parentUuid": "eef29984_c1e15df6",
       "range": {
         "startLine": 241,
         "startChar": 4,
