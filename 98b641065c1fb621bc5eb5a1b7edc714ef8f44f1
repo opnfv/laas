@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96cacee3_31621ac8",
+        "filename": "config.env.sample",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-12-19T19:36:10Z",
+      "side": 1,
+      "message": "Add a space after the comment character (and in other locations). Keeps it consistent with existing code, and it looks better imo",
+      "revId": "98b641065c1fb621bc5eb5a1b7edc714ef8f44f1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f57c1468_3c0fcec5",
+        "filename": "src/account/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-12-19T19:36:10Z",
+      "side": 1,
+      "message": "See https://www.python.org/dev/peps/pep-0257/ for how docstrings should be formatted. (+apply to other places)\n\nYou can use flake8 with flake8-docstrings installed to verify. (Just do this for all the new things added for now.)",
+      "revId": "98b641065c1fb621bc5eb5a1b7edc714ef8f44f1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
