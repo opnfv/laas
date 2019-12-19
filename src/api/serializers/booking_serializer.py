@@ -25,7 +25,8 @@ class BookingField(serializers.Field):
 
     def to_representation(self, booking):
         """
-        Takes in a booking object.
+        Take in a booking object.
+
         Returns a dictionary of primitives representing that booking
         """
         ser = {}
@@ -75,7 +76,7 @@ class BookingField(serializers.Field):
 
     def to_internal_value(self, data):
         """
-        Takes in a dictionary of primitives
+        Take in a dictionary of primitives.
         Returns a booking object
 
         This is not going to be implemented or allowed.
