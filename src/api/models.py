@@ -35,6 +35,12 @@ from account.models import Downtime
 
 
 class JobStatus(object):
+    """
+    A poor man's enum
+    A job is NEW if it has not been started or recognized by the Lab
+    A job is CURRENT if it has been started by the lab but it is not yet completed
+    a job is DONE if all the tasks are complete and the booking is ready to use
+    """
     NEW = 0
     CURRENT = 100
     DONE = 200
@@ -48,6 +54,7 @@ class LabManagerTracker(object):
         """
         Takes in a lab name (from a url path)
         returns a lab manager instance for that lab, if it exists
+        Also checks that the given API token is correct
         """
         try:
             lab = Lab.objects.get(name=lab_name)
@@ -286,6 +293,10 @@ class LabManager(object):
 
 class Job(models.Model):
     """
+    The API uses Jobs and Tasks to communicate actions that need to be taken to the Lab
+    that is hosting a booking. A booking from a user has an associated Job which tells
+    the lab how to configure the hardware, networking, etc to fulfill the booking
+    for the user.
     This is the class that is serialized and put into the api
     """
     booking = models.OneToOneField(Booking, on_delete=models.CASCADE, null=True)
@@ -857,6 +868,9 @@ class SnapshotRelation(TaskRelation):
 
 
 class JobFactory(object):
+    """
+    This class creates all the API models (jobs, tasks, etc) needed to fulfill a booking.
+    """
 
     @classmethod
     def reimageHost(cls, new_image, booking, host):
@@ -902,6 +916,9 @@ class JobFactory(object):
 
     @classmethod
     def makeCompleteJob(cls, booking):
+        """
+        Creates everything that is needed to fulfill the given booking
+        """
         hosts = Host.objects.filter(bundle=booking.resource)
         job = None
         try:
@@ -945,6 +962,10 @@ class JobFactory(object):
 
     @classmethod
     def makeHardwareConfigs(cls, hosts=[], job=Job()):
+        """
+        Helper function to create the tasks related to
+        configuring the hardware
+        """
         for host in hosts:
             hardware_config = None
             try:
@@ -969,6 +990,10 @@ class JobFactory(object):
 
     @classmethod
     def makeAccessConfig(cls, users, access_type, revoke=False, job=Job(), context=False):
+        """
+        Helper function to create the tasks related to
+        configuring the VPN, SSH, etc access for users
+        """
         for user in users:
             relation = AccessRelation()
             relation.job = job
@@ -988,6 +1013,10 @@ class JobFactory(object):
 
     @classmethod
     def makeNetworkConfigs(cls, hosts=[], job=Job()):
+        """
+        Helper function to create the tasks related to
+        configuring the networking
+        """
         for host in hosts:
             network_config = None
             try:
@@ -1028,6 +1057,10 @@ class JobFactory(object):
 
     @classmethod
     def makeSoftware(cls, booking=None, job=Job()):
+        """
+        Helper function to create the tasks related to
+        configuring the desired software, e.g. an OPNFV deployment
+        """
 
         if not booking.opnfv_config:
             return None

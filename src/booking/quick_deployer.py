@@ -97,6 +97,10 @@ class BookingPermissionException(Exception):
 
 
 def parse_host_field(host_json):
+    """
+    parses the json from the frontend to get a reference to the selected
+    Lab and HostProfile objects
+    """
     lab, profile = (None, None)
     lab_dict = host_json['lab']
     for lab_info in lab_dict.values():
@@ -117,6 +121,10 @@ def parse_host_field(host_json):
 
 
 def check_available_matching_host(lab, hostprofile):
+    """
+    Returns true if the requested host type is availble,
+    Or throws and exception
+    """
     available_host_types = ResourceManager.getInstance().getAvailableHostTypes(lab)
     if hostprofile not in available_host_types:
         # TODO: handle deleting generic resource in this instance along with grb
@@ -128,6 +136,8 @@ def check_available_matching_host(lab, hostprofile):
 
     return True
 
+
+# Functions to create models
 
 def generate_grb(owner, lab, common_id):
     grbundle = GenericResourceBundle(owner=owner)
@@ -218,6 +228,10 @@ def generate_resource_bundle(generic_resource_bundle, config_bundle):  # warning
 
 
 def check_invariants(request, **kwargs):
+    """
+    checks all the contraints on the requested booking,
+    such as software compatibility, booking length, etc
+    """
     installer = kwargs['installer']
     image = kwargs['image']
     scenario = kwargs['scenario']
@@ -256,6 +270,10 @@ def configure_networking(grb, config):
 
 
 def create_from_form(form, request):
+    """
+    Large, nasty method to create a booking or return a useful error
+    based on the form from the frontend
+    """
     quick_booking_id = str(uuid.uuid4())
 
     host_field = form.cleaned_data['filter_field']
@@ -330,6 +348,13 @@ def create_from_form(form, request):
 
 
 def drop_filter(user):
+    """
+    Returns a dictionary that contains filters
+    for installers, scenarios, and images.
+    Only certain installlers are supported on certain images, etc
+    so the image filter indexed at [imageid][installerid] is truthy if
+    that installer is supported on that image
+    """
     installer_filter = {}
     for image in Image.objects.all():
         installer_filter[image.id] = {}

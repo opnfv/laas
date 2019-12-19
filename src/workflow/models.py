@@ -26,6 +26,12 @@ from booking.models import Booking
 
 
 class BookingAuthManager():
+    """
+    Class to verify that the user is allowed to book the requested resource
+    The user must input a url to the INFO.yaml file to prove that they are the ptl of
+    an approved project if they are booking a multi-node pod.
+    This class parses the url and checks the logged in user against the info file.
+    """
     LFN_PROJECTS = ["opnfv"]  # TODO
 
     def parse_github_url(self, url):
@@ -158,6 +164,11 @@ class BookingAuthManager():
 
 
 class WorkflowStepStatus(object):
+    """
+    Poor man's enum. The steps in a workflow are not completed (UNTOUCHED)
+    or they have been completed correctly (VALID) or they were filled out
+    incorrectly (INVALID)
+    """
     UNTOUCHED = 0
     INVALID = 100
     VALID = 200
