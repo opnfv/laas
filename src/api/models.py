@@ -36,6 +36,13 @@ from account.models import Downtime
 
 
 class JobStatus(object):
+    """
+    A poor man's enum for a job's status
+
+    A job is NEW if it has not been started or recognized by the Lab
+    A job is CURRENT if it has been started by the lab but it is not yet completed
+    a job is DONE if all the tasks are complete and the booking is ready to use
+    """
     NEW = 0
     CURRENT = 100
     DONE = 200
@@ -47,8 +54,11 @@ class LabManagerTracker(object):
     @classmethod
     def get(cls, lab_name, token):
         """
+        get a LabManager
+
         Takes in a lab name (from a url path)
         returns a lab manager instance for that lab, if it exists
+        Also checks that the given API token is correct
         """
         try:
             lab = Lab.objects.get(name=lab_name)
@@ -61,8 +71,8 @@ class LabManagerTracker(object):
 
 class LabManager(object):
     """
-    This is the class that will ultimately handle all REST calls to
-    lab endpoints.
+    Handles all lab REST calls
+
     handles jobs, inventory, status, etc
     may need to create helper classes
     """
@@ -287,6 +297,12 @@ class LabManager(object):
 
 class Job(models.Model):
     """
+    A Job to be performed by the Lab
+
+    The API uses Jobs and Tasks to communicate actions that need to be taken to the Lab
+    that is hosting a booking. A booking from a user has an associated Job which tells
+    the lab how to configure the hardware, networking, etc to fulfill the booking
+    for the user.
     This is the class that is serialized and put into the api
     """
     booking = models.OneToOneField(Booking, on_delete=models.CASCADE, null=True)
@@ -321,6 +337,8 @@ class Job(models.Model):
 
     def is_fulfilled(self):
         """
+        If a job has been completed by the lab
+
         This method should return true if all of the job's tasks are done,
         and false otherwise
         """
@@ -718,6 +736,12 @@ def get_task_uuid():
 
 
 class TaskRelation(models.Model):
+    """
+    Relates a Job to a TaskConfig
+
+    superclass that relates a Job to tasks anc maintains information
+    like status and messages from the lab
+    """
     status = models.IntegerField(default=JobStatus.NEW)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
     config = models.OneToOneField(TaskConfig, on_delete=models.CASCADE)
@@ -808,6 +832,9 @@ class SnapshotRelation(TaskRelation):
 
 
 class JobFactory(object):
+    """
+    This class creates all the API models (jobs, tasks, etc) needed to fulfill a booking.
+    """
 
     @classmethod
     def reimageHost(cls, new_image, booking, host):
@@ -853,6 +880,9 @@ class JobFactory(object):
 
     @classmethod
     def makeCompleteJob(cls, booking):
+        """
+        Creates everything that is needed to fulfill the given booking
+        """
         hosts = Host.objects.filter(bundle=booking.resource)
         job = None
         try:
@@ -896,6 +926,12 @@ class JobFactory(object):
 
     @classmethod
     def makeHardwareConfigs(cls, hosts=[], job=Job()):
+        """
+        Create and save HardwareConfig
+
+        Helper function to create the tasks related to
+        configuring the hardware
+        """
         for host in hosts:
             hardware_config = None
             try:
@@ -916,6 +952,12 @@ class JobFactory(object):
 
     @classmethod
     def makeAccessConfig(cls, users, access_type, revoke=False, job=Job(), context=False):
+        """
+        Create and save AccessConfig
+
+        Helper function to create the tasks related to
+        configuring the VPN, SSH, etc access for users
+        """
         for user in users:
             relation = AccessRelation()
             relation.job = job
@@ -935,6 +977,12 @@ class JobFactory(object):
 
     @classmethod
     def makeNetworkConfigs(cls, hosts=[], job=Job()):
+        """
+        Create and save NetworkConfig
+
+        Helper function to create the tasks related to
+        configuring the networking
+        """
         for host in hosts:
             network_config = None
             try:
@@ -975,6 +1023,12 @@ class JobFactory(object):
 
     @classmethod
     def makeSoftware(cls, booking=None, job=Job()):
+        """
+        Create and save SoftwareConfig
+
+        Helper function to create the tasks related to
+        configuring the desired software, e.g. an OPNFV deployment
+        """
 
         if not booking.opnfv_config:
             return None
