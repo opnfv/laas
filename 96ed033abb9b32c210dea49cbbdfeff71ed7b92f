@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10592980_04736d16",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-12-19T16:53:13Z",
+      "side": 1,
+      "message": "Why decrease this? Have you tested this against a booking with ~4 hosts?",
+      "range": {
+        "startLine": 878,
+        "startChar": 21,
+        "endLine": 878,
+        "endChar": 26
+      },
+      "revId": "96ed033abb9b32c210dea49cbbdfeff71ed7b92f",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42cfae41_91fcc83e",
+        "filename": "src/templates/booking/booking_detail.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2019-12-19T16:53:13Z",
+      "side": 1,
+      "message": "while we are here, can you change this to \"Machine\" or something similar?",
+      "range": {
+        "startLine": 67,
+        "startChar": 40,
+        "endLine": 67,
+        "endChar": 47
+      },
+      "revId": "96ed033abb9b32c210dea49cbbdfeff71ed7b92f",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
