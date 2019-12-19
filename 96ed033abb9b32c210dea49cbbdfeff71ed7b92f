@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "218366f4_6171db9b",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-12-19T17:10:42Z",
+      "side": 1,
+      "message": "I\u0027ll revert this change. It had to do with the page changes, but I\u0027ll also fix that as well.",
+      "parentUuid": "10592980_04736d16",
+      "range": {
+        "startLine": 878,
+        "startChar": 21,
+        "endLine": 878,
+        "endChar": 26
+      },
+      "revId": "96ed033abb9b32c210dea49cbbdfeff71ed7b92f",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "42cfae41_91fcc83e",
         "filename": "src/templates/booking/booking_detail.html",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-12-19T16:53:13Z",
       "side": 1,
       "message": "while we are here, can you change this to \"Machine\" or something similar?",
+      "range": {
+        "startLine": 67,
+        "startChar": 40,
+        "endLine": 67,
+        "endChar": 47
+      },
+      "revId": "96ed033abb9b32c210dea49cbbdfeff71ed7b92f",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79471094_5b1248b9",
+        "filename": "src/templates/booking/booking_detail.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 7509
+      },
+      "writtenOn": "2019-12-19T17:10:42Z",
+      "side": 1,
+      "message": "Sure.",
+      "parentUuid": "42cfae41_91fcc83e",
       "range": {
         "startLine": 67,
         "startChar": 40,
