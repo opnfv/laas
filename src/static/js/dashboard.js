@@ -455,15 +455,15 @@ class NetworkStep {
         this.editor.setGraphContainer(graphContainer);
         this.doGlobalConfig();
         this.prefill(xml, hosts, added_hosts, removed_host_ids);
-        this.addToolbarButton(this.editor, toolbarContainer, 'zoomIn', '', "/static/img/mxgraph/zoom_in.png", true);
-        this.addToolbarButton(this.editor, toolbarContainer, 'zoomOut', '', "/static/img/mxgraph/zoom_out.png", true);
+        this.addToolbarButton(this.editor, toolbarContainer, 'zoomIn', 'fa-search-plus');
+        this.addToolbarButton(this.editor, toolbarContainer, 'zoomOut', 'fa-search-minus');
 
         if(this.debug){
             this.editor.addAction('printXML', function(editor, cell) {
                 mxLog.write(this.encodeGraph());
                 mxLog.show();
             }.bind(this));
-            this.addToolbarButton(this.editor, toolbarContainer, 'printXML', '', '/static/img/mxgraph/fit_to_size.png', true);
+            this.addToolbarButton(this.editor, toolbarContainer, 'printXML', 'fa-file-code');
         }
 
         new mxOutline(this.graph, overviewContainer);
@@ -704,27 +704,18 @@ class NetworkStep {
         this.currentWindow.destroy();
     }
 
-    addToolbarButton(editor, toolbar, action, label, image, isTransparent) {
+    addToolbarButton(editor, toolbar, action, image) {
         const button = document.createElement('button');
-        button.style.fontSize = '10';
+        button.setAttribute('class', 'btn btn-sm m-1');
         if (image != null) {
-            const img = document.createElement('img');
-            img.setAttribute('src', image);
-            img.style.width = '16px';
-            img.style.height = '16px';
-            img.style.verticalAlign = 'middle';
-            img.style.marginRight = '2px';
-            button.appendChild(img);
-        }
-        if (isTransparent) {
-            button.style.background = 'transparent';
-            button.style.color = '#FFFFFF';
-            button.style.border = 'none';
+            const icon = document.createElement('i');
+            icon.setAttribute('class', 'fas ' + image);
+            button.appendChild(icon);
         }
         mxEvent.addListener(button, 'click', function(evt) {
             editor.execute(action);
         });
-        mxUtils.write(button, label);
+        mxUtils.write(button, '');
         toolbar.appendChild(button);
     };
 

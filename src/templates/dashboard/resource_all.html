@@ -4,14 +4,14 @@
 {% block extrahead %}
     {{ block.super }}
     <!-- Morris Charts CSS -->
-    <link href="{% static "bower_components/morrisjs/morris.css" %}" rel="stylesheet">
+    <link href="{% static "node_modules/morrisjs/morris.css" %}" rel="stylesheet">
 
     <!-- DataTables CSS -->
-    <link href="{% static "bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css" %}"
+    <link href="{% static "node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css" %}"
           rel="stylesheet">
 
     <!-- DataTables Responsive CSS -->
-    <link href="{% static "bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" %}"
+    <link href="{% static "node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" %}"
           rel="stylesheet">
 {% endblock extrahead %}
 
@@ -36,21 +36,21 @@
 
 {% block extrajs %}
     <!-- DataTables JavaScript -->
-    <link href="{% static "bower_components/datatables/media/css/dataTables.bootstrap.css" %}"
+    <link href="{% static "node_modules/datatables/media/css/dataTables.bootstrap.css" %}"
           rel="stylesheet">
 
-          <script src={% static "bower_components/datatables.net/js/jquery.dataTables.min.js" %}></script>
-          <script src={% static "bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js" %}></script>
+          <script src={% static "node_modules/datatables.net/js/jquery.dataTables.min.js" %}></script>
+          <script src={% static "node_modules/datatables.net-bs4/js/dataTables.bootstrap4.min.js" %}></script>
 
 
 
     <!-- Flot Charts JavaScript -->
-    <script src="{% static "bower_components/flot/excanvas.min.js" %}"></script>
-    <script src="{% static "bower_components/flot/jquery.flot.js" %}"></script>
-    <script src="{% static "bower_components/flot/jquery.flot.pie.js" %}"></script>
-    <script src="{% static "bower_components/flot/jquery.flot.resize.js" %}"></script>
-    <script src="{% static "bower_components/flot/jquery.flot.time.js" %}"></script>
-    <script src="{% static "bower_components/flot.tooltip/js/jquery.flot.tooltip.min.js" %}"></script>
+    <script src="{% static "node_modules/flot/excanvas.min.js" %}"></script>
+    <script src="{% static "node_modules/flot/jquery.flot.js" %}"></script>
+    <script src="{% static "node_modules/flot/jquery.flot.pie.js" %}"></script>
+    <script src="{% static "node_modules/flot/jquery.flot.resize.js" %}"></script>
+    <script src="{% static "node_modules/flot/jquery.flot.time.js" %}"></script>
+    <script src="{% static "node_modules/flot.tooltip/js/jquery.flot.tooltip.min.js" %}"></script>
     <script src="{% static "js/flot-pie-chart.js" %}"></script><
 
     <script type="text/javascript">
