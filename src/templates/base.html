@@ -150,7 +150,9 @@
                     </div>
                 </div>
                 {% endif %}
-                <div id="bsm">{% bootstrap_messages %}</div>
+                {% if messages %}
+                    <div id="bsm" class="mt-4">{% bootstrap_messages %}</div>
+                {% endif %}
                 <!-- Content block placed here -->
                 {% block content %}
                 {% endblock content %}

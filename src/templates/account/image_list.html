@@ -3,7 +3,7 @@
 <h2>Images I Own</h2>
 <div class="row">
 {% for image in images %}
-    <div class="p-2 col-12 col-md-6 col-lg-4 col-xl-3">
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
         <div class="card h-100">
             <div class="card-header">
                 <h3>Image {{image.id}}</h3>
@@ -25,12 +25,17 @@
             </div>
         </div>
     </div>
+{% empty %}
+    <div class="col">
+        <p>You don't have any images. You can create an image by creating a snapshot.</p>
+    </div>
 {% endfor %}
 </div>
+
 <h2>Public Images</h2>
 <div class="row">
     {% for image in public_images %}
-        <div class="p-2 col-12 col-md-6 col-lg-4 col-xl-3">
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
             <div class="card h-100">
                 <div class="card-header">
                     <h3>Image {{image.id}}</h3>
@@ -45,6 +50,10 @@
                     </ul>
                 </div>
             </div>
+        </div>
+    {% empty %}
+        <div class="col">
+            <p>There are no public images.</p>
         </div>
     {% endfor %}
 </div>

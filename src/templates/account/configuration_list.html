@@ -2,7 +2,7 @@
 {% block content %}
 <div class="row">
 {% for config in configurations %}
-    <div class="p-2 col-12 col-md-6 col-lg-4 col-xl-3">
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
         <div class="card h-100">
             <div class="card-header">
                 <h3>Configuration {{config.id}}</h3>
@@ -25,8 +25,13 @@
             </div>
         </div>
     </div>
+{% empty %}
+    <div class="col">
+        <p>You don't have any configurations. You can create a configuration by configuring a pod.</p>
+    </div>
 {% endfor %}
 </div>
+
 <script>
     var current_config_id = -1;
     function delete_config(config_id) {
@@ -44,6 +49,7 @@
         req.send(formData);
     }
 </script>
+
 <div class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

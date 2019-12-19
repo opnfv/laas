@@ -875,7 +875,7 @@ class NetworkStep {
     makeMxNetwork(net_name, is_public = false) {
         const model = this.graph.getModel();
         const width = 10;
-        const height = 1700;
+        const height = 500;
         const xoff = 400 + (30 * this.netCount);
         const yoff = -10;
         let color = this.netColors[this.netCount];
