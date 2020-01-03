@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4df71be0_5a0ce84f",
+        "filename": "src/dashboard/tasks.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2020-01-03T20:15:08Z",
+      "side": 1,
+      "message": "Worker was complaining that config.set_power() was not a function",
+      "range": {
+        "startLine": 26,
+        "startChar": 12,
+        "endLine": 26,
+        "endChar": 32
+      },
+      "revId": "c8cb822702dfb4746452d46d274ccdf36b56ba73",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fadde942_e6c497c5",
+        "filename": "src/resource_inventory/migrations/0012_auto_20200103_1850.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2020-01-03T20:15:08Z",
+      "side": 1,
+      "message": "I don\u0027t think I use this actually, so I can remove it next patch set",
+      "range": {
+        "startLine": 9,
+        "startChar": 4,
+        "endLine": 9,
+        "endChar": 61
+      },
+      "revId": "c8cb822702dfb4746452d46d274ccdf36b56ba73",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8356cd8f_03a98129",
+        "filename": "src/resource_inventory/migrations/0012_auto_20200103_1850.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2020-01-03T20:15:08Z",
+      "side": 1,
+      "message": "Not really too sure how to go about this change without losing information since we change vlan\u0027s network foreign key from Network to PhysicalNetwork",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 10
+      },
+      "revId": "c8cb822702dfb4746452d46d274ccdf36b56ba73",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7930dd4d_266a30a9",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2020-01-03T20:15:08Z",
+      "side": 1,
+      "message": "I made this abstract so that it\u0027s easier to create the migration as there is no field that belongs to Resource right now.\n\nWhat is the planned use for the Resource class? Maybe it shouldn\u0027t be abstract depending on how it\u0027s supposed to be used",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 23
+      },
+      "revId": "c8cb822702dfb4746452d46d274ccdf36b56ba73",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a0d5392_1c01c037",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2020-01-03T20:15:08Z",
+      "side": 1,
+      "message": "I changed this back to null\u003dTrue because I\u0027m not sure what to do when the original Network pointer is null",
+      "range": {
+        "startLine": 200,
+        "startChar": 48,
+        "endLine": 200,
+        "endChar": 88
+      },
+      "revId": "c8cb822702dfb4746452d46d274ccdf36b56ba73",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
