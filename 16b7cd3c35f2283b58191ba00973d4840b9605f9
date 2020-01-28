@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "233bf74e_cd17011d",
+        "filename": "src/api/models.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-01-28T15:58:49Z",
+      "side": 1,
+      "message": "j is not used here. We can delete these two lines if we set the \"id\" in the returned dictionary directly.",
+      "range": {
+        "startLine": 298,
+        "startChar": 0,
+        "endLine": 299,
+        "endChar": 25
+      },
+      "revId": "16b7cd3c35f2283b58191ba00973d4840b9605f9",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe3df9ae_1a2b22ac",
+        "filename": "src/api/models.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-01-28T15:58:49Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 337,
+        "startChar": 1,
+        "endLine": 338,
+        "endChar": 25
+      },
+      "revId": "16b7cd3c35f2283b58191ba00973d4840b9605f9",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
