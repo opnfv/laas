@@ -94,6 +94,30 @@
     },
     {
       "key": {
+        "uuid": "377f4fd9_7e7e10ee",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-01-28T15:58:49Z",
+      "side": 1,
+      "message": "Abstract makes sense here because we would never create a raw Resource - Its a super class for actual resources",
+      "parentUuid": "7930dd4d_266a30a9",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 23
+      },
+      "revId": "c8cb822702dfb4746452d46d274ccdf36b56ba73",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a0d5392_1c01c037",
         "filename": "src/resource_inventory/models.py",
         "patchSetId": 6
