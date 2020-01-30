@@ -53,10 +53,19 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'laas_dashboard.urls'
 
+TEMPLATE_DIRS = [
+    os.environ.get("TEMPLATE_OVERRIDE_DIR", None),
+    "",
+    "base"
+]
+
+dirs = [os.path.join(BASE_DIR, "templates", d) for d in TEMPLATE_DIRS if d is not None]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'NAME': 'OverrideDjangoTemplates',
+        'DIRS': dirs,
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
