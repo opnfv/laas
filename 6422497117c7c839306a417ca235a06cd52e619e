@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a1c4d5f_26c50ad5",
+        "filename": "src/laas_dashboard/settings.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-01-30T21:04:58Z",
+      "side": 1,
+      "message": "Not needed",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 5
+      },
+      "revId": "6422497117c7c839306a417ca235a06cd52e619e",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
