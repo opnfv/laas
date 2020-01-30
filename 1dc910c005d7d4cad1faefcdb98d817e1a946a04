@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "40be12c5_53f35bf5",
+        "filename": "src/templates/base/base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 7515
+      },
+      "writtenOn": "2020-01-30T18:42:39Z",
+      "side": 1,
+      "message": "If we\u0027re changing LaaS specific sections to be blocks, should this part also be changed?",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 20
+      },
+      "revId": "1dc910c005d7d4cad1faefcdb98d817e1a946a04",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    }
+  ]
+}
