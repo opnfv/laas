@@ -22,6 +22,53 @@
       "revId": "1dc910c005d7d4cad1faefcdb98d817e1a946a04",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "60e93573_130d1552",
+        "filename": "src/templates/base/base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-01-30T19:18:09Z",
+      "side": 1,
+      "message": "Yes, and it will be. I wanted the creation of the override system and the changing of all the base templates to be seperate changes",
+      "parentUuid": "40be12c5_53f35bf5",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 20
+      },
+      "revId": "1dc910c005d7d4cad1faefcdb98d817e1a946a04",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33834e66_204c82f4",
+        "filename": "src/templates/base/base.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-01-30T19:18:09Z",
+      "side": 1,
+      "message": "delete this",
+      "range": {
+        "startLine": 157,
+        "startChar": 8,
+        "endLine": 158,
+        "endChar": 43
+      },
+      "revId": "1dc910c005d7d4cad1faefcdb98d817e1a946a04",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }
