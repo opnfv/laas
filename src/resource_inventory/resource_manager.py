@@ -42,25 +42,25 @@ class ResourceManager:
         hostprofileset = HostProfile.objects.filter(host__in=hostset, labs=lab)
         return set(hostprofileset)
 
-    def hostsAvailable(self, grb):
+    def hostsAvailable(self, resource_template):
         """
-        Check if the given GenericResourceBundle is available.
+        Check if the given ResourceTemplate is available.
 
         No changes to the database
         """
         # count up hosts
         profile_count = {}
-        for host in grb.getResources():
-            if host.profile not in profile_count:
-                profile_count[host.profile] = 0
-            profile_count[host.profile] += 1
+        for config in resource_template.getConfigs():
+            if config.profile not in profile_count:
+                profile_count[config.profile] = 0
+            profile_count[config.profile] += 1
 
         # check that all required hosts are available
         for profile in profile_count.keys():
             available = Host.objects.filter(
                 booked=False,
                 working=True,
-                lab=grb.lab,
+                lab=resource_template.lab,
                 profile=profile
             ).count()
             needed = profile_count[profile]
@@ -88,13 +88,14 @@ class ResourceManager:
                 networks[network.name] = vlan
         return networks
 
-    def convertResourceBundle(self, genericResourceBundle, config=None):
+    def convertResourceBundle(self, resource_template, config=None):
         """
         Convert a GenericResourceBundle into a ResourceBundle.
 
         Takes in a genericResourceBundle and reserves all the
         Resources needed and returns a completed ResourceBundle.
         """
+        # TODO: Fix
         resource_bundle = ResourceBundle.objects.create(template=genericResourceBundle)
         generic_hosts = genericResourceBundle.getResources()
         physical_hosts = []
