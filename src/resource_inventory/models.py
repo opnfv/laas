@@ -131,6 +131,13 @@ class Resource(models.Model):
         """
         raise NotImplementedError("Must implement in concrete Resource classes")
 
+    def get_interfaces(self):
+        """
+        Returns a list of interfaces on this resource.
+        The ordering of interfaces should be consistent.
+        """
+        raise NotImplementedError("Must implement in concrete Resource classes")
+
 
 # Generic resource templates
 class GenericResourceBundle(models.Model):
@@ -423,6 +430,9 @@ class Host(Resource):
             "power": power,
             "ipmi_create": str(ipmi)
         }
+
+    def get_interfaces(self):
+        return list(self.interfaces.all().order_by('bus_address'))
 
 
 class Interface(models.Model):
