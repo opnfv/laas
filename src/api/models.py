@@ -21,11 +21,11 @@ import uuid
 from booking.models import Booking
 from resource_inventory.models import (
     Lab,
-    HostProfile,
-    Host,
+    ResourceProfile,
+    Resource,
     Image,
     Interface,
-    HostOPNFVConfig,
+    ResourceOPNFVConfig,
     RemoteInfo,
     OPNFVConfig,
     ConfigState
@@ -33,6 +33,7 @@ from resource_inventory.models import (
 from resource_inventory.idf_templater import IDFTemplater
 from resource_inventory.pdf_templater import PDFTemplater
 from account.models import Downtime
+from dashboard.utils import ResourceQuery, JobTaskQuery
 
 
 class JobStatus(object):
@@ -163,23 +164,18 @@ class LabManager(object):
             "phone": self.lab.contact_phone,
             "email": self.lab.contact_email
         }
-        prof['host_count'] = []
-        for host in HostProfile.objects.filter(labs=self.lab):
-            count = Host.objects.filter(profile=host, lab=self.lab).count()
-            prof['host_count'].append(
-                {
-                    "type": host.name,
-                    "count": count
-                }
-            )
+        prof['host_count'] = [{
+            "type": profile.name,
+            "count": len(profile.get_resources(lab=self.lab))}
+            for profile in ResourceProfile.objects.filter(labs=self.lab)]
         return prof
 
     def get_inventory(self):
         inventory = {}
-        hosts = Host.objects.filter(lab=self.lab)
+        resources = ResourceQuery.filter(lab=self.lab)
         images = Image.objects.filter(from_lab=self.lab)
-        profiles = HostProfile.objects.filter(labs=self.lab)
-        inventory['hosts'] = self.serialize_hosts(hosts)
+        profiles = ResourceProfile.objects.filter(labs=self.lab)
+        inventory['resources'] = self.serialize_resources(resources)
         inventory['images'] = self.serialize_images(images)
         inventory['host_types'] = self.serialize_host_profiles(profiles)
         return inventory
@@ -237,7 +233,8 @@ class LabManager(object):
 
         return job_ser
 
-    def serialize_hosts(self, hosts):
+    def serialize_resources(self, resources):
+        # TODO: rewrite for Resource model
         host_ser = []
         for host in hosts:
             h = {}
@@ -265,7 +262,7 @@ class LabManager(object):
             )
         return images_ser
 
-    def serialize_host_profiles(self, profiles):
+    def serialize_resource_profiles(self, profiles):
         profile_ser = []
         for profile in profiles:
             p = {}
@@ -323,21 +320,9 @@ class Job(models.Model):
         return {"id": self.id, "payload": d}
 
     def get_tasklist(self, status="all"):
-        tasklist = []
-        clist = [
-            HostHardwareRelation,
-            AccessRelation,
-            HostNetworkRelation,
-            SoftwareRelation,
-            SnapshotRelation
-        ]
         if status == "all":
-            for cls in clist:
-                tasklist += list(cls.objects.filter(job=self))
-        else:
-            for cls in clist:
-                tasklist += list(cls.objects.filter(job=self).filter(status=status))
-        return tasklist
+            return JobTaskQuery.filter(job=self, status=status)
+        return JobTaskQuery.filter(job=self)
 
     def is_fulfilled(self):
         """
@@ -632,6 +617,8 @@ class NetworkConfig(TaskConfig):
         for interface in self.interfaces.all():
             d[hid][interface.mac_address] = []
             for vlan in interface.config.all():
+                # TODO: should this come from the interface?
+                # e.g. will different interfaces for different resources need different configs?
                 d[hid][interface.mac_address].append({"vlan_id": vlan.vlan_id, "tagged": vlan.tagged})
 
         return d
@@ -876,14 +863,14 @@ class JobFactory(object):
     @classmethod
     def makeCompleteJob(cls, booking):
         """Create everything that is needed to fulfill the given booking."""
-        hosts = Host.objects.filter(bundle=booking.resource)
+        resources = booking.resource.get_resources()
         job = None
         try:
             job = Job.objects.get(booking=booking)
         except Exception:
             job = Job.objects.create(status=JobStatus.NEW, booking=booking)
         cls.makeHardwareConfigs(
-            hosts=hosts,
+            resources=resources,
             job=job
         )
         cls.makeNetworkConfigs(
@@ -918,22 +905,22 @@ class JobFactory(object):
                 continue
 
     @classmethod
-    def makeHardwareConfigs(cls, hosts=[], job=Job()):
+    def makeHardwareConfigs(cls, resources=[], job=Job()):
         """
         Create and save HardwareConfig.
 
         Helper function to create the tasks related to
         configuring the hardware
         """
-        for host in hosts:
+        for res in resources:
             hardware_config = None
             try:
-                hardware_config = HardwareConfig.objects.get(relation__host=host)
+                hardware_config = HardwareConfig.objects.get(relation__host=res)
             except Exception:
                 hardware_config = HardwareConfig()
 
             relation = HostHardwareRelation()
-            relation.host = host
+            relation.host = res
             relation.job = job
             relation.config = hardware_config
             relation.config.save()
@@ -969,29 +956,30 @@ class JobFactory(object):
             config.save()
 
     @classmethod
-    def makeNetworkConfigs(cls, hosts=[], job=Job()):
+    def makeNetworkConfigs(cls, resources=[], job=Job()):
         """
         Create and save NetworkConfig.
 
         Helper function to create the tasks related to
         configuring the networking
         """
-        for host in hosts:
+        for res in resources:
             network_config = None
             try:
-                network_config = NetworkConfig.objects.get(relation__host=host)
+                network_config = NetworkConfig.objects.get(relation__host=res)
             except Exception:
                 network_config = NetworkConfig.objects.create()
 
             relation = HostNetworkRelation()
-            relation.host = host
+            relation.host = res
             relation.job = job
             network_config.save()
             relation.config = network_config
             relation.save()
             network_config.clear_delta()
 
-            for interface in host.interfaces.all():
+            # TODO: use get_interfaces() on resource
+            for interface in res.interfaces.all():
                 network_config.add_interface(interface)
             network_config.save()
 
@@ -1040,3 +1028,12 @@ class JobFactory(object):
         software_config = SoftwareConfig.objects.create(opnfv=opnfv_api_config)
         software_relation = SoftwareRelation.objects.create(job=job, config=software_config)
         return software_relation
+
+
+JOB_TASK_CLASSLIST = [
+    HostHardwareRelation,
+    AccessRelation,
+    HostNetworkRelation,
+    SoftwareRelation,
+    SnapshotRelation
+]
