@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd24b3af_ea1a6c37",
+        "filename": "src/account/models.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-02-06T18:12:19Z",
+      "side": 1,
+      "message": "this should probably be atomic somehow, as is we can double reserve a vlan I think",
+      "revId": "77377d5e9362bd35a3b300df231e82ee974675e1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
