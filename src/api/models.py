@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponseNotFound
 from django.urls import reverse
 from django.utils import timezone
 
@@ -21,18 +22,20 @@ import uuid
 from booking.models import Booking
 from resource_inventory.models import (
     Lab,
-    HostProfile,
-    Host,
+    ResourceProfile,
+    Resource,
     Image,
     Interface,
-    HostOPNFVConfig,
+    ResourceOPNFVConfig,
     RemoteInfo,
     OPNFVConfig,
-    ConfigState
+    ConfigState,
+    ResourceQuery
 )
 from resource_inventory.idf_templater import IDFTemplater
 from resource_inventory.pdf_templater import PDFTemplater
 from account.models import Downtime
+from dashboard.utils import AbstractModelQuery
 
 
 class JobStatus(object):
@@ -115,8 +118,11 @@ class LabManager(object):
         )
         return self.get_downtime_json()
 
-    def update_host_remote_info(self, data, host_id):
-        host = get_object_or_404(Host, labid=host_id, lab=self.lab)
+    def update_host_remote_info(self, data, res_id):
+        resource = ResourceQuery.filter(labid=res_id, lab=self.lab)
+        if len(resource) != 1:
+            return HttpResponseNotFound("Could not find single host with id " + str(res_id))
+        resource = resource[0]
         info = {}
         try:
             info['address'] = data['address']
@@ -127,7 +133,7 @@ class LabManager(object):
             info['versions'] = json.dumps(data['versions'])
         except Exception as e:
             return {"error": "invalid arguement: " + str(e)}
-        remote_info = host.remote_management
+        remote_info = resource.remote_management
         if "default" in remote_info.mac_address:
             remote_info = RemoteInfo()
         remote_info.address = info['address']
@@ -137,9 +143,9 @@ class LabManager(object):
         remote_info.type = info['type']
         remote_info.versions = info['versions']
         remote_info.save()
-        host.remote_management = remote_info
-        host.save()
-        booking = Booking.objects.get(resource=host.bundle)
+        resource.remote_management = remote_info
+        resource.save()
+        booking = Booking.objects.get(resource=resource.bundle)
         self.update_xdf(booking)
         return {"status": "success"}
 
@@ -163,41 +169,42 @@ class LabManager(object):
             "phone": self.lab.contact_phone,
             "email": self.lab.contact_email
         }
-        prof['host_count'] = []
-        for host in HostProfile.objects.filter(labs=self.lab):
-            count = Host.objects.filter(profile=host, lab=self.lab).count()
-            prof['host_count'].append(
-                {
-                    "type": host.name,
-                    "count": count
-                }
-            )
+        prof['host_count'] = [{
+            "type": profile.name,
+            "count": len(profile.get_resources(lab=self.lab))}
+            for profile in ResourceProfile.objects.filter(labs=self.lab)]
         return prof
 
     def get_inventory(self):
         inventory = {}
-        hosts = Host.objects.filter(lab=self.lab)
+        resources = ResourceQuery.filter(lab=self.lab)
         images = Image.objects.filter(from_lab=self.lab)
-        profiles = HostProfile.objects.filter(labs=self.lab)
-        inventory['hosts'] = self.serialize_hosts(hosts)
+        profiles = ResourceProfile.objects.filter(labs=self.lab)
+        inventory['resources'] = self.serialize_resources(resources)
         inventory['images'] = self.serialize_images(images)
         inventory['host_types'] = self.serialize_host_profiles(profiles)
         return inventory
 
     def get_host(self, hostname):
-        host = get_object_or_404(Host, labid=hostname, lab=self.lab)
+        resource = ResourceQuery.filter(labid=hostname, lab=self.lab)
+        if len(resource) != 1:
+            return HttpResponseNotFound("Could not find single host with id " + str(hostname))
+        resource = resource[0]
         return {
-            "booked": host.booked,
-            "working": host.working,
-            "type": host.profile.name
+            "booked": resource.booked,
+            "working": resource.working,
+            "type": resource.profile.name
         }
 
     def update_host(self, hostname, data):
-        host = get_object_or_404(Host, labid=hostname, lab=self.lab)
+        resource = ResourceQuery.filter(labid=hostname, lab=self.lab)
+        if len(resource) != 1:
+            return HttpResponseNotFound("Could not find single host with id " + str(hostname))
+        resource = resource[0]
         if "working" in data:
             working = data['working'] == "true"
-            host.working = working
-        host.save()
+            resource.working = working
+        resource.save()
         return self.get_host(hostname)
 
     def get_status(self):
@@ -237,20 +244,22 @@ class LabManager(object):
 
         return job_ser
 
-    def serialize_hosts(self, hosts):
+    def serialize_resources(self, resources):
+        # TODO: rewrite for Resource model
         host_ser = []
-        for host in hosts:
-            h = {}
-            h['interfaces'] = []
-            h['hostname'] = host.name
-            h['host_type'] = host.profile.name
-            for iface in host.interfaces.all():
-                eth = {}
-                eth['mac'] = iface.mac_address
-                eth['busaddr'] = iface.bus_address
-                eth['name'] = iface.name
-                eth['switchport'] = {"switch_name": iface.switch_name, "port_name": iface.port_name}
-                h['interfaces'].append(eth)
+        for res in resources:
+            r = {
+                'interfaces': [],
+                'hostname': res.name,
+                'host_type': res.profile.name
+            }
+            for iface in res.get_interfaces():
+                r['interfaces'].append({
+                    'mac': iface.mac_address,
+                    'busaddr': iface.bus_address,
+                    'name': iface.name,
+                    'switchport': {"switch_name": iface.switch_name, "port_name": iface.port_name}
+                })
         return host_ser
 
     def serialize_images(self, images):
@@ -265,7 +274,7 @@ class LabManager(object):
             )
         return images_ser
 
-    def serialize_host_profiles(self, profiles):
+    def serialize_resource_profiles(self, profiles):
         profile_ser = []
         for profile in profiles:
             p = {}
@@ -323,21 +332,9 @@ class Job(models.Model):
         return {"id": self.id, "payload": d}
 
     def get_tasklist(self, status="all"):
-        tasklist = []
-        clist = [
-            HostHardwareRelation,
-            AccessRelation,
-            HostNetworkRelation,
-            SoftwareRelation,
-            SnapshotRelation
-        ]
         if status == "all":
-            for cls in clist:
-                tasklist += list(cls.objects.filter(job=self))
-        else:
-            for cls in clist:
-                tasklist += list(cls.objects.filter(job=self).filter(status=status))
-        return tasklist
+            return JobTaskQuery.filter(job=self, status=status)
+        return JobTaskQuery.filter(job=self)
 
     def is_fulfilled(self):
         """
@@ -435,7 +432,7 @@ class OpnfvApiConfig(models.Model):
 
     installer = models.CharField(max_length=200)
     scenario = models.CharField(max_length=300)
-    roles = models.ManyToManyField(Host)
+    roles = models.ManyToManyField(ResourceOPNFVConfig)
     # pdf and idf are url endpoints, not the actual file
     pdf = models.CharField(max_length=100)
     idf = models.CharField(max_length=100)
@@ -632,6 +629,8 @@ class NetworkConfig(TaskConfig):
         for interface in self.interfaces.all():
             d[hid][interface.mac_address] = []
             for vlan in interface.config.all():
+                # TODO: should this come from the interface?
+                # e.g. will different interfaces for different resources need different configs?
                 d[hid][interface.mac_address].append({"vlan_id": vlan.vlan_id, "tagged": vlan.tagged})
 
         return d
@@ -876,14 +875,14 @@ class JobFactory(object):
     @classmethod
     def makeCompleteJob(cls, booking):
         """Create everything that is needed to fulfill the given booking."""
-        hosts = Host.objects.filter(bundle=booking.resource)
+        resources = booking.resource.get_resources()
         job = None
         try:
             job = Job.objects.get(booking=booking)
         except Exception:
             job = Job.objects.create(status=JobStatus.NEW, booking=booking)
         cls.makeHardwareConfigs(
-            hosts=hosts,
+            resources=resources,
             job=job
         )
         cls.makeNetworkConfigs(
@@ -918,22 +917,22 @@ class JobFactory(object):
                 continue
 
     @classmethod
-    def makeHardwareConfigs(cls, hosts=[], job=Job()):
+    def makeHardwareConfigs(cls, resources=[], job=Job()):
         """
         Create and save HardwareConfig.
 
         Helper function to create the tasks related to
         configuring the hardware
         """
-        for host in hosts:
+        for res in resources:
             hardware_config = None
             try:
-                hardware_config = HardwareConfig.objects.get(relation__host=host)
+                hardware_config = HardwareConfig.objects.get(relation__host=res)
             except Exception:
                 hardware_config = HardwareConfig()
 
             relation = HostHardwareRelation()
-            relation.host = host
+            relation.host = res
             relation.job = job
             relation.config = hardware_config
             relation.config.save()
@@ -969,29 +968,30 @@ class JobFactory(object):
             config.save()
 
     @classmethod
-    def makeNetworkConfigs(cls, hosts=[], job=Job()):
+    def makeNetworkConfigs(cls, resources=[], job=Job()):
         """
         Create and save NetworkConfig.
 
         Helper function to create the tasks related to
         configuring the networking
         """
-        for host in hosts:
+        for res in resources:
             network_config = None
             try:
-                network_config = NetworkConfig.objects.get(relation__host=host)
+                network_config = NetworkConfig.objects.get(relation__host=res)
             except Exception:
                 network_config = NetworkConfig.objects.create()
 
             relation = HostNetworkRelation()
-            relation.host = host
+            relation.host = res
             relation.job = job
             network_config.save()
             relation.config = network_config
             relation.save()
             network_config.clear_delta()
 
-            for interface in host.interfaces.all():
+            # TODO: use get_interfaces() on resource
+            for interface in res.interfaces.all():
                 network_config.add_interface(interface)
             network_config.save()
 
@@ -1000,13 +1000,13 @@ class JobFactory(object):
         if booking.resource.hosts.count() < 2:
             return None
         try:
-            jumphost_config = HostOPNFVConfig.objects.filter(
+            jumphost_config = ResourceOPNFVConfig.objects.filter(
                 role__name__iexact="jumphost"
             )
-            jumphost = Host.objects.get(
+            jumphost = ResourceQuery.filter(
                 bundle=booking.resource,
-                config=jumphost_config.host_config
-            )
+                config=jumphost_config.resource_config
+            )[0]
         except Exception:
             return None
         br_config = BridgeConfig.objects.create(opnfv_config=booking.opnfv_config)
@@ -1040,3 +1040,16 @@ class JobFactory(object):
         software_config = SoftwareConfig.objects.create(opnfv=opnfv_api_config)
         software_relation = SoftwareRelation.objects.create(job=job, config=software_config)
         return software_relation
+
+
+JOB_TASK_CLASSLIST = [
+    HostHardwareRelation,
+    AccessRelation,
+    HostNetworkRelation,
+    SoftwareRelation,
+    SnapshotRelation
+]
+
+
+class JobTaskQuery(AbstractModelQuery):
+    model_list = JOB_TASK_CLASSLIST
