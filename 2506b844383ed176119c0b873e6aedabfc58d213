@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44de7200_39e140ba",
+        "filename": "src/dashboard/utils.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-02-10T20:15:00Z",
+      "side": 1,
+      "message": "I feel like we should just use django polymorphic instead of trying to reinvent the wheel for this",
+      "revId": "2506b844383ed176119c0b873e6aedabfc58d213",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd2e708c_cb05906e",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-02-10T20:15:00Z",
+      "side": 1,
+      "message": "-available\n+deployable?\n\nI don\u0027t love the wording here",
+      "revId": "2506b844383ed176119c0b873e6aedabfc58d213",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "128ffc59_28a4f147",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-02-10T20:15:00Z",
+      "side": 1,
+      "message": "might make sense to move the \"reserved\" query into the get_resources method",
+      "revId": "2506b844383ed176119c0b873e6aedabfc58d213",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}

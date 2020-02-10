@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3d92255_1f54600d",
+        "filename": "src/booking/models.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-02-10T20:15:00Z",
+      "side": 0,
+      "message": "how are we going to handle configuration for this?",
+      "revId": "ac50210dd7e1a250307f5d20a43624621c50b0a0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
