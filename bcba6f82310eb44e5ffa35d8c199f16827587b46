@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e70bb6f0_5dc8508b",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-02-11T19:13:51Z",
+      "side": 1,
+      "message": "different name would be preferable, maybe \"same_instance\" or something?",
+      "revId": "bcba6f82310eb44e5ffa35d8c199f16827587b46",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
