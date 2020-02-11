@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c32a7099_2c2febf5",
+        "filename": "src/api/models.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-11T18:09:09Z",
+      "side": 1,
+      "message": "This is still broken. As far as I can see, we have two options:\n- use a polymorphism library\n- Add a FK from resource onto the relations and have a method on the relations that figures out its resource",
+      "range": {
+        "startLine": 789,
+        "startChar": 1,
+        "endLine": 789,
+        "endChar": 60
+      },
+      "revId": "95a25a3111da00fd237bda09862363e854cb6046",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
