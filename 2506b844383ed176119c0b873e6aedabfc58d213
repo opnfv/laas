@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f8123bbe_ddc6b020",
+        "filename": "src/dashboard/utils.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-11T14:56:21Z",
+      "side": 1,
+      "message": "This is just factoring out code that we already had written (iterate over multiple classes with the same query). Its a small part of what polymorphic offers, and I don\u0027t think we need to pull it in just yet. I want to keep the ORM as vanilla as possible.",
+      "parentUuid": "44de7200_39e140ba",
+      "revId": "2506b844383ed176119c0b873e6aedabfc58d213",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fd2e708c_cb05906e",
         "filename": "src/resource_inventory/resource_manager.py",
         "patchSetId": 5
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "42543c82_e8514518",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-11T14:56:21Z",
+      "side": 1,
+      "message": "This method deals specifically with resource availability. I think checking if the template is \"deployable\" implies this method does more than it does. Maybe resourcesAvailable? or templateIsReservable?",
+      "parentUuid": "fd2e708c_cb05906e",
+      "revId": "2506b844383ed176119c0b873e6aedabfc58d213",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "128ffc59_28a4f147",
         "filename": "src/resource_inventory/resource_manager.py",
         "patchSetId": 5
@@ -47,6 +83,24 @@
       "writtenOn": "2020-02-10T20:15:00Z",
       "side": 1,
       "message": "might make sense to move the \"reserved\" query into the get_resources method",
+      "revId": "2506b844383ed176119c0b873e6aedabfc58d213",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d7e1f71_df4489d9",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-11T14:56:21Z",
+      "side": 1,
+      "message": "sounds good",
+      "parentUuid": "128ffc59_28a4f147",
       "revId": "2506b844383ed176119c0b873e6aedabfc58d213",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true

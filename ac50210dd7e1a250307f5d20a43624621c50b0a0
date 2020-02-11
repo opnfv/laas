@@ -16,6 +16,24 @@
       "revId": "ac50210dd7e1a250307f5d20a43624621c50b0a0",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0a5a59f_d242bf28",
+        "filename": "src/booking/models.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-11T14:56:21Z",
+      "side": 0,
+      "message": "A ResourceBundle knows its ResourceTemplate, so having another reference to it here is redundant.",
+      "parentUuid": "e3d92255_1f54600d",
+      "revId": "ac50210dd7e1a250307f5d20a43624621c50b0a0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }
