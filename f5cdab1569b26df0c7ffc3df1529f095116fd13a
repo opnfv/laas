@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6ebd91d_ed207590",
+        "filename": "src/api/models.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-13T16:31:42Z",
+      "side": 1,
+      "message": "This is repeated in a few places. Should be put into its own function that raises django.http.Http404",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 124,
+        "endChar": 30
+      },
+      "revId": "f5cdab1569b26df0c7ffc3df1529f095116fd13a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b362b2d_24311df3",
+        "filename": "src/api/models.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-13T16:31:42Z",
+      "side": 1,
+      "message": "and here",
+      "range": {
+        "startLine": 188,
+        "startChar": 0,
+        "endLine": 191,
+        "endChar": 30
+      },
+      "revId": "f5cdab1569b26df0c7ffc3df1529f095116fd13a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8f806c7_910b05a1",
+        "filename": "src/api/models.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-13T16:31:42Z",
+      "side": 1,
+      "message": "and here",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 202,
+        "endChar": 30
+      },
+      "revId": "f5cdab1569b26df0c7ffc3df1529f095116fd13a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b38000d_8cba87ca",
+        "filename": "src/api/models.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-13T16:31:42Z",
+      "side": 1,
+      "message": "could be rewritten with list comprehension",
+      "range": {
+        "startLine": 251,
+        "startChar": 29,
+        "endLine": 251,
+        "endChar": 33
+      },
+      "revId": "f5cdab1569b26df0c7ffc3df1529f095116fd13a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c45560d_56eabfc1",
+        "filename": "src/api/models.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 721,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-13T16:31:42Z",
+      "side": 1,
+      "message": "This is going to be a very common pattern. Maybe it should go into ResourceQuery",
+      "range": {
+        "startLine": 720,
+        "startChar": 0,
+        "endLine": 721,
+        "endChar": 114
+      },
+      "revId": "f5cdab1569b26df0c7ffc3df1529f095116fd13a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4cdaca0_dc2d5c16",
+        "filename": "src/api/models.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-13T16:31:42Z",
+      "side": 1,
+      "message": "and here",
+      "range": {
+        "startLine": 808,
+        "startChar": 1,
+        "endLine": 809,
+        "endChar": 114
+      },
+      "revId": "f5cdab1569b26df0c7ffc3df1529f095116fd13a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "536cc515_5ee55660",
+        "filename": "src/api/models.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 827,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-13T16:31:42Z",
+      "side": 1,
+      "message": "and here",
+      "range": {
+        "startLine": 826,
+        "startChar": 0,
+        "endLine": 827,
+        "endChar": 114
+      },
+      "revId": "f5cdab1569b26df0c7ffc3df1529f095116fd13a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccf1736e_e201dbf4",
+        "filename": "src/api/models.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 1007,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-13T16:31:42Z",
+      "side": 1,
+      "message": "do it",
+      "range": {
+        "startLine": 1007,
+        "startChar": 5,
+        "endLine": 1007,
+        "endChar": 52
+      },
+      "revId": "f5cdab1569b26df0c7ffc3df1529f095116fd13a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3023856_41cdb6d6",
+        "filename": "src/booking/quick_deployer.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-13T16:31:42Z",
+      "side": 1,
+      "message": "This will actually require a change for the frontend",
+      "range": {
+        "startLine": 46,
+        "startChar": 35,
+        "endLine": 46,
+        "endChar": 43
+      },
+      "revId": "f5cdab1569b26df0c7ffc3df1529f095116fd13a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a96298c3_60a13925",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-02-13T16:31:42Z",
+      "side": 1,
+      "message": "should probably be PhysicalNet, and rename fields",
+      "range": {
+        "startLine": 495,
+        "startChar": 36,
+        "endLine": 495,
+        "endChar": 40
+      },
+      "revId": "f5cdab1569b26df0c7ffc3df1529f095116fd13a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
