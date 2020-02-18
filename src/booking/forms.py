@@ -13,8 +13,8 @@ from workflow.forms import (
     MultipleSelectFilterField,
     MultipleSelectFilterWidget,
     FormUtils)
-from account.models import UserProfile
-from resource_inventory.models import Image, Installer, Scenario
+from account.models import UserProfile, Lab
+from resource_inventory.models import Image, Installer, Scenario, HostProfile
 from workflow.forms import SearchableSelectMultipleField
 from booking.lib import get_user_items, get_user_field_opts
 
@@ -33,6 +33,7 @@ class QuickBookingForm(forms.Form):
         else:
             default_user = "you"
         self.default_user = default_user
+        self.user = user
 
         super(QuickBookingForm, self).__init__(data=data, **kwargs)
 
@@ -99,6 +100,73 @@ class QuickBookingForm(forms.Form):
         }
         return attrs
 
+    def is_valid(self):
+        # Check if invalid first
+        if not super().is_valid():
+            return False
+
+        lab, host_profile = self.parse_host_field()
+        self.cleaned_data['lab'] = lab
+        self.cleaned_data['host_profile'] = host_profile
+        self.cleaned_data['user'] = self.user
+
+        self.check_invariants()
+
+        # Do this last
+        return True
+
+    def check_invariants(self):
+        """
+        Verify all the contraints on the requested booking.
+
+        verifies software compatibility, booking length, etc
+        """
+        installer = self.cleaned_data['installer']
+        image = self.cleaned_data['image']
+        scenario = self.cleaned_data['scenario']
+        lab = self.cleaned_data['lab']
+        host_profile = self.cleaned_data['host_profile']
+        length = self.cleaned_data['length']
+        user = self.cleaned_data['user']
+        # check that image os is compatible with installer
+        if installer in image.os.sup_installers.all():
+            # if installer not here, we can omit that and not check for scenario
+            if not scenario:
+                raise IncompatibleScenarioForInstaller("An OPNFV Installer needs a scenario to be chosen to work properly")
+            if scenario not in installer.sup_scenarios.all():
+                raise IncompatibleScenarioForInstaller("The chosen installer does not support the chosen scenario")
+        if image.from_lab != lab:
+            raise ImageNotAvailableAtLab("The chosen image is not available at the chosen hosting lab")
+        if image.host_type != host_profile:
+            raise IncompatibleImageForHost("The chosen image is not available for the chosen host type")
+        if not image.public and image.owner != user:
+            raise ImageOwnershipInvalid("You are not the owner of the chosen private image")
+        if length < 1 or length > 21:
+            raise BookingLengthException("Booking must be between 1 and 21 days long")
+
+    def parse_host_field(self):
+        """
+        Parse the json from the frontend.
+
+        returns a reference to the selected Lab and HostProfile objects
+        """
+        lab, profile = (None, None)
+        lab_dict = self.cleaned_data['filter_field']['lab']
+        for lab_info in lab_dict.values():
+            if lab_info['selected']:
+                lab = Lab.objects.get(lab_user__id=lab_info['id'])
+
+        host_dict = self.cleaned_data['filter_field']['host']
+        for host_info in host_dict.values():
+            if host_info['selected']:
+                profile = HostProfile.objects.get(pk=host_info['id'])
+
+        if lab is None:
+            raise NoLabSelectedError("No lab was selected")
+        if profile is None:
+            raise HostProfileDNE("No Host was selected")
+
+        return lab, profile
 
 class HostReImageForm(forms.Form):
 

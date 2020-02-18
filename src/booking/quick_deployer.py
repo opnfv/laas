@@ -96,31 +96,6 @@ class BookingPermissionException(Exception):
     pass
 
 
-def parse_host_field(host_json):
-    """
-    Parse the json from the frontend.
-
-    returns a reference to the selected Lab and HostProfile objects
-    """
-    lab, profile = (None, None)
-    lab_dict = host_json['lab']
-    for lab_info in lab_dict.values():
-        if lab_info['selected']:
-            lab = Lab.objects.get(lab_user__id=lab_info['id'])
-
-    host_dict = host_json['host']
-    for host_info in host_dict.values():
-        if host_info['selected']:
-            profile = HostProfile.objects.get(pk=host_info['id'])
-
-    if lab is None:
-        raise NoLabSelectedError("No lab was selected")
-    if profile is None:
-        raise HostProfileDNE("No Host was selected")
-
-    return lab, profile
-
-
 def check_available_matching_host(lab, hostprofile):
     """
     Check the resources are available.
@@ -237,36 +212,6 @@ def generate_resource_bundle(generic_resource_bundle, config_bundle):  # warning
     except ModelValidationException:
         raise ModelValidationException("Encountered error while saving grbundle")
 
-
-def check_invariants(request, **kwargs):
-    """
-    Verify all the contraints on the requested booking.
-
-    verifies software compatibility, booking length, etc
-    """
-    installer = kwargs['installer']
-    image = kwargs['image']
-    scenario = kwargs['scenario']
-    lab = kwargs['lab']
-    host_profile = kwargs['host_profile']
-    length = kwargs['length']
-    # check that image os is compatible with installer
-    if installer in image.os.sup_installers.all():
-        # if installer not here, we can omit that and not check for scenario
-        if not scenario:
-            raise IncompatibleScenarioForInstaller("An OPNFV Installer needs a scenario to be chosen to work properly")
-        if scenario not in installer.sup_scenarios.all():
-            raise IncompatibleScenarioForInstaller("The chosen installer does not support the chosen scenario")
-    if image.from_lab != lab:
-        raise ImageNotAvailableAtLab("The chosen image is not available at the chosen hosting lab")
-    if image.host_type != host_profile:
-        raise IncompatibleImageForHost("The chosen image is not available for the chosen host type")
-    if not image.public and image.owner != request.user:
-        raise ImageOwnershipInvalid("You are not the owner of the chosen private image")
-    if length < 1 or length > 21:
-        raise BookingLengthException("Booking must be between 1 and 21 days long")
-
-
 def configure_networking(grb, config):
     # create network
     net = Network.objects.create(name="public", bundle=grb, is_public=True)
@@ -296,20 +241,12 @@ def create_from_form(form, request):
     users_field = form.cleaned_data['users']
     hostname = form.cleaned_data['hostname']
     length = form.cleaned_data['length']
+    host_profile = form.cleaned_data['host_profile']
+    lab = form.cleaned_data['lab']
 
     image = form.cleaned_data['image']
     scenario = form.cleaned_data['scenario']
     installer = form.cleaned_data['installer']
-
-    lab, host_profile = parse_host_field(host_field)
-    data = form.cleaned_data
-    data['lab'] = lab
-    data['host_profile'] = host_profile
-    check_invariants(request, **data)
-
-    # check booking privileges
-    if Booking.objects.filter(owner=request.user, end__gt=timezone.now()).count() >= 3 and not request.user.userprofile.booking_privledge:
-        raise BookingPermissionException("You do not have permission to have more than 3 bookings at a time.")
 
     check_available_matching_host(lab, host_profile)  # requires cleanup if failure after this point
 

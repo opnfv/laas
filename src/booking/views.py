@@ -27,7 +27,7 @@ from booking.forms import HostReImageForm
 from api.models import JobFactory
 from workflow.views import login
 from booking.forms import QuickBookingForm
-from booking.quick_deployer import create_from_form, drop_filter
+from booking.quick_deployer import create_from_form, drop_filter, BookingPermissionException
 
 
 def quick_create_clear_fields(request):
@@ -61,6 +61,10 @@ def quick_create(request):
 
         if form.is_valid():
             try:
+                # check booking privileges
+                if Booking.objects.filter(owner=request.user, end__gt=timezone.now()).count() >= 3 and not request.user.userprofile.booking_privledge:
+                    raise BookingPermissionException("You do not have permission to have more than 3 bookings at a time.")
+
                 booking = create_from_form(form, request)
                 messages.success(request, "We've processed your request. "
                                           "Check Account->My Bookings for the status of your new booking")
