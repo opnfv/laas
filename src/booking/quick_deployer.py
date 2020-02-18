@@ -250,6 +250,7 @@ def check_invariants(request, **kwargs):
     lab = kwargs['lab']
     host_profile = kwargs['host_profile']
     length = kwargs['length']
+    user = kwargs['user']
     # check that image os is compatible with installer
     if installer in image.os.sup_installers.all():
         # if installer not here, we can omit that and not check for scenario
@@ -261,7 +262,7 @@ def check_invariants(request, **kwargs):
         raise ImageNotAvailableAtLab("The chosen image is not available at the chosen hosting lab")
     if image.host_type != host_profile:
         raise IncompatibleImageForHost("The chosen image is not available for the chosen host type")
-    if not image.public and image.owner != request.user:
+    if not image.public and image.owner != user:
         raise ImageOwnershipInvalid("You are not the owner of the chosen private image")
     if length < 1 or length > 21:
         raise BookingLengthException("Booking must be between 1 and 21 days long")
@@ -296,16 +297,12 @@ def create_from_form(form, request):
     users_field = form.cleaned_data['users']
     hostname = form.cleaned_data['hostname']
     length = form.cleaned_data['length']
+    host_profile = form.cleaned_data['host_profile']
+    lab = form.cleaned_data['lab']
 
     image = form.cleaned_data['image']
     scenario = form.cleaned_data['scenario']
     installer = form.cleaned_data['installer']
-
-    lab, host_profile = parse_host_field(host_field)
-    data = form.cleaned_data
-    data['lab'] = lab
-    data['host_profile'] = host_profile
-    check_invariants(request, **data)
 
     # check booking privileges
     if Booking.objects.filter(owner=request.user, end__gt=timezone.now()).count() >= 3 and not request.user.userprofile.booking_privledge:

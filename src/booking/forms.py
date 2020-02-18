@@ -17,6 +17,7 @@ from account.models import UserProfile
 from resource_inventory.models import Image, Installer, Scenario
 from workflow.forms import SearchableSelectMultipleField
 from booking.lib import get_user_items, get_user_field_opts
+from booking.quick_deployer import check_invariants, parse_host_field
 
 
 class QuickBookingForm(forms.Form):
@@ -33,6 +34,7 @@ class QuickBookingForm(forms.Form):
         else:
             default_user = "you"
         self.default_user = default_user
+        self.user = user
 
         super(QuickBookingForm, self).__init__(data=data, **kwargs)
 
@@ -98,6 +100,21 @@ class QuickBookingForm(forms.Form):
             'edit': False
         }
         return attrs
+
+    def is_valid(self):
+        # Check if invalid first
+        if not super().is_valid():
+            return False
+
+        lab, host_profile = parse_host_field(self.cleaned_data['filter_field'])
+        self.cleaned_data['lab'] = lab
+        self.cleaned_data['host_profile'] = host_profile
+        self.cleaned_data['user'] = self.user
+
+        check_invariants(**self.cleaned_data)
+
+        # Do this last
+        return True
 
 
 class HostReImageForm(forms.Form):
