@@ -22,6 +22,30 @@
       "revId": "d63a08e56716358ea4daa30d3050fa01df65a837",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "197d80e5_729c3c60",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 7601
+      },
+      "writtenOn": "2020-02-18T15:42:29Z",
+      "side": 1,
+      "message": "The values are different, but it should still work (and it works for me, does it not work for you?), as per django docs.",
+      "parentUuid": "d4a17c8e_e9bdc173",
+      "range": {
+        "startLine": 158,
+        "startChar": 27,
+        "endLine": 158,
+        "endChar": 49
+      },
+      "revId": "d63a08e56716358ea4daa30d3050fa01df65a837",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }
