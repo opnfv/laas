@@ -44,7 +44,7 @@ def quick_create(request):
         r_manager = ResourceManager.getInstance()
         profiles = {}
         for lab in Lab.objects.all():
-            profiles[str(lab)] = r_manager.getAvailableHostTypes(lab)
+            profiles[str(lab)] = r_manager.getAvailableResourceTemplates(lab, request.user)
 
         context['lab_profile_map'] = profiles
 
