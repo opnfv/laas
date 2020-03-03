@@ -7,6 +7,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
 from booking.models import Booking
+from django.db.models import Q
 import datetime
 import pytz
 
@@ -34,7 +35,10 @@ class StatisticsManager(object):
         now = datetime.datetime.now(pytz.utc)
         delta = datetime.timedelta(days=span)
         end = now - delta
-        bookings = Booking.objects.filter(start__lte=now, end__gte=end).prefetch_related("collaborators")
+        bookings = Booking.objects.filter(
+            Q(start__lte=now) | Q(end__gte=end)
+        ).prefetch_related("collaborators")
+
         for booking in bookings:  # collect data from each booking
             user_list = [u.pk for u in booking.collaborators.all()]
             user_list.append(booking.owner.pk)
@@ -44,13 +48,22 @@ class StatisticsManager(object):
         # sort based on time
         data.sort(key=lambda i: i[0])
 
+        # see if there are any bookings
+        if len(data) == 0:
+            return {"booking": [[], []], "user": [[], []]}
+
         # collect data
         count = 0
         active_users = {}
+
         for datum in data:
-            x.append(str(datum[0]))  # time
-            count += datum[1]  # booking count
+            if datum[0] - now > delta:
+                break
+
+            count += datum[1]
+            x.append(str(datum[0]))
             y.append(count)
+
             for pk in datum[2]:  # maintain count of each user's active bookings
                 active_users[pk] = active_users.setdefault(pk, 0) + datum[1]
                 if active_users[pk] == 0:
