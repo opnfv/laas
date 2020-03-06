@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0cb0939e_df43b3c5",
+        "filename": "src/booking/stats.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-06T16:36:09Z",
+      "side": 1,
+      "message": "start__lte\u003dnow will return every single booking. This whole query could probably be end__gte\u003dend",
+      "revId": "91746ee2d90e5fdd51aa88f3e9b1b08c4ba83573",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9608e165_1aa605d3",
+        "filename": "src/booking/stats.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-06T16:36:09Z",
+      "side": 1,
+      "message": "this can be an else clause right after the for loop",
+      "revId": "91746ee2d90e5fdd51aa88f3e9b1b08c4ba83573",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
