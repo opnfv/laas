@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "6ea89bbd_456691d8",
+        "filename": "src/booking/stats.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-10T19:55:56Z",
+      "side": 1,
+      "message": "\u003e If we had just end__gte\u003dstart, then we would get bookings that start after the end of the span, which is unnecessary \n\nYou are correct, but this situation does not happen because of how bookings are created (Bookings always start right now). I suppose there is no harm in having the line there just in case.",
+      "parentUuid": "61eb40ee_2ae968b8",
+      "range": {
+        "startLine": 36,
+        "startChar": 2,
+        "endLine": 36,
+        "endChar": 27
+      },
+      "revId": "34b272ae912975bc1c4affdfa17e9aef63a38d4e",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dede1a7e_1b02735d",
         "filename": "src/booking/tests/test_stats.py",
         "patchSetId": 6
