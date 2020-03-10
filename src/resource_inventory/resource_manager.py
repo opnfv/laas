@@ -51,10 +51,16 @@ class ResourceManager:
                 profile_count[config.profile] = 0
             profile_count[config.profile] += 1
 
+        print("Profile count: " + str(profile_count))
+        print("Profile keys: " + str(profile_count.keys()))
+
         # check that all required hosts are available
         for profile in profile_count.keys():
+            print("loop1")
             available = len(profile.get_resources(lab=resource_template.lab, unreserved=True))
+            print("loop2")
             needed = profile_count[profile]
+            print("loop3")
             if available < needed:
                 return False
         return True
