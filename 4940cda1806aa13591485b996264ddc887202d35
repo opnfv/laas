@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2502805f_68d11550",
+        "filename": "src/api/migrations/0011_auto_20200218_1536.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-03-10T17:29:16Z",
+      "side": 1,
+      "message": "are we keeping these around or will they be obsolesced by resources serializing themselves?",
+      "revId": "4940cda1806aa13591485b996264ddc887202d35",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23982b40_01acb531",
+        "filename": "src/api/migrations/0013_manual_20200218_1536.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-03-10T17:29:16Z",
+      "side": 1,
+      "message": "is there any reason to migrate the relations? are we going to do this as a hot swap or do downtime for it?",
+      "revId": "4940cda1806aa13591485b996264ddc887202d35",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5de15f1b_2482a4ed",
+        "filename": "src/resource_inventory/migrations/0012_manual_20200218_1536.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-03-10T17:29:16Z",
+      "side": 1,
+      "message": "Why pair networks in the last file just to delete them here?",
+      "revId": "4940cda1806aa13591485b996264ddc887202d35",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c19a25d5_87656095",
+        "filename": "src/resource_inventory/migrations/0013_auto_20200218_1536.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-03-10T17:29:16Z",
+      "side": 1,
+      "message": "master still has HostProfile, what is it called after this change? Is it just ResourceProfile for everything?",
+      "revId": "4940cda1806aa13591485b996264ddc887202d35",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
