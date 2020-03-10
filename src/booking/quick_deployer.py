@@ -22,6 +22,7 @@ from resource_inventory.models import (
     OPNFVRole,
     OPNFVConfig,
     ResourceOPNFVConfig,
+    ResourceConfiguration,
 )
 from resource_inventory.resource_manager import ResourceManager
 from resource_inventory.pdf_templater import PDFTemplater
@@ -56,13 +57,53 @@ def parse_resource_field(resource_json):
     return lab, template
 
 
-def update_template(template, image, lab, hostname):
+def update_template(old_template, image, hostname, user):
     """
-    Update and copy a resource template to the user's profile.
+    Duplicate a template to the users account and update configured fields.
 
-    TODO: How, why, should we?
+    The dashboard presents users with preconfigured resource templates,
+    but the user might want to make small modifications, e.g hostname and
+    linux distro. So we copy the public template and create a private version
+    to the user's profile, and mark it temporary. When the booking ends the
+    new template is deleted
     """
-    pass
+    name = user.username + "'s Copy of '" + old_template.name + "'"
+    num_copies = ResourceTemplate.objects.filter(name__startswith=name).count()
+    template = ResourceTemplate.objects.create(
+        name=name if num_copies == 0 else name + " (" + str(num_copies) + ")",
+        xml=old_template.xml,
+        owner=user,
+        lab=old_template.lab,
+        description=old_template.description,
+        public=False,
+        temporary=True
+    )
+
+    # We are assuming there is only one opnfv config per public resource template
+    old_opnfv = template.opnfv_config.first()
+    opnfv_config = OPNFVConfig.objects.create(
+        installer=old_opnfv.installler,
+        scenario=old_opnfv.installler,
+        template=template,
+        name=old_opnfv.installler,
+    )
+    # I am explicitly leaving opnfv_config.networks empty to avoid
+    # problems with duplicated / shared networks. In the quick deploy,
+    # there is never multiple networks anyway. This may have to change in the future
+
+    for old_config in old_template:
+        config = ResourceConfiguration.objects.create(
+            profile=old_config.profile,
+            image=image,
+            template=template
+        )
+
+        for old_res_opnfv in old_config.resource_opnfv_config.all():
+            ResourceOPNFVConfig.objects.create(
+                role=old_opnfv.role,
+                resource_config=config,
+                opnfv_config=opnfv_config
+            )
 
 
 def generate_opnfvconfig(scenario, installer, template):
@@ -213,10 +254,19 @@ def drop_filter(user):
     for image in images:
         image_filter[image.id] = {
             'lab': 'lab_' + str(image.from_lab.lab_user.id),
-            'host_profile': 'host_' + str(image.host_type.id),
+            'host_profile': str(image.host_type.id),
             'name': image.name
         }
 
-    return {'installer_filter': json.dumps(installer_filter),
-            'scenario_filter': json.dumps(scenario_filter),
-            'image_filter': json.dumps(image_filter)}
+    resource_filter = {}
+    templates = ResourceTemplate.objects.filter(Q(public=True) | Q(owner=user))
+    for rt in templates:
+        profiles = [conf.profile for conf in rt.getConfigs()]
+        resource_filter["resource_" + str(rt.id)] = [str(p.id) for p in profiles]
+
+    return {
+        'installer_filter': json.dumps(installer_filter),
+        'scenario_filter': json.dumps(scenario_filter),
+        'image_filter': json.dumps(image_filter),
+        'resource_profile_map': json.dumps(resource_filter),
+    }

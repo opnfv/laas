@@ -161,7 +161,7 @@ class ResourceTemplate(models.Model):
     lab = models.ForeignKey(Lab, null=True, on_delete=models.SET_NULL, related_name="resourcetemplates")
     description = models.CharField(max_length=1000, default="")
     public = models.BooleanField(default=False)
-    hidden = models.BooleanField(default=False)
+    temporary = models.BooleanField(default=False)
 
     def getConfigs(self):
         return list(self.resourceConfigurations.all())
