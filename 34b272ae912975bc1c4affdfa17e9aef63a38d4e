@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "61eb40ee_2ae968b8",
+        "filename": "src/booking/stats.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-03-10T19:25:32Z",
+      "side": 1,
+      "message": "I don\u0027t think that\u0027s right. This will return only bookings where the start is less than the end of the span and the end of the booking is greater than the start of the span. By doing this we filter out bookings where the end is less than the start of the span and bookings where the start is greater than the end of the span. Those two circumstances have time frames that are not of interest in the booking statistics. If we had just end__gte\u003dstart, then we would get bookings that start after the end of the span, which is unnecessary (but not bad if we want them for some reason.)",
+      "parentUuid": "113f49fc_364f08f0",
+      "range": {
+        "startLine": 36,
+        "startChar": 2,
+        "endLine": 36,
+        "endChar": 27
+      },
+      "revId": "34b272ae912975bc1c4affdfa17e9aef63a38d4e",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dede1a7e_1b02735d",
         "filename": "src/booking/tests/test_stats.py",
         "patchSetId": 6
