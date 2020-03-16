@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c4f8e8e_0971c6d2",
+        "filename": "src/templates/base/booking/stats.html",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-16T18:39:13Z",
+      "side": 1,
+      "message": "wrong indentation level",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 52
+      },
+      "revId": "e6d2c16814ca7252c36f84c2b7bc9076b44650cf",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
