@@ -34,6 +34,7 @@ class PDFTemplater:
         owner = "Anon"
         email = "email@mail.com"
         resource_lab = resource.template.lab
+        print("resource lab: " + str(resource_lab))
         lab = resource_lab.name
         location = resource_lab.location
         pod_type = "development"
@@ -71,6 +72,7 @@ class PDFTemplater:
                 config__is_head_node=True
             ).first()
 
+        print("Found jumphost: " + str(jumphost))
         return jumphost
 
     @classmethod
@@ -78,6 +80,7 @@ class PDFTemplater:
         """Return a dict of all the info for the "jumphost" section."""
         jumphost = cls.get_jumphost(booking)
         jumphost_info = cls.get_pdf_host(jumphost)
+        print("os: " + str(jumphost.config.image.os))
         jumphost_info['os'] = jumphost.config.image.os.name
         return jumphost_info
 
@@ -101,7 +104,8 @@ class PDFTemplater:
         returns a dictionary
         """
         host_info = {}
-        host_info['name'] = host.template.resource.name
+        print("host: " + str(host))
+        host_info['name'] = host.name
         host_info['node'] = cls.get_pdf_host_node(host)
         host_info['disks'] = []
         for disk in host.profile.storageprofile.all():
@@ -140,6 +144,7 @@ class PDFTemplater:
     def get_pdf_host_disk(cls, disk):
         """Return a dict describing the given disk."""
         disk_info = {}
+        print("disk: " + str(disk))
         disk_info['name'] = disk.name
         disk_info['capacity'] = str(disk.size) + "G"
         disk_info['type'] = disk.media_type
@@ -151,15 +156,11 @@ class PDFTemplater:
     def get_pdf_host_iface(cls, interface):
         """Return a dict describing given interface."""
         iface_info = {}
+        print("iface: " + str(interface))
         iface_info['features'] = "none"
         iface_info['mac_address'] = interface.mac_address
-        iface_info['name'] = interface.name
-        speed = "unknown"
-        try:
-            profile = InterfaceProfile.objects.get(host=interface.host.profile, name=interface.name)
-            speed = str(int(profile.speed / 1000)) + "gb"
-        except Exception:
-            pass
+        iface_info['name'] = interface.profile.name
+        speed = str(int(interface.profile.speed / 1000)) + "gb"
         iface_info['speed'] = speed
         return iface_info
 
