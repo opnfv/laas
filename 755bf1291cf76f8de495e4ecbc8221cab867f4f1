@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ca82acd_79f9bf9c",
+        "filename": "src/dashboard/tasks.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-16T18:35:26Z",
+      "side": 1,
+      "message": "This is not set up yet",
+      "range": {
+        "startLine": 54,
+        "startChar": 12,
+        "endLine": 54,
+        "endChar": 78
+      },
+      "revId": "755bf1291cf76f8de495e4ecbc8221cab867f4f1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
