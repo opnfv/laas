@@ -47,7 +47,6 @@ def quick_create(request):
             templates[str(lab)] = r_manager.getAvailableResourceTemplates(lab, request.user)
 
         context['lab_profile_map'] = templates
-
         context['form'] = QuickBookingForm(default_user=request.user.username, user=request.user)
 
         context.update(drop_filter(request.user))
