@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a24f66b_b0d61eae",
+        "filename": "src/booking/views.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-03-16T21:48:45Z",
+      "side": 0,
+      "message": "? Seems odd to include as a change here",
+      "revId": "b360e0e417f787e0266268596d630b87e88283d1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}

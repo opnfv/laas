@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "c11b6ba2_a89a97f2",
+        "filename": "src/resource_inventory/migrations/0014_auto_20200305_1415.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-03-16T21:48:45Z",
+      "side": 1,
+      "message": "Should probably be a separate change, doesn\u0027t really matter",
+      "revId": "7f5792e5a3e97c73316a8248b5fe2e58b1dabf1d",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "834de855_886a268d",
         "filename": "src/resource_inventory/models.py",
         "patchSetId": 4
@@ -30,6 +47,24 @@
       "writtenOn": "2020-03-16T20:14:35Z",
       "side": 1,
       "message": "This is ok if all interfaces run at gig, but not if anything runs fast or lower, 0.1 gb or 0.01 gb seems like a weird display....",
+      "revId": "7f5792e5a3e97c73316a8248b5fe2e58b1dabf1d",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc1378e8_e2453665",
+        "filename": "src/resource_inventory/pdf_templater.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-03-16T21:48:45Z",
+      "side": 1,
+      "message": "Seems unlikely, and doesn\u0027t really break if speed is lower than a gbit so we can look at this in the future if we end up with machines with anything lower than 1gbit",
+      "parentUuid": "70c0f9be_b7023a26",
       "revId": "7f5792e5a3e97c73316a8248b5fe2e58b1dabf1d",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
