@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a17ff9e_fd89d4e1",
+        "filename": "src/booking/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-17T15:57:28Z",
+      "side": 1,
+      "message": "This should be happening in the Form with attrs (or a better named variable) passed in",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 118
+      },
+      "revId": "db2efc4765cfb05d77491f293326cb0fcf4d30fe",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "574e2c13_275aa3a6",
+        "filename": "src/booking/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-17T15:57:28Z",
+      "side": 1,
+      "message": "no prints",
+      "revId": "db2efc4765cfb05d77491f293326cb0fcf4d30fe",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5aa3667a_6fce12a8",
+        "filename": "src/booking/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-17T15:57:28Z",
+      "side": 1,
+      "message": "whitespace",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 8
+      },
+      "revId": "db2efc4765cfb05d77491f293326cb0fcf4d30fe",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5609fbc_962a0978",
+        "filename": "src/booking/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-17T15:57:28Z",
+      "side": 1,
+      "message": "same thing",
+      "revId": "db2efc4765cfb05d77491f293326cb0fcf4d30fe",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f85f9e1d_5d4db82f",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-17T15:57:28Z",
+      "side": 1,
+      "message": "no prints",
+      "revId": "db2efc4765cfb05d77491f293326cb0fcf4d30fe",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "947f23a3_d2232610",
+        "filename": "src/resource_inventory/resource_manager.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-17T15:57:28Z",
+      "side": 1,
+      "message": "filters should be added to iteratively. Do something like this:\nfilter \u003d Q(public\u003dTrue)\nif user:\n    filter \u003d filter | Q(owner\u003duser)\ntemplates \u003d templates.filter(filter)",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 53
+      },
+      "revId": "db2efc4765cfb05d77491f293326cb0fcf4d30fe",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
