@@ -286,7 +286,6 @@ def make_server(host_profile, lab, labid="test_host", name="test_host",
         booked=booked,
         working=working,
         config=config,
-        template=template,
         bundle=bundle,
         model=model,
         vendor=vendor
