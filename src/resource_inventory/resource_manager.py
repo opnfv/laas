@@ -19,7 +19,6 @@ from resource_inventory.models import (
     PhysicalNetwork,
 )
 
-
 class ResourceManager:
 
     instance = None
@@ -33,10 +32,12 @@ class ResourceManager:
             ResourceManager.instance = ResourceManager()
         return ResourceManager.instance
 
-    def getAvailableResourceTemplates(self, lab, user):
-        templates = ResourceTemplate.objects.filter(lab=lab)
-        templates = templates.filter(Q(owner=user) | Q(public=True)).filter(temporary=False)
-        return templates
+    def getAvailableResourceTemplates(self, lab, user=None):
+        filter = Q(public=True)
+        if user:
+            filter = filter | Q(owner=user)
+        filter = filter & Q(temporary=False) & Q(lab=lab)
+        return ResourceTemplate.objects.filter(filter)
 
     def templateIsReservable(self, resource_template):
         """
