@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0be366a_3753996e",
+        "filename": "src/booking/tests/test_models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-17T17:42:47Z",
+      "side": 1,
+      "message": "dead code",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 30
+      },
+      "revId": "9661cc70b7b420fa450a57c6f173a1ce9d0c64e6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "648a20d7_9ec81d0c",
+        "filename": "src/booking/tests/test_models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-17T17:42:47Z",
+      "side": 1,
+      "message": "fiddling with count is hardly worth it, just hardcode the names of the templates",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 23
+      },
+      "revId": "9661cc70b7b420fa450a57c6f173a1ce9d0c64e6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd765bdf_04c8296b",
+        "filename": "src/resource_inventory/migrations/0013_auto_20200218_1536.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-17T17:42:47Z",
+      "side": 1,
+      "message": "dead code",
+      "range": {
+        "startLine": 18,
+        "startChar": 5,
+        "endLine": 18,
+        "endChar": 21
+      },
+      "revId": "9661cc70b7b420fa450a57c6f173a1ce9d0c64e6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
