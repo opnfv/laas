@@ -24,6 +24,7 @@ from resource_inventory.models import (
     Installer,
     Scenario,
 )
+from resource_inventory.resource_manager import ResourceManager
 from booking.lib import get_user_items, get_user_field_opts
 
 
@@ -286,7 +287,7 @@ class MultipleSelectFilterField(forms.Field):
 
 class FormUtils:
     @staticmethod
-    def getLabData(multiple_hosts=False):
+    def getLabData(multiple_hosts=False, user=None):
         """
         Get all labs and thier host profiles, returns a serialized version the form can understand.
 
@@ -319,7 +320,8 @@ class FormUtils:
             neighbors[lab_node['id']] = []
             labs[lab_node['id']] = lab_node
 
-            for template in lab.resourcetemplates.all():
+            for template in ResourceManager.getInstance().getAvailableResourceTemplates(lab, user):
+
                 resource_node = {
                     'form': {"name": "host_name", "type": "text", "placeholder": "hostname"},
                     'id': "resource_" + str(template.id),

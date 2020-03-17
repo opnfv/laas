@@ -164,6 +164,8 @@ class ResourceTemplate(models.Model):
     temporary = models.BooleanField(default=False)
 
     def getConfigs(self):
+        configs = self.resourceConfigurations.all()
+        print("My configs: " + str(configs))
         return list(self.resourceConfigurations.all())
 
     def __str__(self):
@@ -428,7 +430,7 @@ class InterfaceConfiguration(models.Model):
     connections = models.ManyToManyField(NetworkConnection)
 
     def __str__(self):
-        return "type " + str(self.profile) + " on host " + str(self.host)
+        return "type " + str(self.profile.name) + " on host " + str(self.profile.host.name)
 
 
 """

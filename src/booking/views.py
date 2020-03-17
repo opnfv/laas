@@ -24,11 +24,13 @@ from account.models import Lab, Downtime
 from booking.models import Booking
 from booking.stats import StatisticsManager
 from booking.forms import HostReImageForm
+from booking.forms import FormUtils
 from api.models import JobFactory
 from workflow.views import login
 from booking.forms import QuickBookingForm
 from booking.quick_deployer import create_from_form, drop_filter
-
+from workflow.forms import (MultipleSelectFilterField,
+        MultipleSelectFilterWidget)
 
 def quick_create_clear_fields(request):
     request.session['quick_create_forminfo'] = None
@@ -46,15 +48,23 @@ def quick_create(request):
         for lab in Lab.objects.all():
             templates[str(lab)] = r_manager.getAvailableResourceTemplates(lab, request.user)
 
-        context['lab_profile_map'] = templates
 
+        context['lab_profile_map'] = None
         context['form'] = QuickBookingForm(default_user=request.user.username, user=request.user)
 
-        context.update(drop_filter(request.user))
+        attrs = FormUtils.getLabData(user=request.user)
+        context['form'].fields['filter_field'] = MultipleSelectFilterField(widget=MultipleSelectFilterWidget(**attrs))
 
+        print(context['form'])
+        context.update(drop_filter(request.user))
+        print("Templates at view: " + str(context['lab_profile_map']))
         return render(request, 'booking/quick_deploy.html', context)
     if request.method == 'POST':
         form = QuickBookingForm(request.POST, user=request.user)
+        
+        attrs = FormUtils.getLabData(user=request.user)
+        form.fields['filter_field'] = MultipleSelectFilterField(widget=MultipleSelectFilterWidget(**attrs))
+
         context = {}
         context['lab_profile_map'] = {}
         context['form'] = form

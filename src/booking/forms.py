@@ -47,8 +47,6 @@ class QuickBookingForm(forms.Form):
             **get_user_field_opts()
         )
 
-        attrs = FormUtils.getLabData()
-        self.fields['filter_field'] = MultipleSelectFilterField(widget=MultipleSelectFilterWidget(**attrs))
         self.fields['length'] = forms.IntegerField(
             widget=NumberInput(
                 attrs={
