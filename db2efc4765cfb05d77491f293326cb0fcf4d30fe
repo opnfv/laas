@@ -42,6 +42,23 @@
     },
     {
       "key": {
+        "uuid": "b9b63ad3_c7191d0f",
+        "filename": "src/booking/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 7619
+      },
+      "writtenOn": "2020-03-17T16:02:34Z",
+      "side": 1,
+      "message": "Remove Print statements",
+      "revId": "db2efc4765cfb05d77491f293326cb0fcf4d30fe",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5aa3667a_6fce12a8",
         "filename": "src/booking/views.py",
         "patchSetId": 1
@@ -93,6 +110,23 @@
       "writtenOn": "2020-03-17T15:57:28Z",
       "side": 1,
       "message": "no prints",
+      "revId": "db2efc4765cfb05d77491f293326cb0fcf4d30fe",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2730ca6_ceeef836",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 7619
+      },
+      "writtenOn": "2020-03-17T16:02:34Z",
+      "side": 1,
+      "message": "Remove Print statement",
       "revId": "db2efc4765cfb05d77491f293326cb0fcf4d30fe",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
