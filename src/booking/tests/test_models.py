@@ -15,9 +15,9 @@ from django.contrib.auth.models import Permission, User
 from django.test import TestCase
 from django.utils import timezone
 
-# from booking.models import *
 from booking.models import Booking
-from resource_inventory.models import ResourceBundle, GenericResourceBundle, ConfigBundle
+from resource_inventory.models import ResourceBundle, ResourceTemplate
+from dashboard.testing_utils import make_resource_template, make_user
 
 
 class BookingModelTestCase(TestCase):
@@ -27,8 +27,6 @@ class BookingModelTestCase(TestCase):
     Creates all the scafolding needed and tests the Booking model
     """
 
-    count = 0
-
     def setUp(self):
         """
         Prepare for Booking model tests.
@@ -36,29 +34,9 @@ class BookingModelTestCase(TestCase):
         Creates all the needed models, such as users, resources, and configurations
         """
         self.owner = User.objects.create(username='owner')
-
-        self.res1 = ResourceBundle.objects.create(
-            template=GenericResourceBundle.objects.create(
-                name="gbundle" + str(self.count)
-            )
-        )
-        self.count += 1
-        self.res2 = ResourceBundle.objects.create(
-            template=GenericResourceBundle.objects.create(
-                name="gbundle2" + str(self.count)
-            )
-        )
-        self.count += 1
-        self.user1 = User.objects.create(username='user1')
-
-        self.add_booking_perm = Permission.objects.get(codename='add_booking')
-        self.user1.user_permissions.add(self.add_booking_perm)
-
-        self.user1 = User.objects.get(pk=self.user1.id)
-        self.config_bundle = ConfigBundle.objects.create(
-            owner=self.user1,
-            name="test config"
-        )
+        self.res1 = make_resource_template(name="Test template 1"))
+        self.res2 = make_resource_template(name="Test template 2"))
+        self.user1 = make_user(username='user1')
 
     def test_start_end(self):
         """
@@ -76,7 +54,6 @@ class BookingModelTestCase(TestCase):
             end=end,
             resource=self.res1,
             owner=self.user1,
-            config_bundle=self.config_bundle
         )
         end = start
         self.assertRaises(
@@ -86,7 +63,6 @@ class BookingModelTestCase(TestCase):
             end=end,
             resource=self.res1,
             owner=self.user1,
-            config_bundle=self.config_bundle
         )
 
     def test_conflicts(self):
@@ -105,7 +81,6 @@ class BookingModelTestCase(TestCase):
                 end=end,
                 owner=self.user1,
                 resource=self.res1,
-                config_bundle=self.config_bundle
             )
         )
 
@@ -116,7 +91,6 @@ class BookingModelTestCase(TestCase):
             end=end,
             resource=self.res1,
             owner=self.user1,
-            config_bundle=self.config_bundle
         )
 
         self.assertRaises(
@@ -126,7 +100,6 @@ class BookingModelTestCase(TestCase):
             end=end - timedelta(days=1),
             resource=self.res1,
             owner=self.user1,
-            config_bundle=self.config_bundle
         )
 
         self.assertRaises(
@@ -136,7 +109,6 @@ class BookingModelTestCase(TestCase):
             end=end,
             resource=self.res1,
             owner=self.user1,
-            config_bundle=self.config_bundle
         )
 
         self.assertRaises(
@@ -146,7 +118,6 @@ class BookingModelTestCase(TestCase):
             end=end - timedelta(days=1),
             resource=self.res1,
             owner=self.user1,
-            config_bundle=self.config_bundle
         )
 
         self.assertRaises(
@@ -156,7 +127,6 @@ class BookingModelTestCase(TestCase):
             end=end + timedelta(days=1),
             resource=self.res1,
             owner=self.user1,
-            config_bundle=self.config_bundle
         )
 
         self.assertRaises(
@@ -166,7 +136,6 @@ class BookingModelTestCase(TestCase):
             end=end + timedelta(days=1),
             resource=self.res1,
             owner=self.user1,
-            config_bundle=self.config_bundle
         )
 
         self.assertTrue(
@@ -175,7 +144,6 @@ class BookingModelTestCase(TestCase):
                 end=start,
                 owner=self.user1,
                 resource=self.res1,
-                config_bundle=self.config_bundle
             )
         )
 
@@ -185,7 +153,6 @@ class BookingModelTestCase(TestCase):
                 end=end + timedelta(days=1),
                 owner=self.user1,
                 resource=self.res1,
-                config_bundle=self.config_bundle
             )
         )
 
@@ -195,7 +162,6 @@ class BookingModelTestCase(TestCase):
                 end=start - timedelta(days=1),
                 owner=self.user1,
                 resource=self.res1,
-                config_bundle=self.config_bundle
             )
         )
 
@@ -205,7 +171,6 @@ class BookingModelTestCase(TestCase):
                 end=end + timedelta(days=2),
                 owner=self.user1,
                 resource=self.res1,
-                config_bundle=self.config_bundle
             )
         )
 
@@ -215,7 +180,6 @@ class BookingModelTestCase(TestCase):
                 end=end,
                 owner=self.user1,
                 resource=self.res2,
-                config_bundle=self.config_bundle
             )
         )
 
@@ -234,7 +198,6 @@ class BookingModelTestCase(TestCase):
                 end=end,
                 owner=self.user1,
                 resource=self.res1,
-                config_bundle=self.config_bundle
             )
         )
 
