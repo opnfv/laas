@@ -85,7 +85,7 @@ def update_template(old_template, image, hostname, user):
     for old_network in old_template.networks.all():
         Network.objects.create(
             name=old_network.name,
-            bundle=old_template,
+            bundle=template,
             is_public=False
         )
     # We are assuming there is only one opnfv config per public resource template
@@ -105,7 +105,8 @@ def update_template(old_template, image, hostname, user):
         config = ResourceConfiguration.objects.create(
             profile=old_config.profile,
             image=image,
-            template=template
+            template=template,
+            is_head_node=old_config.is_head_node
         )
 
         for old_iface_config in old_config.interface_configs.all():
@@ -127,6 +128,7 @@ def update_template(old_template, image, hostname, user):
                     resource_config=config,
                     opnfv_config=opnfv_config
                 )
+    return template
 
 
 def generate_opnfvconfig(scenario, installer, template):
@@ -217,11 +219,12 @@ def create_from_form(form, request):
 
     ResourceManager.getInstance().templateIsReservable(resource_template)
 
-    hconf = update_template(resource_template, image, hostname, request.user)
+    resource_template = update_template(resource_template, image, hostname, request.user)
 
     # if no installer provided, just create blank host
     opnfv_config = None
     if installer:
+        hconf = resource_template.getConfigs()[0]
         opnfv_config = generate_opnfvconfig(scenario, installer, resource_template)
         generate_hostopnfv(hconf, opnfv_config)
 
