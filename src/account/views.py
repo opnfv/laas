@@ -260,7 +260,7 @@ def configuration_delete_view(request, config_id=None):
     config = get_object_or_404(ResourceTemplate, pk=config_id)
     if not request.user.id == config.owner.id:
         return HttpResponse('no')  # 403?
-    if Booking.objects.filter(config_bundle=config, end__gt=timezone.now()).exists():
+    if Booking.objects.filter(resource__template=config, end__gt=timezone.now()).exists():
         return HttpResponse('no')
     config.delete()
     return HttpResponse('')
