@@ -28,6 +28,7 @@ def lab_list_view(request):
 
 def lab_detail_view(request, lab_name):
     user = None
+
     if request.user.is_authenticated:
         user = request.user
 
@@ -43,7 +44,7 @@ def lab_detail_view(request, lab_name):
         {
             'title': "Lab Overview",
             'lab': lab,
-            'hostprofiles': lab.hostprofiles.all(),
+            'hostprofiles': ResourceProfile.objects.filter(labs=lab),
             'images': images,
         }
     )

@@ -19,14 +19,14 @@ from api.models import (
 
 from resource_inventory.models import (
     OPNFVRole,
-    HostProfile,
+    ResourceProfile,
     ConfigState,
 )
 
 from django.test import TestCase, Client
 
 from dashboard.testing_utils import (
-    make_host,
+    make_resource_profile,
     make_user,
     make_user_profile,
     make_lab,
@@ -34,7 +34,6 @@ from dashboard.testing_utils import (
     make_image,
     make_scenario,
     make_os,
-    make_complete_host_profile,
     make_booking,
 )
 
@@ -42,17 +41,17 @@ from dashboard.testing_utils import (
 class ValidBookingCreatesValidJob(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.user = make_user(False, username="newtestuser", password="testpassword")
+        cls.user = make_user(username="newtestuser", password="testpassword")
         cls.userprofile = make_user_profile(cls.user)
         cls.lab = make_lab()
 
-        cls.host_profile = make_complete_host_profile(cls.lab)
+        cls.resource_profile = make_resource_profile(cls.lab)
         cls.scenario = make_scenario()
         cls.installer = make_installer([cls.scenario])
         os = make_os([cls.installer])
-        cls.image = make_image(cls.lab, 1, cls.user, os, cls.host_profile)
+        cls.image = make_image(cls.resource_profile, cls.lab, owner=cls.user, os=os)
         for i in range(30):
-            make_host(cls.host_profile, cls.lab, name="host" + str(i), labid="host" + str(i))
+            make_resource_profile(cls.lab, name="host" + str(i))
         cls.client = Client()
 
     def setUp(self):
@@ -63,7 +62,7 @@ class ValidBookingCreatesValidJob(TestCase):
 
         compute_hostnames = ["cmp01", "cmp02", "cmp03"]
 
-        host_type = HostProfile.objects.first()
+        host_type = ResourceProfile.objects.first()
 
         universal_networks = [
             {"name": "public", "tagged": False, "public": True},
