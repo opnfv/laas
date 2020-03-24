@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7efc5e23_e97d2ac8",
+        "filename": "src/account/views.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-03-24T20:26:59Z",
+      "side": 1,
+      "message": "We have already done `from django.utils import timezone`. You can use timezone.now() to get the time instead of datetime",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 14
+      },
+      "revId": "aa670643ddfdf0d05faec6c2e0b6000345ae6e72",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
