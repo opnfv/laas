@@ -42,6 +42,7 @@ from api.views import (
     lab_host,
     get_pdf,
     get_idf,
+    lab_users,
     GenerateTokenView
 )
 
@@ -59,5 +60,6 @@ urlpatterns = [
     path('labs/<slug:lab_name>/jobs/new', new_jobs),
     path('labs/<slug:lab_name>/jobs/current', current_jobs),
     path('labs/<slug:lab_name>/jobs/done', done_jobs),
+    path('labs/<slug:lab_name>/users', lab_users),
     url(r'^token$', GenerateTokenView.as_view(), name='generate_token'),
 ]

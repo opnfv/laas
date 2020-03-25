@@ -97,6 +97,11 @@ def lab_status(request, lab_name=""):
         return JsonResponse(lab_manager.set_status(request.POST), safe=False)
     return JsonResponse(lab_manager.get_status(), safe=False)
 
+def lab_users(request, lab_name=""):
+    lab_token = request.META.get('HTTP_AUTH_TOKEN')
+    lab_manager = LabManagerTracker.get(lab_name, lab_token)
+    return HttpResponse(lab_manager.get_users(), content_type="text/plain")
+
 
 @csrf_exempt
 def update_host_bmc(request, lab_name="", host_id=""):
