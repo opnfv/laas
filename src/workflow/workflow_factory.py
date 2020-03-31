@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 2018 Sawyer Bergeron, Parker Berberian, and others.
+# Copyright (c) 2018 Sawyer Bergeron, Parker Berberian, Sean Smith, and others.
 #
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Apache License, Version 2.0
@@ -90,6 +90,13 @@ class WorkflowFactory():
         Define_Software,
         Config_Software,
     ]
+
+    # resource_steps = [
+    #     Define_Hardware,
+    #     Define_Nets,
+    #     Define_Software,
+    #     Software,
+    # ]
 
     snapshot_steps = [
         Select_Host_Step,

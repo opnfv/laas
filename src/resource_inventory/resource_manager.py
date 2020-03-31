@@ -19,6 +19,7 @@ from resource_inventory.models import (
     PhysicalNetwork,
 )
 
+
 class ResourceManager:
 
     instance = None
