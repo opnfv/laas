@@ -165,7 +165,7 @@ class ResourceTemplate(models.Model):
 
     def getConfigs(self):
         configs = self.resourceConfigurations.all()
-        return list(self.resourceConfigurations.all())
+        return list(configs)
 
     def __str__(self):
         return self.name
@@ -201,7 +201,7 @@ class ResourceConfiguration(models.Model):
     image = models.ForeignKey("Image", on_delete=models.PROTECT)
     template = models.ForeignKey(ResourceTemplate, related_name="resourceConfigurations", null=True, on_delete=models.CASCADE)
     is_head_node = models.BooleanField(default=False)
-    # name?
+    # name = models.CharField(max_length=300)
 
     def __str__(self):
         return "config with " + str(self.template) + " and image " + str(self.image)

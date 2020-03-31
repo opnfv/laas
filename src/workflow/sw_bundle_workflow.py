@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 2018 Sawyer Bergeron, Parker Berberian, and others.
+# Copyright (c) 2018 Sawyer Bergeron, Parker Berberian, Sean Smith, and others.
 #
 # All rights reserved. This program and the accompanying materials
 # are made available under the terms of the Apache License, Version 2.0
@@ -34,9 +34,11 @@ class Define_Software(WorkflowStep):
         based on the ordering of the passed
         hosts_data
         """
+
         filter_data = []
         user = self.repo_get(self.repo.SESSION_USER)
-        lab = self.repo_get(self.repo.SELECTED_GRESOURCE_BUNDLE).lab
+        lab = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE).lab
+        print(hosts_data)
         for i, host_data in enumerate(hosts_data):
             host = ResourceConfiguration.objects.get(pk=host_data['host_id'])
             wrong_owner = Image.objects.exclude(owner=user).exclude(public=True)
@@ -54,8 +56,8 @@ class Define_Software(WorkflowStep):
         if host_configs:
             for config in host_configs:
                 hosts_initial.append({
-                    'host_id': config.host.id,
-                    'host_name': config.host.resource.name,
+                    'host_id': config.id,
+                    'host_name': config.profile.name,
                     'headnode': config.is_head_node,
                     'image': config.image
                 })
@@ -63,7 +65,7 @@ class Define_Software(WorkflowStep):
             for host in hostlist:
                 hosts_initial.append({
                     'host_id': host.id,
-                    'host_name': host.resource.name
+                    'host_name': host.profile.name
                 })
 
         HostFormset = formset_factory(HostSoftwareDefinitionForm, extra=0)
@@ -82,18 +84,18 @@ class Define_Software(WorkflowStep):
 
     def get_host_list(self, grb=None):
         if grb is None:
-            grb = self.repo_get(self.repo.SELECTED_GRESOURCE_BUNDLE, False)
+            grb = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE, False)
             if not grb:
                 return []
         if grb.id:
-            return ResourceConfiguration.objects.filter(resource__bundle=grb)
-        generic_hosts = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {}).get("hosts", [])
+            return ResourceConfiguration.objects.filter(template=grb)
+        generic_hosts = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {}).get("hosts", [])
         return generic_hosts
 
     def get_context(self):
         context = super(Define_Software, self).get_context()
 
-        grb = self.repo_get(self.repo.SELECTED_GRESOURCE_BUNDLE, False)
+        grb = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE, False)
 
         if grb:
             context["grb"] = grb
@@ -122,22 +124,13 @@ class Define_Software(WorkflowStep):
             confirm_hosts = []
             for i, form in enumerate(formset):
                 host = hosts[i]
-                image = form.cleaned_data['image']
-                headnode = form.cleaned_data['headnode']
-                if headnode:
+                if host.is_head_node:
                     has_headnode = True
-                bundle = models['bundle']
-                hostConfig = ResourceConfiguration(
-                    host=host,
-                    image=image,
-                    bundle=bundle,
-                    is_head_node=headnode
-                )
-                models['host_configs'].append(hostConfig)
+                models['host_configs'].append(host)
                 confirm_hosts.append({
-                    "name": host.resource.name,
-                    "image": image.name,
-                    "headnode": headnode
+                    "name": host.profile.name,
+                    "image": host.image.name,
+                    "headnode": host.is_head_node
                 })
 
             if not has_headnode:
