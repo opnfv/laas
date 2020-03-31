@@ -34,9 +34,10 @@ class Define_Software(WorkflowStep):
         based on the ordering of the passed
         hosts_data
         """
+
         filter_data = []
         user = self.repo_get(self.repo.SESSION_USER)
-        lab = self.repo_get(self.repo.SELECTED_GRESOURCE_BUNDLE).lab
+        lab = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE).lab
         for i, host_data in enumerate(hosts_data):
             host = ResourceConfiguration.objects.get(pk=host_data['host_id'])
             wrong_owner = Image.objects.exclude(owner=user).exclude(public=True)
@@ -82,18 +83,18 @@ class Define_Software(WorkflowStep):
 
     def get_host_list(self, grb=None):
         if grb is None:
-            grb = self.repo_get(self.repo.SELECTED_GRESOURCE_BUNDLE, False)
+            grb = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE, False)
             if not grb:
                 return []
         if grb.id:
             return ResourceConfiguration.objects.filter(resource__bundle=grb)
-        generic_hosts = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {}).get("hosts", [])
+        generic_hosts = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {}).get("hosts", [])
         return generic_hosts
 
     def get_context(self):
         context = super(Define_Software, self).get_context()
 
-        grb = self.repo_get(self.repo.SELECTED_GRESOURCE_BUNDLE, False)
+        grb = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE, False)
 
         if grb:
             context["grb"] = grb

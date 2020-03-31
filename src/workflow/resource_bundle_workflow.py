@@ -59,7 +59,7 @@ class Define_Hardware(WorkflowStep):
 
     def update_models(self, data):
         data = data['filter_field']
-        models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
+        models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
         models['hosts'] = []  # This will always clear existing data when this step changes
         models['interfaces'] = {}
         if "bundle" not in models:
@@ -91,14 +91,14 @@ class Define_Hardware(WorkflowStep):
                 break  # if somehow we get two 'true' labs, we only use one
 
         # return to repo
-        self.repo_put(self.repo.GRESOURCE_BUNDLE_MODELS, models)
+        self.repo_put(self.repo.RESOURCE_TEMPLATE_MODELS, models)
 
     def update_confirmation(self):
         confirm = self.repo_get(self.repo.CONFIRMATION, {})
         if "resource" not in confirm:
             confirm['resource'] = {}
         confirm['resource']['hosts'] = []
-        models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {"hosts": []})
+        models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {"hosts": []})
         for host in models['hosts']:
             host_dict = {"name": host.resource.name, "profile": host.profile.name}
             confirm['resource']['hosts'].append(host_dict)
@@ -131,7 +131,7 @@ class Define_Nets(WorkflowStep):
         if vlans:
             return vlans
         # try to grab some vlans from lab
-        models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
+        models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
         if "bundle" not in models:
             return None
         lab = models['bundle'].lab
@@ -146,10 +146,10 @@ class Define_Nets(WorkflowStep):
 
     def make_mx_host_dict(self, generic_host):
         host = {
-            'id': generic_host.resource.name,
+            'id': generic_host.profile.name,
             'interfaces': [],
             'value': {
-                "name": generic_host.resource.name,
+                "name": generic_host.profile.name,
                 "description": generic_host.profile.description
             }
         }
@@ -173,11 +173,11 @@ class Define_Nets(WorkflowStep):
         if vlans:
             context['vlans'] = vlans
         try:
-            models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
+            models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
             hosts = models.get("hosts", [])
             # calculate if the selected hosts have changed
             added_hosts = set()
-            host_set = set(self.repo_get(self.repo.GRB_LAST_HOSTLIST, []))
+            host_set = set(self.repo_get(self.repo.RCONFIG_LAST_HOSTLIST, []))
             if len(host_set):
                 new_host_set = set([h.resource.name + "*" + h.profile.name for h in models['hosts']])
                 context['removed_hosts'] = [h.split("*")[0] for h in (host_set - new_host_set)]
@@ -200,10 +200,10 @@ class Define_Nets(WorkflowStep):
         return context
 
     def post(self, post_data, user):
-        models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
+        models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
         if 'hosts' in models:
             host_set = set([h.resource.name + "*" + h.profile.name for h in models['hosts']])
-            self.repo_put(self.repo.GRB_LAST_HOSTLIST, host_set)
+            self.repo_put(self.repo.RCONFIG_LAST_HOSTLIST, host_set)
         try:
             xmlData = post_data.get("xml")
             self.updateModels(xmlData)
@@ -215,7 +215,7 @@ class Define_Nets(WorkflowStep):
             self.set_invalid("An error occurred when applying networks: " + str(e))
 
     def updateModels(self, xmlData):
-        models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
+        models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
         models["connections"] = {}
         models['networks'] = {}
         given_hosts, interfaces, networks = self.parseXml(xmlData)
@@ -247,7 +247,7 @@ class Define_Nets(WorkflowStep):
                     connection = NetworkConnection(vlan_is_tagged=connection['tagged'], network=net)
                     models['connections'][existing_host.resource.name][iface['profile_name']].append(connection)
         bundle.xml = xmlData
-        self.repo_put(self.repo.GRESOURCE_BUNDLE_MODELS, models)
+        self.repo_put(self.repo.RESOURCE_TEMPLATE_MODELS, models)
 
     def decomposeXml(self, xmlString):
         """
@@ -366,7 +366,7 @@ class Resource_Meta_Info(WorkflowStep):
         context = super(Resource_Meta_Info, self).get_context()
         name = ""
         desc = ""
-        bundle = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {}).get("bundle", False)
+        bundle = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {}).get("bundle", False)
         if bundle and bundle.name:
             name = bundle.name
             desc = bundle.description
@@ -376,14 +376,14 @@ class Resource_Meta_Info(WorkflowStep):
     def post(self, post_data, user):
         form = ResourceMetaForm(post_data)
         if form.is_valid():
-            models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
+            models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
             name = form.cleaned_data['bundle_name']
             desc = form.cleaned_data['bundle_description']
             bundle = models.get("bundle", ResourceTemplate(owner=self.repo_get(self.repo.SESSION_USER)))
             bundle.name = name
             bundle.description = desc
             models['bundle'] = bundle
-            self.repo_put(self.repo.GRESOURCE_BUNDLE_MODELS, models)
+            self.repo_put(self.repo.RESOURCE_TEMPLATE_MODELS, models)
             confirm = self.repo_get(self.repo.CONFIRMATION)
             if "resource" not in confirm:
                 confirm['resource'] = {}
