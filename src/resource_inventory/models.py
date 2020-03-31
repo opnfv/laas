@@ -165,7 +165,7 @@ class ResourceTemplate(models.Model):
 
     def getConfigs(self):
         configs = self.resourceConfigurations.all()
-        return list(self.resourceConfigurations.all())
+        return list(configs)
 
     def __str__(self):
         return self.name

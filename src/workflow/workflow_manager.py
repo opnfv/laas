@@ -164,14 +164,14 @@ class SessionManager():
         confirmation = self.make_booking_confirm(booking)
         self.active_workflow().repository.el[self.active_workflow().repository.BOOKING_MODELS] = models
         self.active_workflow().repository.el[self.active_workflow().repository.CONFIRMATION] = confirmation
-        self.active_workflow().repository.el[self.active_workflow().repository.GRESOURCE_BUNDLE_MODELS] = self.make_grb_models(booking.resource.template)
-        self.active_workflow().repository.el[self.active_workflow().repository.SELECTED_GRESOURCE_BUNDLE] = self.make_grb_models(booking.resource.template)['bundle']
+        self.active_workflow().repository.el[self.active_workflow().repository.RESOURCE_TEMPLATE_MODELS] = self.make_grb_models(booking.resource.template)
+        self.active_workflow().repository.el[self.active_workflow().repository.SELECTED_RESOURCE_TEMPLATE] = self.make_grb_models(booking.resource.template)['bundle']
         self.active_workflow().repository.el[self.active_workflow().repository.CONFIG_MODELS] = self.make_config_models(booking.config_bundle)
 
     def prefill_resource(self, resource):
         models = self.make_grb_models(resource)
         confirm = self.make_grb_confirm(resource)
-        self.active_workflow().repository.el[self.active_workflow().repository.GRESOURCE_BUNDLE_MODELS] = models
+        self.active_workflow().repository.el[self.active_workflow().repository.RESOURCE_TEMPLATE_MODELS] = models
         self.active_workflow().repository.el[self.active_workflow().repository.CONFIRMATION] = confirm
 
     def prefill_config(self, config):
@@ -180,10 +180,10 @@ class SessionManager():
         self.active_workflow().repository.el[self.active_workflow().repository.CONFIG_MODELS] = models
         self.active_workflow().repository.el[self.active_workflow().repository.CONFIRMATION] = confirm
         grb_models = self.make_grb_models(config.bundle)
-        self.active_workflow().repository.el[self.active_workflow().repository.GRESOURCE_BUNDLE_MODELS] = grb_models
+        self.active_workflow().repository.el[self.active_workflow().repository.RESOURCE_TEMPLATE_MODELS] = grb_models
 
     def make_grb_models(self, resource):
-        models = self.active_workflow().repository.el.get(self.active_workflow().repository.GRESOURCE_BUNDLE_MODELS, {})
+        models = self.active_workflow().repository.el.get(self.active_workflow().repository.RESOURCE_TEMPLATE_MODELS, {})
         models['hosts'] = []
         models['bundle'] = resource
         models['interfaces'] = {}

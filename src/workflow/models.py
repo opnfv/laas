@@ -366,14 +366,14 @@ class Repository():
     MODELS = "models"
     RESOURCE_SELECT = "resource_select"
     CONFIRMATION = "confirmation"
-    SELECTED_GRESOURCE_BUNDLE = "selected generic bundle pk"
+    SELECTED_RESOURCE_TEMPLATE = "selected resource template pk"
     SELECTED_CONFIG_BUNDLE = "selected config bundle pk"
     SELECTED_OPNFV_CONFIG = "selected opnfv deployment config"
-    GRESOURCE_BUNDLE_MODELS = "generic_resource_bundle_models"
-    GRESOURCE_BUNDLE_INFO = "generic_resource_bundle_info"
+    RESOURCE_TEMPLATE_MODELS = "generic_resource_bundle_models"
+    RESOURCE_TEMPLATE_INFO = "generic_resource_bundle_info"
     BOOKING = "booking"
     LAB = "lab"
-    GRB_LAST_HOSTLIST = "grb_network_previous_hostlist"
+    RCONFIG_LAST_HOSTLIST = "grb_network_previous_hostlist"
     BOOKING_FORMS = "booking_forms"
     SWCONF_HOSTS = "swconf_hosts"
     BOOKING_MODELS = "booking models"
@@ -399,7 +399,7 @@ class Repository():
 
     def get_child_defaults(self):
         return_tuples = []
-        for key in [self.SELECTED_GRESOURCE_BUNDLE, self.SESSION_USER]:
+        for key in [self.SELECTED_RESOURCE_TEMPLATE, self.SESSION_USER]:
             return_tuples.append((key, self.el.get(key)))
         return return_tuples
 
@@ -435,13 +435,13 @@ class Repository():
                 return errors
 
         # if GRB WF, create it
-        if self.GRESOURCE_BUNDLE_MODELS in self.el:
+        if self.RESOURCE_TEMPLATE_MODELS in self.el:
             errors = self.make_generic_resource_bundle()
             if errors:
                 return errors
             else:
                 self.el[self.HAS_RESULT] = True
-                self.el[self.RESULT_KEY] = self.SELECTED_GRESOURCE_BUNDLE
+                self.el[self.RESULT_KEY] = self.SELECTED_RESOURCE_TEMPLATE
                 return
 
         if self.CONFIG_MODELS in self.el:
@@ -507,8 +507,8 @@ class Repository():
 
     def make_generic_resource_bundle(self):
         owner = self.el[self.SESSION_USER]
-        if self.GRESOURCE_BUNDLE_MODELS in self.el:
-            models = self.el[self.GRESOURCE_BUNDLE_MODELS]
+        if self.RESOURCE_TEMPLATE_MODELS in self.el:
+            models = self.el[self.RESOURCE_TEMPLATE_MODELS]
             if 'hosts' in models:
                 hosts = models['hosts']
             else:
@@ -578,7 +578,7 @@ class Repository():
         models = self.el[self.CONFIG_MODELS]
         if 'bundle' in models:
             bundle = models['bundle']
-            bundle.bundle = self.el[self.SELECTED_GRESOURCE_BUNDLE]
+            bundle.bundle = self.el[self.SELECTED_RESOURCE_TEMPLATE]
             try:
                 bundle.save()
             except Exception as e:
@@ -623,8 +623,8 @@ class Repository():
 
         selected_grb = None
 
-        if self.SELECTED_GRESOURCE_BUNDLE in self.el:
-            selected_grb = self.el[self.SELECTED_GRESOURCE_BUNDLE]
+        if self.SELECTED_RESOURCE_TEMPLATE in self.el:
+            selected_grb = self.el[self.SELECTED_RESOURCE_TEMPLATE]
         else:
             return "BOOK, no selected resource. CODE:0x000e"
 

@@ -167,7 +167,6 @@ def check_invariants(request, **kwargs):
     image = kwargs['image']
     scenario = kwargs['scenario']
     lab = kwargs['lab']
-    resource_template = kwargs['resource_template']
     length = kwargs['length']
     # check that image os is compatible with installer
     if installer in image.os.sup_installers.all():
@@ -178,8 +177,8 @@ def check_invariants(request, **kwargs):
             raise ValidationError("The chosen installer does not support the chosen scenario")
     if image.from_lab != lab:
         raise ValidationError("The chosen image is not available at the chosen hosting lab")
-    #TODO
-    #if image.host_type != host_profile:
+    # TODO
+    # if image.host_type != host_profile:
     #    raise ValidationError("The chosen image is not available for the chosen host type")
     if not image.public and image.owner != request.user:
         raise ValidationError("You are not the owner of the chosen private image")

@@ -36,7 +36,7 @@ class Abstract_Resource_Select(AbstractSelectOrCreate):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.select_repo_key = self.repo.SELECTED_GRESOURCE_BUNDLE
+        self.select_repo_key = self.repo.SELECTED_RESOURCE_TEMPLATE
         self.confirm_key = self.workflow_type
 
     def alert_bundle_missing(self):
@@ -81,7 +81,7 @@ class SWConfig_Select(AbstractSelectOrCreate):
 
     def get_form_queryset(self):
         user = self.repo_get(self.repo.SESSION_USER)
-        grb = self.repo_get(self.repo.SELECTED_GRESOURCE_BUNDLE)
+        grb = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE)
         qs = ResourceTemplate.objects.filter(Q(hidden=False) & (Q(owner=user) | Q(public=True))).filter(bundle=grb)
         return qs
 
