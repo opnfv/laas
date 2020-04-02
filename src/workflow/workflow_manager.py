@@ -66,7 +66,7 @@ class SessionManager():
             return reverse('booking:booking_detail', kwargs={'booking_id': self.result.id})
         return "/"
 
-    def pop_workflow(self):
+    def pop_workflow(self, discard=False):
         multiple_wfs = len(self.workflows) > 1
         if multiple_wfs:
             if self.workflows[-1].repository.el[Repository.RESULT]:  # move result
@@ -79,6 +79,8 @@ class SessionManager():
         else:
             current_repo = prev_workflow.repository
         self.result = current_repo.el[current_repo.RESULT]
+        if discard:
+            current_repo.cancel()
         return multiple_wfs, self.result
 
     def status(self, request):
