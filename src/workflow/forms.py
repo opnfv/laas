@@ -393,7 +393,7 @@ class NetworkConfigurationForm(forms.Form):
 
 class HostSoftwareDefinitionForm(forms.Form):
 
-    host_name = forms.CharField(max_length=200, disabled=True, required=False)
+    host_name = forms.CharField(max_length=200, disabled=False, required=True)
     headnode = forms.BooleanField(required=False, widget=forms.HiddenInput)
 
     def __init__(self, *args, **kwargs):

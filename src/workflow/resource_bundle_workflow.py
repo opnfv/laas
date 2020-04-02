@@ -9,10 +9,14 @@
 
 
 from django.conf import settings
+from django.forms import formset_factory
+
+from typing import List
 
 import json
 import re
 from xml.dom import minidom
+import traceback
 
 from workflow.models import WorkflowStep
 from account.models import Lab
@@ -20,6 +24,7 @@ from workflow.forms import (
     HardwareDefinitionForm,
     NetworkDefinitionForm,
     ResourceMetaForm,
+    HostSoftwareDefinitionForm,
 )
 from resource_inventory.models import (
     ResourceProfile,
@@ -27,7 +32,8 @@ from resource_inventory.models import (
     ResourceConfiguration,
     InterfaceConfiguration,
     Network,
-    NetworkConnection
+    NetworkConnection,
+    Image,
 )
 from dashboard.exceptions import (
     InvalidVlanConfigurationException,
@@ -53,46 +59,137 @@ class Define_Hardware(WorkflowStep):
         super().__init__(*args, **kwargs)
 
     def get_context(self):
+        print("get context start")
         context = super(Define_Hardware, self).get_context()
         context['form'] = self.form or HardwareDefinitionForm()
+        print("end get context")
         return context
 
     def update_models(self, data):
+        print("updating models")
         data = data['filter_field']
         models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
-        models['hosts'] = []  # This will always clear existing data when this step changes
+        models['resources'] = []  # This will always clear existing data when this step changes
+        models['connections'] = []
         models['interfaces'] = {}
-        if "bundle" not in models:
-            models['bundle'] = ResourceTemplate(owner=self.repo_get(self.repo.SESSION_USER))
-        host_data = data['host']
-        names = {}
-        for host_profile_dict in host_data.values():
-            id = host_profile_dict['id']
-            profile = ResourceProfile.objects.get(id=id)
+        if "template" not in models:
+            template = ResourceTemplate()
+            template.save()
+            models['template'] = template
+
+        print("Data is: " + str(data))
+
+        resource_data = data['resource']
+        #names = {}
+
+        new_template = models['template']
+
+        public_network = Network(name="public", bundle=new_template, is_public=True)
+        public_network.save()
+
+        all_networks = {public_network.id: public_network}
+
+        #all_resources = []
+
+        for resource_template_dict in resource_data.values():
+            if not resource_template_dict['selected']:
+                continue
+
+            id = resource_template_dict['id']
+            old_template = ResourceTemplate.objects.get(id=id)
+            #profile = ResourceProfile.objects.get(id=id)
             # instantiate genericHost and store in repo
-            for name in host_profile_dict['values'].values():
-                if not re.match(r"(?=^.{1,253}$)(^([A-Za-z0-9-_]{1,62}\.)*[A-Za-z0-9-_]{1,63})", name):
-                    raise InvalidHostnameException("Invalid hostname: '" + name + "'")
-                if name in names:
-                    raise NonUniqueHostnameException("All hosts must have unique names")
-                names[name] = True
-                resourceConfig = ResourceConfiguration(profile=profile, template=models['bundle'])
-                models['hosts'].append(resourceConfig)
-                for interface_profile in profile.interfaceprofile.all():
-                    genericInterface = InterfaceConfiguration(profile=interface_profile, resource_config=resourceConfig)
-                    if resourceConfig.name not in models['interfaces']:
-                        models['interfaces'][resourceConfig.name] = []
-                    models['interfaces'][resourceConfig.name].append(genericInterface)
+            print("Resource template dict:")
+            print(resource_template_dict)
+            print("Start iter")
+
+            used_names = {}
+            for _ in range(0, resource_template_dict['count']):
+                resource_configs = old_template.resourceConfigurations.all()
+                for config in resource_configs:
+                    new_config = ResourceConfiguration()
+                    new_config.profile = config.profile
+                    new_config.image = config.image
+                    new_config.name = config.name
+                    new_config.template = new_template
+
+                    #need to save now for connections to refer to it later
+                    new_config.save()
+                    # TODO: reset template later after saving the template
+                    for interface_config in config.interface_configs.all():
+                        new_interface_config = InterfaceConfiguration()
+                        new_interface_config.profile = interface_config.profile
+                        new_interface_config.resource_config = new_config
+
+                        for connection in interface_config.connections.all():
+                            network = None
+                            if connection.network.is_public:
+                                network = public_network
+                            else:
+                                #check if network is known
+                                if connection.network.id not in all_networks:
+                                    #create matching one
+                                    new_network = Network(
+                                            name = connection.network.name + "_" + str(new_config.id),
+                                            bundle = new_template,
+                                            is_public = False)
+                                    new_network.save()
+
+                                    all_networks[connection.network.id] = new_network
+
+                                network = all_networks[connection.network.id]
+
+                            new_connection = NetworkConnection(
+                                    network=network,
+                                    vlan_is_tagged=connection.vlan_is_tagged)
+
+                            new_interface_config.save() # can't do later because M2M on next line
+                            new_connection.save()
+                            
+                            new_interface_config.connections.add(new_connection)
+
+                        unique_resource_ref = new_config.name + "_" + str(new_config.id)
+                        if unique_resource_ref not in models['interfaces']:
+                            models['interfaces'][unique_resource_ref] = []
+                        models['interfaces'][unique_resource_ref].append(interface_config)
+
+                    models['resources'].append(new_config)
+
+            print("Done iter")
+            print("networks is")
+            print(all_networks)
+            models['networks'] = all_networks
+            print("resources is")
+            print(models['resources'])
+            print("interfaces is")
+            print(models['interfaces'])
+
+            #for name in resource_template_dict.values():
+            #    if not re.match(r"(?=^.{1,253}$)(^([A-Za-z0-9-_]{1,62}\.)*[A-Za-z0-9-_]{1,63})", name):
+            #        print("InvalidHostnameException")
+            #        raise InvalidHostnameException("Invalid hostname: '" + name + "'")
+            #    if name in names:
+            #        print("InvalidHostnameException")
+            #        raise NonUniqueHostnameException("All hosts must have unique names")
+            #    names[name] = True
+            #    resourceConfig = ResourceConfiguration(profile=profile, template=models['bundle'])
+            #    models['hosts'].append(resourceConfig)
+            #    for interface_profile in profile.interfaceprofile.all():
+            #        genericInterface = InterfaceConfiguration(profile=interface_profile, resource_config=resourceConfig)
+            #        if resourceConfig.name not in models['interfaces']:
+            #            models['interfaces'][resourceConfig.name] = []
+            #        models['interfaces'][resourceConfig.name].append(genericInterface)
 
         # add selected lab to models
         for lab_dict in data['lab'].values():
             if lab_dict['selected']:
-                models['bundle'].lab = Lab.objects.get(lab_user__id=lab_dict['id'])
+                models['template'].lab = Lab.objects.get(lab_user__id=lab_dict['id'])
                 break  # if somehow we get two 'true' labs, we only use one
 
         # return to repo
         self.repo_put(self.repo.RESOURCE_TEMPLATE_MODELS, models)
 
+    # TODO: fix when making confirm work
     def update_confirmation(self):
         confirm = self.repo_get(self.repo.CONFIRMATION, {})
         if "resource" not in confirm:
@@ -111,12 +208,134 @@ class Define_Hardware(WorkflowStep):
             self.form = HardwareDefinitionForm(post_data)
             if self.form.is_valid():
                 self.update_models(self.form.cleaned_data)
-                self.update_confirmation()
+                #self.update_confirmation()
                 self.set_valid("Step Completed")
             else:
                 self.set_invalid("Please complete the fields highlighted in red to continue")
         except Exception as e:
+            print("Caught exception: " + str(e))
+            traceback.print_exc()
+            #print(repr(e))
             self.set_invalid(str(e))
+
+
+class Define_Software(WorkflowStep):
+    template = 'config_bundle/steps/define_software.html'
+    title = "Pick Software"
+    description = "Choose the opnfv and image of your machines"
+    short_title = "host config"
+
+    def build_filter_data(self, hosts_data):
+        """
+        Build list of Images to filter out.
+
+        returns a 2D array of images to exclude
+        based on the ordering of the passed
+        hosts_data
+        """
+
+        filter_data = []
+        user = self.repo_get(self.repo.SESSION_USER)
+        #lab = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE).lab
+        lab = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS)['template'].lab
+        for i, host_data in enumerate(hosts_data):
+            host = ResourceConfiguration.objects.get(pk=host_data['host_id'])
+            wrong_owner = Image.objects.exclude(owner=user).exclude(public=True)
+            wrong_host = Image.objects.exclude(host_type=host.profile)
+            wrong_lab = Image.objects.exclude(from_lab=lab)
+            excluded_images = wrong_owner | wrong_host | wrong_lab
+            filter_data.append([])
+            for image in excluded_images:
+                filter_data[i].append(image.pk)
+        return filter_data
+
+    def create_hostformset(self, hostlist, data=None):
+        hosts_initial = []
+        #host_configs = self.repo_get(self.repo.CONFIG_MODELS, {}).get("host_configs", False)
+        configs = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {}).get("resources")
+        if configs:
+            for config in configs:
+                hosts_initial.append({
+                    'host_id': config.id,
+                    'host_name': config.name,
+                    'headnode': config.is_head_node,
+                    'image': config.image
+                })
+        else:
+            for host in hostlist:
+                hosts_initial.append({
+                    'host_id': host.id,
+                    'host_name': host.name
+                })
+
+        HostFormset = formset_factory(HostSoftwareDefinitionForm, extra=0)
+        filter_data = self.build_filter_data(hosts_initial)
+
+        class SpecialHostFormset(HostFormset):
+            def get_form_kwargs(self, index):
+                kwargs = super(SpecialHostFormset, self).get_form_kwargs(index)
+                if index is not None:
+                    kwargs['imageQS'] = Image.objects.exclude(pk__in=filter_data[index])
+                return kwargs
+
+        if data:
+            return SpecialHostFormset(data, initial=hosts_initial)
+        return SpecialHostFormset(initial=hosts_initial)
+
+    def get_host_list(self, grb=None):
+        return self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS).get("resources")
+        '''if grb is None:
+            grb = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE, False)
+            if not grb:
+                return []
+        if grb.id:
+            return ResourceConfiguration.objects.filter(template=grb)
+        generic_hosts = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {}).get("hosts", [])
+        return generic_hosts'''
+
+    def get_context(self):
+        context = super(Define_Software, self).get_context()
+
+        context["formset"] = self.create_hostformset(self.get_host_list())
+
+        return context
+
+    def post(self, post_data, user):
+        models = self.repo_get(self.repo.CONFIG_MODELS, {})
+        if "bundle" not in models:
+            models['bundle'] = ResourceTemplate(owner=self.repo_get(self.repo.SESSION_USER))
+
+        confirm = self.repo_get(self.repo.CONFIRMATION, {})
+
+        hosts = self.get_host_list()
+        #models['headnode_index'] = post_data.get("headnode", 1)
+        formset = self.create_hostformset(hosts, data=post_data)
+        has_headnode = False
+        if formset.is_valid():
+            models['host_configs'] = []
+            confirm_hosts = []
+            for i, form in enumerate(formset):
+                host = hosts[i]
+                image = form.cleaned_data['image']
+                hostname = form.cleaned_data['host_name']
+                headnode = form.cleaned_data['headnode']
+                if headnode:
+                    print("Found a headnode")
+                    has_headnode = True
+                host.is_head_node = headnode
+                host.name = hostname
+                host.image = image
+                print("Updated host:")
+                print(host)
+                host.save()
+
+            #if not has_headnode:
+                #self.set_invalid('Must have one "Headnode" per POD')
+                #return
+
+            self.set_valid("Completed")
+        else:
+            self.set_invalid("Please complete all fields")
 
 
 class Define_Nets(WorkflowStep):
@@ -144,6 +363,43 @@ class Define_Nets(WorkflowStep):
         except Exception:
             return None
 
+    def make_mx_network_dict(self, network):
+        network_dict = {
+            'id': network.id,
+            'name': network.name,
+            'public': network.is_public
+        }
+
+        return network_dict
+
+    def make_mx_resource_dict(self, resource_config):
+        resource_dict = {
+            'id': resource_config.id,
+            'interfaces': [],
+            'value': {
+                'name': resource_config.name,
+                'id': resource_config.id,
+                'description': resource_config.profile.description
+            }
+        }
+
+        for interface_config in resource_config.interface_configs.all():
+            connections = []
+            for connection in interface_config.connections.all():
+                connections.append({'tagged': connection.vlan_is_tagged, 'network': connection.network.id})
+
+            interface_dict = {
+                "id": interface_config.id,
+                "name": interface_config.profile.name,
+                "description": "speed: " + str(interface_config.profile.speed) + "M\ntype: " + interface_config.profile.nic_type,
+                "connections": connections
+            }
+
+            resource_dict['interfaces'].append(interface_dict)
+
+        return resource_dict
+                
+
     def make_mx_host_dict(self, generic_host):
         host = {
             'id': generic_host.profile.name,
@@ -160,42 +416,65 @@ class Define_Nets(WorkflowStep):
             })
         return host
 
+    # first step guards this one, so can't get here without at least empty 
+    # models being populated by step one
     def get_context(self):
         context = super(Define_Nets, self).get_context()
         context.update({
             'form': NetworkDefinitionForm(),
             'debug': settings.DEBUG,
+            'resources': {},
+            'networks': {},
+            'vlans': [],
+            # remove others
             'hosts': [],
             'added_hosts': [],
             'removed_hosts': []
         })
-        vlans = self.get_vlans()
-        if vlans:
-            context['vlans'] = vlans
-        try:
-            models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
-            hosts = models.get("hosts", [])
-            # calculate if the selected hosts have changed
-            added_hosts = set()
-            host_set = set(self.repo_get(self.repo.RCONFIG_LAST_HOSTLIST, []))
-            if len(host_set):
-                new_host_set = set([h.resource.name + "*" + h.profile.name for h in models['hosts']])
-                context['removed_hosts'] = [h.split("*")[0] for h in (host_set - new_host_set)]
-                added_hosts.update([h.split("*")[0] for h in (new_host_set - host_set)])
 
-            # add all host info to context
-            for generic_host in hosts:
-                host = self.make_mx_host_dict(generic_host)
-                host_serialized = json.dumps(host)
-                context['hosts'].append(host_serialized)
-                if host['id'] in added_hosts:
-                    context['added_hosts'].append(host_serialized)
-            bundle = models.get("bundle", False)
-            if bundle:
-                context['xml'] = bundle.xml or False
+        models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS) # infallible, guarded by prior step
+        for resource in models['resources']:
+            d = self.make_mx_resource_dict(resource)
+            context['resources'][d['id']] = d
+            #context['resources'].append(self.make_mx_resource_dict(resource))
 
-        except Exception:
-            pass
+        for network in models['networks'].values():
+            print("network right now is")
+            print(network)
+            d = self.make_mx_network_dict(network)
+            context['networks'][d['id']] = d
+            #context['networks'].append(self.make_mx_network_dict(network))
+
+
+        #vlans = self.get_vlans()
+        #if vlans:
+        #    context['vlans'] = vlans
+        #try:
+        #    models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
+        #    hosts = models.get("hosts", [])
+        #    # calculate if the selected hosts have changed
+        #    added_hosts = set()
+        #    host_set = set(self.repo_get(self.repo.GRB_LAST_HOSTLIST, []))
+        #    if len(host_set):
+        #        new_host_set = set([h.resource.name + "*" + h.profile.name for h in models['hosts']])
+        #        context['removed_hosts'] = [h.split("*")[0] for h in (host_set - new_host_set)]
+        #        added_hosts.update([h.split("*")[0] for h in (new_host_set - host_set)])
+
+        #    # add all host info to context
+        #    for generic_host in hosts:
+        #        host = self.make_mx_host_dict(generic_host)
+        #        host_serialized = json.dumps(host)
+        #        context['hosts'].append(host_serialized)
+        #        if host['id'] in added_hosts:
+        #            context['added_hosts'].append(host_serialized)
+        #    bundle = models.get("bundle", False)
+        #    if bundle:
+        #        context['xml'] = bundle.xml or False
+
+        #except Exception:
+        #    pass
+        print("Context:")
+        print(context)
 
         return context
 
@@ -212,19 +491,45 @@ class Define_Nets(WorkflowStep):
         except ResourceAvailabilityException:
             self.set_invalid("Public network not availble")
         except Exception as e:
+            traceback.print_exc()
             self.set_invalid("An error occurred when applying networks: " + str(e))
 
-    def updateModels(self, xmlData):
-        models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
-        models["connections"] = {}
-        models['networks'] = {}
-        given_hosts, interfaces, networks = self.parseXml(xmlData)
-        existing_host_list = models.get("hosts", [])
-        existing_hosts = {}  # maps id to host
-        for host in existing_host_list:
-            existing_hosts[host.resource.name] = host
+    def resetNetworks(self, networks: List[Network]): # potentially just pass template here?
+        for network in networks:
+            network.delete()
 
-        bundle = models.get("bundle", ResourceTemplate(owner=self.repo_get(self.repo.SESSION_USER)))
+    def updateModels(self, xmlData):
+        print("UpdateModels called")
+        # return # for now, no clue why this gets called so early!
+        models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
+        template = models['template']
+
+        #models["connections"] = {}
+        #models['networks'] = {}
+        given_hosts = None
+        interfaces = None
+        networks = None
+        try:
+            given_hosts, interfaces, networks = self.parseXml(xmlData)
+        except Exception as e:
+            print("tried to parse Xml, got exception instead:")
+            print(e)
+        print("Update models called for network step")
+        print("given hosts, interfaces, networks:")
+        print(given_hosts)
+        print(interfaces)
+        print(networks)
+        #return
+
+        existing_rconfig_list = models.get("resources", [])
+        existing_rconfigs = {}  # maps id to host
+        for rconfig in existing_rconfig_list:
+            existing_rconfigs["host_" + str(rconfig.id)] = rconfig
+
+        bundle = models.get("template") # hard fail if not in repo
+
+        self.resetNetworks(models['networks'].values())
+        models['networks'] = {}
 
         for net_id, net in networks.items():
             network = Network()
@@ -232,24 +537,36 @@ class Define_Nets(WorkflowStep):
             network.bundle = bundle
             network.is_public = net['public']
             models['networks'][net_id] = network
+            network.save()
 
         for hostid, given_host in given_hosts.items():
-            existing_host = existing_hosts[hostid[5:]]
+            existing_rconfig = existing_rconfigs[hostid]
 
             for ifaceId in given_host['interfaces']:
                 iface = interfaces[ifaceId]
-                if existing_host.resource.name not in models['connections']:
-                    models['connections'][existing_host.resource.name] = {}
-                models['connections'][existing_host.resource.name][iface['profile_name']] = []
+                print("iface is:", iface)
+                
+                iface_config = InterfaceConfiguration.objects.get(id=iface['config_id']) # verify, don't trust! TODO
+                #if existing_rconfig.resource.name not in models['connections']:
+                    #models['connections'][existing_rconfig.resource.name] = {}
+                #models['connections'][existing_host.resource.name][iface['hostname']] = []
                 for connection in iface['connections']:
                     network_id = connection['network']
                     net = models['networks'][network_id]
                     connection = NetworkConnection(vlan_is_tagged=connection['tagged'], network=net)
-                    models['connections'][existing_host.resource.name][iface['profile_name']].append(connection)
-        bundle.xml = xmlData
+                    connection.save()
+                    print("Adding connection to iface:")
+                    print(connection)
+                    print(iface)
+                    print(iface_config, ":::", iface_config.id)
+                    iface_config.connections.add(connection)
+                    iface_config.save()
+                    #models['connections'][existing_host.resource.name][iface['hostname']].append(connection)
+        #bundle.xml = xmlData // don't save xml, just relayout
         self.repo_put(self.repo.RESOURCE_TEMPLATE_MODELS, models)
 
     def decomposeXml(self, xmlString):
+        print("decomposeXml was called")
         """
         Translate XML into useable data.
 
@@ -288,22 +605,40 @@ class Define_Nets(WorkflowStep):
             elif "network" in parentGroup:
                 network_ports[cellId] = cell.getAttribute("parent")  # maps port ID to net ID
 
+        print("DecomposeXml produces:")
+        print(connections)
+        print(networks)
+        print(hosts)
+        print(interfaces)
+        print(network_ports)
         return connections, networks, hosts, interfaces, network_ports
 
     # serialize and deserialize xml from mxGraph
     def parseXml(self, xmlString):
+        print("hello from parsexml")
+        print("parseXml got xml string")
+        #print(xmlString)
         networks = {}  # maps net name to network object
         hosts = {}  # cotains id -> hosts, each containing interfaces, referencing networks
         interfaces = {}  # maps id -> interface
         untagged_ifaces = set()  # used to check vlan config
         network_names = set()  # used to check network names
+        print("Going to decompose xml")
         xml_connections, xml_nets, xml_hosts, xml_ifaces, xml_ports = self.decomposeXml(xmlString)
+        print("Decomposed xml:")
+        print(xml_connections)
+        print(xml_nets)
+        print(xml_hosts)
+        print(xml_ifaces)
+        print(xml_ports)
 
         # parse Hosts
         for cellId, cell in xml_hosts.items():
             cell_json_str = cell.getAttribute("value")
             cell_json = json.loads(cell_json_str)
-            host = {"interfaces": [], "name": cellId, "profile_name": cell_json['name']}
+            print("this host json should contain 'name':")
+            print(cell_json)
+            host = {"interfaces": [], "name": cellId, "hostname": cell_json['name']}
             hosts[cellId] = host
 
         # parse networks
@@ -311,9 +646,12 @@ class Define_Nets(WorkflowStep):
             escaped_json_str = cell.getAttribute("value")
             json_str = escaped_json_str.replace('&quot;', '"')
             net_info = json.loads(json_str)
+            print("This is a network json:")
+            print(net_info)
             net_name = net_info['name']
             public = net_info['public']
             if net_name in network_names:
+                print("Found non-unique net name")
                 raise NetworkExistsException("Non unique network name found")
             network = {"name": net_name, "public": public, "id": cellId}
             networks[cellId] = network
@@ -324,14 +662,19 @@ class Define_Nets(WorkflowStep):
             parentId = cell.getAttribute('parent')
             cell_json_str = cell.getAttribute("value")
             cell_json = json.loads(cell_json_str)
-            iface = {"name": cellId, "connections": [], "profile_name": cell_json['name']}
+            print("this interface json should contain 'name':")
+            print(cell_json)
+            iface = {"graph_id": cellId, "connections": [], "config_id": cell_json['id'], "profile_name": cell_json['name']}
             hosts[parentId]['interfaces'].append(cellId)
             interfaces[cellId] = iface
 
         # parse connections
         for cellId, cell in xml_connections.items():
+            print("parsing xml_connections, cell is")
+            print(cell)
             escaped_json_str = cell.getAttribute("value")
             json_str = escaped_json_str.replace('&quot;', '"')
+            print("Json string: ", json_str)
             attributes = json.loads(json_str)
             tagged = attributes['tagged']
             interface = None
@@ -346,13 +689,15 @@ class Define_Nets(WorkflowStep):
                 network = networks[xml_ports[src]]
 
             if not tagged:
-                if interface['name'] in untagged_ifaces:
+                if interface['config_id'] in untagged_ifaces:
+                    print("more than one untagged vlan")
                     raise InvalidVlanConfigurationException("More than one untagged vlan on an interface")
-                untagged_ifaces.add(interface['name'])
+                untagged_ifaces.add(interface['config_id'])
 
             # add connection to interface
             interface['connections'].append({"tagged": tagged, "network": network['id']})
 
+        print("parseXml returns")
         return hosts, interfaces, networks
 
 
