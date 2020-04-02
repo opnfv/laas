@@ -391,6 +391,9 @@ class Repository():
     SNAPSHOT_DESC = "description of the snapshot"
     BOOKING_INFO_FILE = "the INFO.yaml file for this user's booking"
 
+    #new keys for migration to using ResourceTemplates:
+    RESOURCE_TEMPLATE_MODELS = "current working model of resource template"
+
     # migratory elements of segmented workflow
     # each of these is the end result of a different workflow.
     HAS_RESULT = "whether or not workflow has a result"
