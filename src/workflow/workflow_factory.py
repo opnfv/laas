@@ -9,8 +9,8 @@
 
 
 from workflow.booking_workflow import Booking_Resource_Select, SWConfig_Select, Booking_Meta, OPNFV_Select
-from workflow.resource_bundle_workflow import Define_Hardware, Define_Nets, Resource_Meta_Info
-from workflow.sw_bundle_workflow import Config_Software, Define_Software, SWConf_Resource_Select
+from workflow.resource_bundle_workflow import Define_Hardware, Define_Nets, Resource_Meta_Info, Define_Software
+from workflow.sw_bundle_workflow import Config_Software, SWConf_Resource_Select
 from workflow.snapshot_workflow import Select_Host_Step, Image_Meta_Step
 from workflow.opnfv_workflow import Pick_Installer, Assign_Network_Roles, Assign_Host_Roles, OPNFV_Resource_Select, MetaInfo
 from workflow.models import Confirmation_Step
@@ -81,6 +81,7 @@ class WorkflowFactory():
 
     resource_steps = [
         Define_Hardware,
+        Define_Software,
         Define_Nets,
         Resource_Meta_Info,
     ]
