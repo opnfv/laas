@@ -196,6 +196,7 @@ class MultipleSelectFilterWidget {
 
         for(let nodeId in this.filter_items) {
             const node = this.filter_items[nodeId];
+            console.log("Defaulting key node.classe: " + node.class);
             this.result[node.class] = {}
         }
 
@@ -390,11 +391,11 @@ class MultipleSelectFilterWidget {
         this.dropdown_count++;
         const label = document.createElement("H5")
         label.appendChild(document.createTextNode(node['name']))
-        label.classList.add("p-1", "m-1");
+        label.classList.add("p-1", "m-1", "flex-grow-1");
         div.appendChild(label);
-        let input = this.make_input(div, node, prepopulate);
-        input.classList.add("flex-grow-1", "p-1", "m-1");
-        div.appendChild(input);
+        //let input = this.make_input(div, node, prepopulate);
+        //input.classList.add("flex-grow-1", "p-1", "m-1");
+        //div.appendChild(input);
         let remove_btn = this.make_remove_button(div, node);
         remove_btn.classList.add("p-1", "m-1");
         div.appendChild(remove_btn);
@@ -407,10 +408,11 @@ class MultipleSelectFilterWidget {
         const node = this.filter_items[node_id]
         const parent = div.parentNode;
         div.parentNode.removeChild(div);
-        delete this.result[node.class][node.id]['values'][div.id];
+        //delete this.result[node.class][node.id]['values'][div.id];
+        this.result[node.class][node.id]['count']--;
 
         //checks if we have removed last item in class
-        if(jQuery.isEmptyObject(this.result[node.class][node.id]['values'])){
+        if(this.result[node.class][node.id]['count'] == 0){
             delete this.result[node.class][node.id];
             this.clear(node);
         }
@@ -425,21 +427,59 @@ class MultipleSelectFilterWidget {
     }
 
     updateObjectResult(node, childKey, childValue){
+        console.log("Update object result called with " + childKey + ", " + childValue + " on node " + node);
         if(!this.result[node.class][node.id])
-            this.result[node.class][node.id] = {selected: true, id: node.model_id, values: {}}
+            this.result[node.class][node.id] = {selected: true, id: node.model_id, count: 0}
 
-        this.result[node.class][node.id]['values'][childKey] = childValue;
+        this.result[node.class][node.id]['count']++;
     }
 
     finish(){
         document.getElementById("filter_field").value = JSON.stringify(this.result);
+        console.log("filter field value:");
+        console.log(JSON.stringify(this.result));
     }
 }
 
 class NetworkStep {
-    constructor(debug, xml, hosts, added_hosts, removed_host_ids, graphContainer, overviewContainer, toolbarContainer){
-        if(!this.check_support())
+    // expects:
+    //
+    // debug: bool
+    // resources: {
+    //     id: {
+    //         id: int,
+    //         value: {
+    //             description: string,
+    //         },
+    //         interfaces: [
+    //             id: int,
+    //             name: str,
+    //             description: str,
+    //             connections: [
+    //                 {
+    //                     network: int, [networks.id]
+    //                     tagged: bool 
+    //                 }
+    //             ],
+    //         ],
+    //     }
+    // }
+    // networks: {
+    //     id: {
+    //         id: int,
+    //         name: str,
+    //         public: bool,
+    //     }
+    // }
+    //     
+    constructor(debug, p_resources, p_networks, graphContainer, overviewContainer, toolbarContainer){
+        console.log("Arrived at constructor");
+        if(!this.check_support()) {
+            console.log("Aborting, browser is not supported");
             return;
+        }
+
+        console.log("Got a bit further");
 
         this.currentWindow = null;
         this.netCount = 0;
@@ -454,7 +494,28 @@ class NetworkStep {
 
         this.editor.setGraphContainer(graphContainer);
         this.doGlobalConfig();
-        this.prefill(xml, hosts, added_hosts, removed_host_ids);
+
+        console.log("all:");
+        console.log(p_networks);
+        console.log(p_resources);
+
+        console.log("printing networks");
+
+        for(const network of p_networks) {
+            console.log("Prefilling network:");
+            console.log(network);
+        }
+
+        console.log("printing resources");
+
+        for(const resource of p_resources) {
+            console.log("Prefilling resource:");
+            console.log(resource);
+        }
+
+        console.log("done printing resources");
+        //this.prefill(xml, hosts, added_hosts, removed_host_ids);
+        //
         this.addToolbarButton(this.editor, toolbarContainer, 'zoomIn', '', "/static/img/mxgraph/zoom_in.png", true);
         this.addToolbarButton(this.editor, toolbarContainer, 'zoomOut', '', "/static/img/mxgraph/zoom_out.png", true);
 
