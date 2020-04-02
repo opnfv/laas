@@ -53,27 +53,38 @@ class Define_Hardware(WorkflowStep):
         super().__init__(*args, **kwargs)
 
     def get_context(self):
+        print("get context start")
         context = super(Define_Hardware, self).get_context()
         context['form'] = self.form or HardwareDefinitionForm()
+        print("end get context")
         return context
 
     def update_models(self, data):
+        print("updating models")
         data = data['filter_field']
         models = self.repo_get(self.repo.GRESOURCE_BUNDLE_MODELS, {})
         models['hosts'] = []  # This will always clear existing data when this step changes
         models['interfaces'] = {}
         if "bundle" not in models:
             models['bundle'] = ResourceTemplate(owner=self.repo_get(self.repo.SESSION_USER))
-        host_data = data['host']
+        print("Data is: " + str(data))
+        print("sdfhkldsfhklsdfhlkfdshkldsf")
+        resource_data = data['resource']
         names = {}
-        for host_profile_dict in host_data.values():
-            id = host_profile_dict['id']
-            profile = ResourceProfile.objects.get(id=id)
+        for resource_template_dict in resource_data.values():
+            if not resource_template_dict['selected']:
+                continue
+
+            id = resource_template_dict['id']
+            template = ResourceTemplate.objects.get(id=id)
+            #profile = ResourceProfile.objects.get(id=id)
             # instantiate genericHost and store in repo
-            for name in host_profile_dict['values'].values():
+            for name in resource_template_dict.values():
                 if not re.match(r"(?=^.{1,253}$)(^([A-Za-z0-9-_]{1,62}\.)*[A-Za-z0-9-_]{1,63})", name):
+                    print("InvalidHostnameException")
                     raise InvalidHostnameException("Invalid hostname: '" + name + "'")
                 if name in names:
+                    print("InvalidHostnameException")
                     raise NonUniqueHostnameException("All hosts must have unique names")
                 names[name] = True
                 resourceConfig = ResourceConfiguration(profile=profile, template=models['bundle'])
@@ -92,6 +103,7 @@ class Define_Hardware(WorkflowStep):
 
         # return to repo
         self.repo_put(self.repo.GRESOURCE_BUNDLE_MODELS, models)
+        print("done update models")
 
     def update_confirmation(self):
         confirm = self.repo_get(self.repo.CONFIRMATION, {})
@@ -116,6 +128,8 @@ class Define_Hardware(WorkflowStep):
             else:
                 self.set_invalid("Please complete the fields highlighted in red to continue")
         except Exception as e:
+            print("Caught exception: " + str(e))
+            print(repr(e))
             self.set_invalid(str(e))
 
 
