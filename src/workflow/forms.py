@@ -321,6 +321,9 @@ class FormUtils:
             labs[lab_node['id']] = lab_node
 
             for template in ResourceManager.getInstance().getAvailableResourceTemplates(lab, user):
+                print("Found a template from query:", template.id)
+                print("Using user:", user)
+                print("Template owner:", template.owner)
 
                 resource_node = {
                     'form': {"name": "host_name", "type": "text", "placeholder": "hostname"},
@@ -355,9 +358,9 @@ class FormUtils:
 
 class HardwareDefinitionForm(forms.Form):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         super(HardwareDefinitionForm, self).__init__(*args, **kwargs)
-        attrs = FormUtils.getLabData(multiple_hosts=True)
+        attrs = FormUtils.getLabData(multiple_hosts=True, user=user)
         self.fields['filter_field'] = MultipleSelectFilterField(
             widget=MultipleSelectFilterWidget(**attrs)
         )
@@ -393,7 +396,7 @@ class NetworkConfigurationForm(forms.Form):
 
 class HostSoftwareDefinitionForm(forms.Form):
 
-    host_name = forms.CharField(max_length=200, disabled=True, required=False)
+    host_name = forms.CharField(max_length=200, disabled=False, required=True)
     headnode = forms.BooleanField(required=False, widget=forms.HiddenInput)
 
     def __init__(self, *args, **kwargs):

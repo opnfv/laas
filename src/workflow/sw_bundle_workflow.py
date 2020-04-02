@@ -20,7 +20,7 @@ class SWConf_Resource_Select(Abstract_Resource_Select):
     workflow_type = "configuration"
 
 
-class Define_Software(WorkflowStep):
+class Define_Software_Old(WorkflowStep):
     template = 'config_bundle/steps/define_software.html'
     title = "Pick Software"
     description = "Choose the opnfv and image of your machines"
