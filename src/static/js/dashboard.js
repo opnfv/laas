@@ -196,6 +196,7 @@ class MultipleSelectFilterWidget {
 
         for(let nodeId in this.filter_items) {
             const node = this.filter_items[nodeId];
+            console.log("Defaulting key node.classe: " + node.class);
             this.result[node.class] = {}
         }
 
@@ -390,11 +391,11 @@ class MultipleSelectFilterWidget {
         this.dropdown_count++;
         const label = document.createElement("H5")
         label.appendChild(document.createTextNode(node['name']))
-        label.classList.add("p-1", "m-1");
+        label.classList.add("p-1", "m-1", "flex-grow-1");
         div.appendChild(label);
-        let input = this.make_input(div, node, prepopulate);
-        input.classList.add("flex-grow-1", "p-1", "m-1");
-        div.appendChild(input);
+        //let input = this.make_input(div, node, prepopulate);
+        //input.classList.add("flex-grow-1", "p-1", "m-1");
+        //div.appendChild(input);
         let remove_btn = this.make_remove_button(div, node);
         remove_btn.classList.add("p-1", "m-1");
         div.appendChild(remove_btn);
@@ -407,10 +408,11 @@ class MultipleSelectFilterWidget {
         const node = this.filter_items[node_id]
         const parent = div.parentNode;
         div.parentNode.removeChild(div);
-        delete this.result[node.class][node.id]['values'][div.id];
+        //delete this.result[node.class][node.id]['values'][div.id];
+        this.result[node.class][node.id]['count']--;
 
         //checks if we have removed last item in class
-        if(jQuery.isEmptyObject(this.result[node.class][node.id]['values'])){
+        if(this.result[node.class][node.id]['count'] == 0){
             delete this.result[node.class][node.id];
             this.clear(node);
         }
@@ -425,21 +427,59 @@ class MultipleSelectFilterWidget {
     }
 
     updateObjectResult(node, childKey, childValue){
+        console.log("Update object result called with " + childKey + ", " + childValue + " on node " + node);
         if(!this.result[node.class][node.id])
-            this.result[node.class][node.id] = {selected: true, id: node.model_id, values: {}}
+            this.result[node.class][node.id] = {selected: true, id: node.model_id, count: 0}
 
-        this.result[node.class][node.id]['values'][childKey] = childValue;
+        this.result[node.class][node.id]['count']++;
     }
 
     finish(){
         document.getElementById("filter_field").value = JSON.stringify(this.result);
+        console.log("filter field value:");
+        console.log(JSON.stringify(this.result));
     }
 }
 
 class NetworkStep {
-    constructor(debug, xml, hosts, added_hosts, removed_host_ids, graphContainer, overviewContainer, toolbarContainer){
-        if(!this.check_support())
+    // expects:
+    //
+    // debug: bool
+    // resources: {
+    //     id: {
+    //         id: int,
+    //         value: {
+    //             description: string,
+    //         },
+    //         interfaces: [
+    //             id: int,
+    //             name: str,
+    //             description: str,
+    //             connections: [
+    //                 {
+    //                     network: int, [networks.id]
+    //                     tagged: bool 
+    //                 }
+    //             ],
+    //         ],
+    //     }
+    // }
+    // networks: {
+    //     id: {
+    //         id: int,
+    //         name: str,
+    //         public: bool,
+    //     }
+    // }
+    //     
+    constructor(debug, resources, networks, graphContainer, overviewContainer, toolbarContainer){
+        console.log("Arrived at constructor");
+        if(!this.check_support()) {
+            console.log("Aborting, browser is not supported");
             return;
+        }
+
+        console.log("Got a bit further");
 
         this.currentWindow = null;
         this.netCount = 0;
@@ -452,9 +492,49 @@ class NetworkStep {
         this.editor = new mxEditor();
         this.graph = this.editor.graph;
 
+        window.global_graph = this.graph;
+
         this.editor.setGraphContainer(graphContainer);
         this.doGlobalConfig();
-        this.prefill(xml, hosts, added_hosts, removed_host_ids);
+
+        console.log("all:");
+        console.log(networks);
+        console.log(resources);
+
+        console.log("printing networks");
+
+        let mx_networks = {}
+
+        for(const network_id in networks) {
+            console.log("Prefilling network:");
+            console.log(network_id);
+            console.log(networks[network_id]);
+
+            let network = networks[network_id];
+
+            /*let mxNet = this.makeMxNetwork(network.name, network.public);
+            this.makeSidebarNetwork(network.name, mxNet.color, mxNet.element_id);
+
+            if( network.public ) {
+                this.has_public_net = true;
+            }*/
+
+            mx_networks[network_id] = this.populateNetwork(network);
+        }
+
+        console.log("printing resources");
+
+        for(const resource_id in resources) {
+            console.log("Prefilling resource:");
+            console.log(resource_id);
+            console.log(resources[resource_id]);
+        }
+
+        this.prefillHosts(resources, mx_networks);
+
+        console.log("done printing resources");
+        //this.prefill(xml, hosts, added_hosts, removed_host_ids);
+        //
         this.addToolbarButton(this.editor, toolbarContainer, 'zoomIn', '', "/static/img/mxgraph/zoom_in.png", true);
         this.addToolbarButton(this.editor, toolbarContainer, 'zoomOut', '', "/static/img/mxgraph/zoom_out.png", true);
 
@@ -472,9 +552,9 @@ class NetworkStep {
         //hooks up double click functionality
         this.graph.dblClick = function(evt, cell) {this.doubleClickHandler(evt, cell);}.bind(this);
 
-        if(!this.has_public_net){
+        /*if(!this.has_public_net){
             this.addPublicNetwork();
-        }
+        }*/
     }
 
     check_support(){
@@ -485,25 +565,123 @@ class NetworkStep {
         return true;
     }
 
-    prefill(xml, hosts, added_hosts, removed_host_ids){
+    /**
+     * Expects
+     * mx_interface: mxCell for the interface itself
+     * network: mxCell for the outer network
+     * tagged: bool
+     */
+    connectNetwork(mx_interface, network, tagged) {
+        console.log("connectNetwork with");
+        console.log(mx_interface);
+        console.log(network);
+        var cell = new mxCell(
+            tagged ? 'tagged':'untagged',
+            new mxGeometry(0, 0, 50, 50));
+        cell.edge = true;
+        cell.geometry.relative = true;
+
+        cell.geometry.setTerminalPoint(mx_interface, true);
+        cell.geometry.setTerminalPoint(
+            this.getClosestNetworkCell(
+                mx_interface.geometry.y,
+                network
+            ), false);
+        //const produced_cell = this.graph.addCell(cell);
+        //this.graph.refresh(cell);
+        console.log("produces cell:");
+        console.log(cell);
+        //console.log(produced_cell);
+        let edge = this.graph.addEdge(cell, null, mx_interface, network);
+        console.log("Edge:");
+        console.log(edge);
+        this.colorEdge(edge, network, mx_interface);
+
+        //this.colorEdge(cell, network, mx_interface);
+    }
+
+    /**
+     * Expects:
+     *
+     * to: desired y axis position of the matching cell
+     * within: graph cell for a full network, with all child cells
+     *
+     * Returns:
+     * an mx cell, the one vertically closest to the desired value
+     */
+    getClosestNetworkCell(to, within) {
+        console.log("Getting closest network");
+        let current_child = within.children['0'];
+        for (const child_id in within.children) {
+            const candidate_child = within.children[child_id];
+
+            const candidate_y = candidate_child.geometry.y;
+            const current_y = current_child.geometry.y;
+            console.log("Compare children: " + candidate_y + ", " + current_y);
+
+            if( Math.abs(candidate_child - to) < Math.abs(current_child - to) ) {
+                console.log("Reassigns");
+                current_child = candidate_child;
+            }
+        }
+        console.log("Gives y " + current_child.geometry.y + " for " + to);
+
+        return current_child;
+    }
+
+    /** Expects
+     *
+     * hosts: {
+     *     id: {
+     *         id: int,
+     *         value: {
+     *             description: string,
+     *         },
+     *         interfaces: [
+     *             id: int,
+     *             name: str,
+     *             description: str,
+     *             connections: [
+     *                 {
+     *                     network: int, [networks.id]
+     *                     tagged: bool 
+     *                 }
+     *             ],
+     *         ],
+     *     }
+     * }
+     *
+     * network_mappings: {
+     *     <django network id>: <mxnetwork id>
+     * }
+     */     
+    prefillHosts(hosts, network_mappings){
         //populate existing data
-        if(xml){
+        /*if(xml){
             this.restoreFromXml(xml, this.editor);
         } else if(hosts){
             for(const host of hosts)
                 this.makeHost(host);
-        }
+        }*/
 
         //apply any changes
-        if(added_hosts){
+        /*if(added_hosts){
             for(const host of added_hosts)
                 this.makeHost(host);
             this.updateHosts([]); //TODO: why?
+        }*/
+        //this.updateHosts(removed_host_ids);
+        console.log("sdfklasdhsgdklgdhkl");
+        for(const host_id in hosts) {
+            console.log("Calling makeHost");
+            this.makeHost(hosts[host_id], network_mappings);
         }
-        this.updateHosts(removed_host_ids);
     }
 
     cellConnectionHandler(sender, event){
+        console.log("Connection handler called with:");
+        console.log(sender);
+        console.log(event);
         const edge = event.getProperty('edge');
         const terminal = event.getProperty('terminal')
         const source = event.getProperty('source');
@@ -917,6 +1095,27 @@ class NetworkStep {
         return ret_val;
     }
 
+    // expects:
+    //
+    // {
+    //     id: int,
+    //     name: str,
+    //     public: bool,
+    // }
+    //
+    // returns:
+    // mxgraph id of network
+    populateNetwork(network) {
+        let mxNet = this.makeMxNetwork(network.name, network.public);
+        this.makeSidebarNetwork(network.name, mxNet.color, mxNet.element_id);
+
+        if( network.public ) {
+            this.has_public_net = true;
+        }
+
+        return mxNet.element_id;
+    }
+
     addPublicNetwork() {
         const net = this.makeMxNetwork("public", true);
         this.makeSidebarNetwork("public", net['color'], net['element_id']);
@@ -977,7 +1176,37 @@ class NetworkStep {
         document.getElementById("network_list").appendChild(newNet);
     }
 
-    makeHost(hostInfo) {
+    /** 
+     * Expects format:
+     * {
+     *     'id': int,
+     *     'value': {
+     *         'description': string,
+     *     },
+     *     'interfaces': [
+     *          {
+     *              id: int,
+     *              name: str,
+     *              description: str,
+     *              connections: [
+     *                  {
+     *                      network: int, <django network id>,
+     *                      tagged: bool
+     *                  }
+     *              ]
+     *          }
+     *      ]
+     * }
+     *
+     * network_mappings: {
+     *     <django network id>: <mxnetwork id>
+     * }
+     */
+    makeHost(hostInfo, network_mappings) {
+        console.log("Building host:");
+        console.log(hostInfo);
+        console.log("Network mappings:\n\n\n");
+        console.log(network_mappings);
         const value = JSON.stringify(hostInfo['value']);
         const interfaces = hostInfo['interfaces'];
         const width = 100;
@@ -1013,6 +1242,20 @@ class NetworkStep {
                 false
             );
             port.getGeometry().offset = new mxPoint(-4*interfaces[i].name.length -2,0);
+            const iface = interfaces[i];
+            //for(var j=0; j < iface.connections.length; j++) {
+            for( const connection of iface.connections ) {
+                console.log("connection is ");
+                console.log(connection);
+                const network = this
+                    .graph
+                    .getModel()
+                    .getCell(network_mappings[connection.network]);
+                console.log("Got network for iface:");
+                console.log(network);
+
+                this.connectNetwork(port, network, connection.tagged);
+            }
             this.graph.refresh(port);
         }
         this.graph.refresh(host);
