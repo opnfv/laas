@@ -352,6 +352,7 @@ class Confirmation_Step(WorkflowStep):
                     self.set_valid("Confirmed")
 
             elif data == "False":
+                self.repo.cancel()
                 self.set_valid("Canceled")
             else:
                 self.set_invalid("Bad Form Contents")
@@ -391,6 +392,9 @@ class Repository():
     SNAPSHOT_DESC = "description of the snapshot"
     BOOKING_INFO_FILE = "the INFO.yaml file for this user's booking"
 
+    #new keys for migration to using ResourceTemplates:
+    RESOURCE_TEMPLATE_MODELS = "current working model of resource template"
+
     # migratory elements of segmented workflow
     # each of these is the end result of a different workflow.
     HAS_RESULT = "whether or not workflow has a result"
@@ -427,6 +431,14 @@ class Repository():
             history[key] = [id]
         else:
             history[key].append(id)
+
+    def cancel(self):
+        if self.RESOURCE_TEMPLATE_MODELS in self.el:
+            models = self.el[self.RESOURCE_TEMPLATE_MODELS]
+            if models['template'].temporary:
+                models['template'].delete()
+                # deleting current template should cascade delete all
+                # necessary related models
 
     def make_models(self):
         if self.SNAPSHOT_MODELS in self.el:
@@ -509,70 +521,15 @@ class Repository():
         owner = self.el[self.SESSION_USER]
         if self.RESOURCE_TEMPLATE_MODELS in self.el:
             models = self.el[self.RESOURCE_TEMPLATE_MODELS]
-            if 'hosts' in models:
-                hosts = models['hosts']
-            else:
-                return "GRB has no hosts. CODE:0x0002"
-            if 'bundle' in models:
-                bundle = models['bundle']
-            else:
-                return "GRB, no bundle in models. CODE:0x0003"
-
-            try:
-                bundle.owner = owner
-                bundle.save()
-            except Exception as e:
-                return "GRB, saving bundle generated exception: " + str(e) + " CODE:0x0004"
-            try:
-                for host in hosts:
-                    genericresource = host.resource
-                    genericresource.bundle = bundle
-                    genericresource.save()
-                    host.resource = genericresource
-                    host.save()
-            except Exception as e:
-                return "GRB, saving hosts generated exception: " + str(e) + " CODE:0x0005"
-
-            if 'networks' in models:
-                for net in models['networks'].values():
-                    net.bundle = bundle
-                    net.save()
-
-            if 'interfaces' in models:
-                for interface_set in models['interfaces'].values():
-                    for interface in interface_set:
-                        try:
-                            interface.host = interface.host
-                            interface.save()
-                        except Exception:
-                            return "GRB, saving interface " + str(interface) + " failed. CODE:0x0019"
-            else:
-                return "GRB, no interface set provided. CODE:0x001a"
-
-            if 'connections' in models:
-                for resource_name, mapping in models['connections'].items():
-                    for profile_name, connection_set in mapping.items():
-                        interface = InterfaceConfiguration.objects.get(
-                            profile__name=profile_name,
-                            host__resource__name=resource_name,
-                            host__resource__bundle=models['bundle']
-                        )
-                        for connection in connection_set:
-                            try:
-                                connection.network = connection.network
-                                connection.save()
-                                interface.connections.add(connection)
-                            except Exception as e:
-                                return "GRB, saving vlan " + str(connection) + " failed. Exception: " + str(e) + ". CODE:0x0017"
-            else:
-                return "GRB, no vlan set provided. CODE:0x0018"
+            models['template'].owner = owner
+            models['template'].temporary = False
+            models['template'].save()
+            self.el[self.RESULT] = models['template']
+            self.el[self.HAS_RESULT] = True
+            return False
 
         else:
             return "GRB no models given. CODE:0x0001"
-
-        self.el[self.RESULT] = bundle
-        self.el[self.HAS_RESULT] = True
-        return False
 
     def make_software_config_bundle(self):
         models = self.el[self.CONFIG_MODELS]
