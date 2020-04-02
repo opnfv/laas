@@ -11,8 +11,7 @@ from django.forms.widgets import NumberInput
 
 from workflow.forms import (
     MultipleSelectFilterField,
-    MultipleSelectFilterWidget,
-    FormUtils)
+    MultipleSelectFilterWidget)
 from account.models import UserProfile
 from resource_inventory.models import Image, Installer, Scenario
 from workflow.forms import SearchableSelectMultipleField
