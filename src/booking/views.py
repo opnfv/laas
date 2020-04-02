@@ -19,8 +19,7 @@ from django.db.models import Q
 from django.urls import reverse
 
 from resource_inventory.models import ResourceBundle, ResourceProfile, Image, ResourceQuery
-from resource_inventory.resource_manager import ResourceManager
-from account.models import Lab, Downtime
+from account.models import Downtime
 from booking.models import Booking
 from booking.stats import StatisticsManager
 from booking.forms import HostReImageForm
@@ -29,8 +28,7 @@ from api.models import JobFactory
 from workflow.views import login
 from booking.forms import QuickBookingForm
 from booking.quick_deployer import create_from_form, drop_filter
-from workflow.forms import (MultipleSelectFilterField,
-        MultipleSelectFilterWidget)
+
 
 def quick_create_clear_fields(request):
     request.session['quick_create_forminfo'] = None
