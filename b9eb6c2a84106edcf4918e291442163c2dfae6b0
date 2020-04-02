@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c0e44c38_01e58354",
+        "filename": "src/api/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-02T17:56:37Z",
+      "side": 1,
+      "message": "this serialization should probably be refactored into its own function instead of duplicated",
+      "range": {
+        "startLine": 179,
+        "startChar": 1,
+        "endLine": 186,
+        "endChar": 17
+      },
+      "revId": "b9eb6c2a84106edcf4918e291442163c2dfae6b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24175c16_69f4f359",
+        "filename": "src/api/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-02T17:56:37Z",
+      "side": 1,
+      "message": "We should gracefully handle when a requested user does not exist",
+      "range": {
+        "startLine": 192,
+        "startChar": 61,
+        "endLine": 192,
+        "endChar": 82
+      },
+      "revId": "b9eb6c2a84106edcf4918e291442163c2dfae6b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6288a0a_cd277cc0",
+        "filename": "src/api/models.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-02T17:56:37Z",
+      "side": 1,
+      "message": "whitespace",
+      "range": {
+        "startLine": 201,
+        "startChar": 0,
+        "endLine": 201,
+        "endChar": 12
+      },
+      "revId": "b9eb6c2a84106edcf4918e291442163c2dfae6b0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
