@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56fedb18_a51579c5",
+        "filename": "src/workflow/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-04-07T21:04:51Z",
+      "side": 1,
+      "message": "I\u0027ve handled this differently so we should agree on something before we go further, I renamed the fields of the REPOSITORY class to reference resource template instead of gresource and changed those all globally",
+      "range": {
+        "startLine": 395,
+        "startChar": 4,
+        "endLine": 395,
+        "endChar": 28
+      },
+      "revId": "12c6dbcbc48aec126a06123754b482f971d4a8e9",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90295a0e_39543948",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-04-07T21:04:51Z",
+      "side": 1,
+      "message": "you might want to stick with models[\u0027bundle\u0027] so we\u0027re doing a one to one fix of bundles to templates, that way we don\u0027t miss something",
+      "range": {
+        "startLine": 70,
+        "startChar": 12,
+        "endLine": 70,
+        "endChar": 30
+      },
+      "revId": "12c6dbcbc48aec126a06123754b482f971d4a8e9",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
