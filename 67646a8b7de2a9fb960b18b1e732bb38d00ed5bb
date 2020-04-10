@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16f087dc_369d0123",
+        "filename": "src/workflow/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-04-10T18:06:05Z",
+      "side": 1,
+      "message": "I replaced SELECTED_GRESOURCE_BUNDLE with RESOURCE_TEMPLATE_MODELS globally, it might be a good idea if you do the same",
+      "revId": "67646a8b7de2a9fb960b18b1e732bb38d00ed5bb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
