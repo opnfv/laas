@@ -79,7 +79,8 @@ def update_template(old_template, image, hostname, user):
         lab=old_template.lab,
         description=old_template.description,
         public=False,
-        temporary=True
+        temporary=True,
+        copy_of=old_template
     )
 
     for old_network in old_template.networks.all():
