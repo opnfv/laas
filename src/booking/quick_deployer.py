@@ -205,6 +205,7 @@ def create_from_form(form, request):
     scenario = form.cleaned_data['scenario']
     installer = form.cleaned_data['installer']
 
+    print("getting resource info")
     lab, resource_template = parse_resource_field(resource_field)
     data = form.cleaned_data
     data['lab'] = lab
@@ -219,6 +220,7 @@ def create_from_form(form, request):
 
     ResourceManager.getInstance().templateIsReservable(resource_template)
 
+    print("copying template")
     resource_template = update_template(resource_template, image, hostname, request.user)
 
     # if no installer provided, just create blank host
@@ -228,6 +230,7 @@ def create_from_form(form, request):
         opnfv_config = generate_opnfvconfig(scenario, installer, resource_template)
         generate_hostopnfv(hconf, opnfv_config)
 
+    print("booking resources")
     # generate resource bundle
     resource_bundle = generate_resource_bundle(resource_template)
 
@@ -242,6 +245,7 @@ def create_from_form(form, request):
         resource=resource_bundle,
         opnfv_config=opnfv_config
     )
+    print("making pdf")
     booking.pdf = PDFTemplater.makePDF(booking)
 
     for collaborator in users_field:  # list of UserProfiles
@@ -250,6 +254,7 @@ def create_from_form(form, request):
     booking.save()
 
     # generate job
+    print("making job")
     JobFactory.makeCompleteJob(booking)
     NotificationHandler.notify_new_booking(booking)
 

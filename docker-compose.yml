@@ -15,7 +15,7 @@ services:
         image: nginx:latest
         container_name: ng01
         ports:
-            - "80:80"
+            - "3500:3500"
         volumes:
             - ./config/nginx:/etc/nginx/conf.d
             - laas-static:/static:ro

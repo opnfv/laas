@@ -17,6 +17,7 @@ from resource_inventory.models import (
     Network,
     Vlan,
     PhysicalNetwork,
+    InterfaceConfiguration,
 )
 
 class ResourceManager:
@@ -91,15 +92,19 @@ class ResourceManager:
         res_configs = resource_template.getConfigs()
         resources = []
 
+        print("making vlan map")
         vlan_map = self.get_vlans(resource_template)
+        print("made map: " + str(vlan_map))
 
         for config in res_configs:
             try:
+                print("booking host")
                 phys_res = self.acquireHost(config)
                 phys_res.bundle = resource_bundle
                 phys_res.config = config
                 resources.append(phys_res)
 
+                print("booking doing networking")
                 self.configureNetworking(phys_res, vlan_map)
                 phys_res.save()
 
@@ -107,15 +112,29 @@ class ResourceManager:
                 self.fail_acquire(resources, vlan_map, resource_template)
                 raise e
 
+        print("all done with the template")
         return resource_bundle
 
     def configureNetworking(self, resource, vlan_map):
         for physical_interface in resource.interfaces.all():
-            iface_config = physical_interface.acts_as
-            if not iface_config:
+            print("configuring interface: " + str(physical_interface))
+            # assign interface configs
+            iface_configs = InterfaceConfiguration.objects.filter(profile=physical_interface.profile, resource_config=resource.config)
+            if iface_configs.count() != 1:
                 continue
+            iface_config = iface_configs.first()
+            print("1")
+            physical_interface.acts_as = iface_config
+            print("2")
+            physical_interface.acts_as.save()
+            print("3")
+            #if not iface_config:
+            #    continue
             physical_interface.config.clear()
+            print("4")
             for connection in iface_config.connections.all():
+                print("iface has config: " + str(iface_config))
+                print("interface is connected to network: " + str(connection.network.name))
                 physicalNetwork = PhysicalNetwork.objects.create(
                     vlan_id=vlan_map[connection.network.name],
                     generic_network=connection.network

@@ -34,6 +34,7 @@ class PDFTemplater:
         owner = "Anon"
         email = "email@mail.com"
         resource_lab = resource.template.lab
+        print("lab: " + str(resource_lab))
         lab = resource_lab.name
         location = resource_lab.location
         pod_type = "development"
@@ -78,6 +79,7 @@ class PDFTemplater:
         """Return a dict of all the info for the "jumphost" section."""
         jumphost = cls.get_jumphost(booking)
         jumphost_info = cls.get_pdf_host(jumphost)
+        print("OS: " + str(jumphost.config.image))
         jumphost_info['os'] = jumphost.config.image.os.name
         return jumphost_info
 
@@ -101,6 +103,7 @@ class PDFTemplater:
         returns a dictionary
         """
         host_info = {}
+        print("host: " + str(host))
         host_info['name'] = host.name
         host_info['node'] = cls.get_pdf_host_node(host)
         host_info['disks'] = []
@@ -140,6 +143,7 @@ class PDFTemplater:
     def get_pdf_host_disk(cls, disk):
         """Return a dict describing the given disk."""
         disk_info = {}
+        print("disk: " + str(disk))
         disk_info['name'] = disk.name
         disk_info['capacity'] = str(disk.size) + "G"
         disk_info['type'] = disk.media_type
@@ -153,6 +157,7 @@ class PDFTemplater:
         iface_info = {}
         iface_info['features'] = "none"
         iface_info['mac_address'] = interface.mac_address
+        print("interface profile: " + str(interface.profile))
         iface_info['name'] = interface.profile.name
         speed = str(int(interface.profile.speed / 1000)) + "gb"
         iface_info['speed'] = speed
