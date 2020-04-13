@@ -17,6 +17,7 @@ from resource_inventory.models import (
     Network,
     Vlan,
     PhysicalNetwork,
+    InterfaceConfiguration,
 )
 
 class ResourceManager:
@@ -111,9 +112,15 @@ class ResourceManager:
 
     def configureNetworking(self, resource, vlan_map):
         for physical_interface in resource.interfaces.all():
-            iface_config = physical_interface.acts_as
-            if not iface_config:
+            # assign interface configs
+            iface_configs = InterfaceConfiguration.objects.filter(profile=physical_interface.profile, resource_config=resource.config)
+            if iface_configs.count() != 1:
                 continue
+            iface_config = iface_configs.first()
+            physical_interface.acts_as = iface_config
+            physical_interface.acts_as.save()
+            #if not iface_config:
+            #    continue
             physical_interface.config.clear()
             for connection in iface_config.connections.all():
                 physicalNetwork = PhysicalNetwork.objects.create(
