@@ -1,0 +1,452 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a139d71_5cfa91fa",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "maybe a better default value like \"\u003cHostname\u003e\" or something",
+      "range": {
+        "startLine": 203,
+        "startChar": 54,
+        "endLine": 203,
+        "endChar": 67
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35d3b31a_c171ab8e",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "no prints",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 199,
+        "endChar": 5
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfa58a88_52868dc5",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "dead code",
+      "range": {
+        "startLine": 396,
+        "startChar": 0,
+        "endLine": 398,
+        "endChar": 33
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "725470c8_7b3ab1af",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "dead code",
+      "range": {
+        "startLine": 411,
+        "startChar": 0,
+        "endLine": 411,
+        "endChar": 2
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6fcde7fa_c0798716",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "no prints",
+      "range": {
+        "startLine": 430,
+        "startChar": 0,
+        "endLine": 430,
+        "endChar": 10
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "765c61bd_c4d21c9e",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "did you test this modification against the quick booking? This code is shared",
+      "range": {
+        "startLine": 432,
+        "startChar": 83,
+        "endLine": 432,
+        "endChar": 88
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2aa5d0a_d1daa0e5",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "ws",
+      "range": {
+        "startLine": 461,
+        "startChar": 35,
+        "endLine": 461,
+        "endChar": 40
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d738261_6df5caa7",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "ws",
+      "range": {
+        "startLine": 474,
+        "startChar": 0,
+        "endLine": 474,
+        "endChar": 3
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57d2656c_90091bab",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "prints",
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23b10280_1581b1dd",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "dead code",
+      "range": {
+        "startLine": 545,
+        "startChar": 4,
+        "endLine": 547,
+        "endChar": 11
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3677ad6b_39c30df7",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "ws",
+      "range": {
+        "startLine": 618,
+        "startChar": 39,
+        "endLine": 618,
+        "endChar": 40
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6b9f841_3e9194fa",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "ws",
+      "range": {
+        "startLine": 630,
+        "startChar": 5,
+        "endLine": 630,
+        "endChar": 12
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2b21fbd_5909b6be",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "prints",
+      "range": {
+        "startLine": 638,
+        "startChar": 2,
+        "endLine": 640,
+        "endChar": 27
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae2a5ca3_df571c67",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "should avoid saving models here if possible",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 1
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7e8ec69_2169784b",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 1
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8830ed0f_63ddce41",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "etc",
+      "range": {
+        "startLine": 140,
+        "startChar": 11,
+        "endLine": 141,
+        "endChar": 49
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70dcc3c0_74a314bf",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "ws",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 28
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79959dd7_0fb21663",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "dead",
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e709cd64_7c3c12e0",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "can you json.dumps this so you don\u0027t have to do that True \u003d true hack?",
+      "range": {
+        "startLine": 312,
+        "startChar": 16,
+        "endLine": 312,
+        "endChar": 52
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94273ede_d3818759",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-04-28T19:43:22Z",
+      "side": 1,
+      "message": "prints",
+      "range": {
+        "startLine": 350,
+        "startChar": 1,
+        "endLine": 389,
+        "endChar": 23
+      },
+      "revId": "6e8dc44e307d57f310790d6b47c66f2d0a62a1eb",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
