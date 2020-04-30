@@ -164,8 +164,7 @@ class ResourceTemplate(models.Model):
     temporary = models.BooleanField(default=False)
 
     def getConfigs(self):
-        configs = self.resourceConfigurations.all()
-        return list(configs)
+        return list(self.resourceConfigurations.all())
 
     def __str__(self):
         return self.name
