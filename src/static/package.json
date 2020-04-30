@@ -18,7 +18,7 @@
     "bootstrap": "^4.4.1",
     "datatables.net-bs4": "^1.10.20",
     "datatables.net-responsive-bs4": "^2.2.3",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "mxgraph": "^4.0.6",
     "plotly.js-dist": "^1.51.3",
     "popper.js": "^1.16.0"
