@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cc47501_bd9fafe0",
+        "filename": "src/account/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-04T20:06:08Z",
+      "side": 1,
+      "message": "Should this be book.resource instead of book.bundle? resource is the fk to ResourceBundle in a Booking model right now.",
+      "revId": "0a58f71221fb2ebd1c47105adca4201f080636b5",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0fa9a0bd_d237ee45",
+        "filename": "src/dashboard/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-04T20:06:08Z",
+      "side": 1,
+      "message": "Why not use the ResourceQuery here?",
+      "revId": "0a58f71221fb2ebd1c47105adca4201f080636b5",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
