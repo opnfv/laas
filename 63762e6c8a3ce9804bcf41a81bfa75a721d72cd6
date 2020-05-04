@@ -2,6 +2,98 @@
   "comments": [
     {
       "key": {
+        "uuid": "3947d0bf_f36fa5b0",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 12
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "I think this change breaks quick booking",
+      "range": {
+        "startLine": 407,
+        "startChar": 2,
+        "endLine": 410,
+        "endChar": 59
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bfc897e_26eea9dc",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 12
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "Whitespace",
+      "range": {
+        "startLine": 587,
+        "startChar": 39,
+        "endLine": 587,
+        "endChar": 40
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "906639b2_e06685a0",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 12
+      },
+      "lineNbr": 1105,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "whitespace",
+      "range": {
+        "startLine": 1105,
+        "startChar": 4,
+        "endLine": 1105,
+        "endChar": 8
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08b4b541_bbe1a19b",
+        "filename": "src/templates/base/resource/steps/pod_definition.html",
+        "patchSetId": 12
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "use json.dumps to get around this?",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 22
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3de8bd90_c21d1869",
         "filename": "src/workflow/forms.py",
         "patchSetId": 12
@@ -18,6 +110,167 @@
         "startChar": 0,
         "endLine": 326,
         "endChar": 56
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58f5ae2d_c8ec8da9",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "should use ResourceTemplate.create()",
+      "range": {
+        "startLine": 74,
+        "startChar": 7,
+        "endLine": 76,
+        "endChar": 27
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd8b1310_019b3ed1",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "dead code",
+      "range": {
+        "startLine": 80,
+        "startChar": 9,
+        "endLine": 80,
+        "endChar": 15
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05e11e81_75b8a6ba",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "dead",
+      "range": {
+        "startLine": 89,
+        "startChar": 9,
+        "endLine": 89,
+        "endChar": 23
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf4b991c_42f474b7",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "dead",
+      "range": {
+        "startLine": 97,
+        "startChar": 13,
+        "endLine": 97,
+        "endChar": 21
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37950e19_a3b30981",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "just user ResourceConfiguration.objects.create()",
+      "range": {
+        "startLine": 103,
+        "startChar": 19,
+        "endLine": 110,
+        "endChar": 37
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f9d8b33_e95085f3",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "use create()",
+      "range": {
+        "startLine": 113,
+        "startChar": 15,
+        "endLine": 115,
+        "endChar": 73
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b46c5bd5_bcb083ea",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "use create()",
+      "range": {
+        "startLine": 125,
+        "startChar": 33,
+        "endLine": 129,
+        "endChar": 54
       },
       "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
@@ -64,6 +317,75 @@
         "startChar": 22,
         "endLine": 183,
         "endChar": 41
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96a8d21c_443c4da6",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "need to fix headnode stuff",
+      "range": {
+        "startLine": 272,
+        "startChar": 36,
+        "endLine": 272,
+        "endChar": 45
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "395b3d3a_2f327dc4",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "can return the dictionary literal directly",
+      "range": {
+        "startLine": 329,
+        "startChar": 11,
+        "endLine": 329,
+        "endChar": 16
+      },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5e6f510_3cb97ce9",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "whitespace",
+      "range": {
+        "startLine": 357,
+        "startChar": 0,
+        "endLine": 357,
+        "endChar": 16
       },
       "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
@@ -203,6 +525,23 @@
         "endLine": 606,
         "endChar": 62
       },
+      "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7c2f90f_fdfcc4cf",
+        "filename": "src/workflow/sw_bundle_workflow.py",
+        "patchSetId": 12
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:45:08Z",
+      "side": 1,
+      "message": "can we just get rid of this step? Maybe this whole file?",
       "revId": "63762e6c8a3ce9804bcf41a81bfa75a721d72cd6",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
