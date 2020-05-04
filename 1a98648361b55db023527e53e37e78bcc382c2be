@@ -117,6 +117,30 @@
     },
     {
       "key": {
+        "uuid": "3df5fe4b_7d128102",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-04T20:57:54Z",
+      "side": 1,
+      "message": "The way I thought about this is finding all the profiles and then finding all the interfaces. Every profile should have an interface for the resource, so that\u0027s the way I went about it below. Does that make sense?",
+      "parentUuid": "ed907376_bdbc5885",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 1
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "155f8cfa_92238f8f",
         "filename": "tests/model_test.py",
         "patchSetId": 1
@@ -128,6 +152,30 @@
       "writtenOn": "2020-05-04T18:02:57Z",
       "side": 1,
       "message": "as written this will never be true",
+      "range": {
+        "startLine": 74,
+        "startChar": 11,
+        "endLine": 74,
+        "endChar": 27
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37259f45_acd1307b",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-04T20:57:54Z",
+      "side": 1,
+      "message": "It should be missing_profiles \u003d set(iface_profile_set) - set(curr_profiles) above. That would fix it, right?",
+      "parentUuid": "155f8cfa_92238f8f",
       "range": {
         "startLine": 74,
         "startChar": 11,
