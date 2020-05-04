@@ -2,6 +2,144 @@
   "comments": [
     {
       "key": {
+        "uuid": "e9fe962a_0a665934",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "This is going to cause merge conflicts, can you remove this file from this change? It doesn\u0027t really belong",
+      "range": {
+        "startLine": 167,
+        "startChar": 25,
+        "endLine": 167,
+        "endChar": 47
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55a9388f_febfb4d2",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "Its 2020",
+      "range": {
+        "startLine": 2,
+        "startChar": 16,
+        "endLine": 2,
+        "endChar": 20
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b10049ec_bbffe1ff",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "This doesn\u0027t need to be a local variable. Just do `for rp in ResourceProfile.objects.all():`",
+      "range": {
+        "startLine": 33,
+        "startChar": 3,
+        "endLine": 35,
+        "endChar": 21
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ef46689_d504159b",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "What is the purpose of this return? Can you document what it should be?",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 9
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed907376_bdbc5885",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "I think this query should grab all the interfaces related to the current Resource, not pull every interface with res\u0027s profile",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 1
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "155f8cfa_92238f8f",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "as written this will never be true",
+      "range": {
+        "startLine": 74,
+        "startChar": 11,
+        "endLine": 74,
+        "endChar": 27
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3bde52bf_fcbee730",
         "filename": "tests/model_test.py",
         "patchSetId": 1
@@ -13,6 +151,144 @@
       "writtenOn": "2020-04-30T23:01:51Z",
       "side": 1,
       "message": "This check for config/iface might be something we want to enforce in the models. Also adding useful names to configs would help prevent this as well",
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f690eab_91d9a55a",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "wrapping this in a set() would make it faster",
+      "range": {
+        "startLine": 97,
+        "startChar": 4,
+        "endLine": 97,
+        "endChar": 19
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31b7d2c0_f1cdff19",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "Doesn\u0027t need to be a local variable, can be iterated on directly",
+      "range": {
+        "startLine": 113,
+        "startChar": 4,
+        "endLine": 113,
+        "endChar": 14
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b0e239d_5dd0b1b2",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "There is no reason to store this as a local variable",
+      "range": {
+        "startLine": 114,
+        "startChar": 0,
+        "endLine": 114,
+        "endChar": 1
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8d3fb47_d9b9f9ae",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "This could just be `if not Network.objects.filter(bundle\u003dtemp).exists():`",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 119,
+        "endChar": 34
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82f51e71_a115c29a",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "You use this pattern a lot in this file. I think it would be cleaner if you defined a fail() function which printed out your error message and threw an exception. You could catch the exception in main or let it bubble up and stop the script",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 121,
+        "endChar": 57
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d799a51a_864360a6",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "Same thing, these don\u0027t need to be declared like this",
+      "range": {
+        "startLine": 142,
+        "startChar": 1,
+        "endLine": 144,
+        "endChar": 36
+      },
       "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
@@ -36,6 +312,52 @@
     },
     {
       "key": {
+        "uuid": "c9c04fa1_de0070d6",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "Be careful here, filter() returns a list-like object, not a single model",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 60
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f9e2119_d49b5014",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "This will not work. InterfaceConfiguration.connections.all() will give you all the connections on an interface config",
+      "range": {
+        "startLine": 153,
+        "startChar": 31,
+        "endLine": 153,
+        "endChar": 42
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "99382fe8_d359bceb",
         "filename": "tests/model_test.py",
         "patchSetId": 1
@@ -47,6 +369,70 @@
       "writtenOn": "2020-04-30T23:01:51Z",
       "side": 1,
       "message": "In hindsight don\u0027t know if this will work for list of list like things",
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0da1538e_898ec9d6",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "It won\u0027t work. The \"pythonic\" way is to check for its truthyness directly. Just do `if not net_connects`",
+      "parentUuid": "99382fe8_d359bceb",
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75e30c78_2432a13e",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "You should call all these functions from within main(), and call main() directly as the last line of the file",
+      "range": {
+        "startLine": 168,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 19
+      },
+      "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3b48c2a_b3f697b3",
+        "filename": "tests/model_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 6929
+      },
+      "writtenOn": "2020-05-04T18:02:57Z",
+      "side": 1,
+      "message": "We don\u0027t need this",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 175,
+        "endChar": 4
+      },
       "revId": "1a98648361b55db023527e53e37e78bcc382c2be",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
