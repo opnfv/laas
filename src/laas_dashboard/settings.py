@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'api',
     'django.contrib.admin',
     'django.contrib.auth',
+    'mozilla_django_oidc',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -186,6 +187,18 @@ OAUTH_ACCESS_TOKEN_URL = JIRA_URL + '/plugins/servlet/oauth/access-token'
 OAUTH_AUTHORIZE_URL = JIRA_URL + '/plugins/servlet/oauth/authorize'
 
 OAUTH_CALLBACK_URL = os.environ['DASHBOARD_URL'] + '/accounts/authenticated'
+
+
+
+# OpenID Connect Settings
+OIDC_RP_CLIENT_ID = os.environ['OIDC_CLIENT_ID']
+OIDC_RP_CLIENT_SECRET = os.environ['OIDC_CLIENT_SECRET']
+OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['OIDC_AUTHORIZATION_ENDPOINT']
+OIDC_OP_TOKEN_ENDPOINT = os.environ['OIDC_TOKEN_ENDPOINT']
+OIDC_OP_USER_ENDPOINT = os.environ['OIDC_USER_ENDPOINT']
+
+LOGIN_REDIRECT_URL = "<URL path to redirect to after login>"
+LOGOUT_REDIRECT_URL = "<URL path to redirect to after logout>"
 
 # Celery Settings
 CELERY_TIMEZONE = 'UTC'
