@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa92350_fe346d0f",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 1168,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-07T16:13:12Z",
+      "side": 1,
+      "message": "dead code",
+      "revId": "6a7dd9b8d4306f163bf8f0beea0a610e86c6ef56",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
