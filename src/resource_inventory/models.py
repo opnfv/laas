@@ -155,7 +155,7 @@ class ResourceTemplate(models.Model):
 
     # TODO: template might not be a good name because this is a collection of lots of configured resources
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=300, unique=True)
+    name = models.CharField(max_length=300)
     xml = models.TextField()
     owner = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     lab = models.ForeignKey(Lab, null=True, on_delete=models.SET_NULL, related_name="resourcetemplates")
@@ -164,7 +164,8 @@ class ResourceTemplate(models.Model):
     temporary = models.BooleanField(default=False)
 
     def getConfigs(self):
-        return list(self.resourceConfigurations.all())
+        configs = self.resourceConfigurations.all()
+        return list(configs)
 
     def __str__(self):
         return self.name
@@ -200,7 +201,7 @@ class ResourceConfiguration(models.Model):
     image = models.ForeignKey("Image", on_delete=models.PROTECT)
     template = models.ForeignKey(ResourceTemplate, related_name="resourceConfigurations", null=True, on_delete=models.CASCADE)
     is_head_node = models.BooleanField(default=False)
-    # name?
+    name = models.CharField(max_length=3000, default="<Hostname>")
 
     def __str__(self):
         return "config with " + str(self.template) + " and image " + str(self.image)
@@ -428,7 +429,7 @@ class InterfaceConfiguration(models.Model):
     connections = models.ManyToManyField(NetworkConnection)
 
     def __str__(self):
-        return "type " + str(self.profile) + " on host " + str(self.host)
+        return "type " + str(self.profile) + " on host " + str(self.resource_config)
 
 
 """
