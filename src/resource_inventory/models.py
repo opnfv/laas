@@ -162,6 +162,7 @@ class ResourceTemplate(models.Model):
     description = models.CharField(max_length=1000, default="")
     public = models.BooleanField(default=False)
     temporary = models.BooleanField(default=False)
+    copy_of = models.ForeignKey("ResourceTemplate", null=True, on_delete=models.SET_NULL)
 
     def getConfigs(self):
         configs = self.resourceConfigurations.all()
@@ -191,6 +192,13 @@ class ResourceBundle(models.Model):
     def get_resource_with_role(self, role):
         # TODO
         pass
+
+    def get_template_name(self):
+        if not self.template:
+            return ""
+        if not self.template.temporary:
+            return self.template.name
+        return self.template.copy_of.name
 
 
 class ResourceConfiguration(models.Model):
