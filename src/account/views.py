@@ -179,7 +179,7 @@ def account_resource_view(request):
         return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
     template = "account/resource_list.html"
 
-    active_bundles = [book.bundle for book in Booking.objects.filter(
+    active_bundles = [book.resource for book in Booking.objects.filter(
         owner=request.user, end__gte=timezone.now())]
     active_resources = [bundle.template.id for bundle in active_bundles]
     resource_list = list(ResourceTemplate.objects.filter(owner=request.user))
