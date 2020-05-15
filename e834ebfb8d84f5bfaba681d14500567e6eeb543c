@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "472929cc_a42d7630",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-15T17:11:44Z",
+      "side": 1,
+      "message": "Why no unique constraint on template names? Is there some advantage to having multiple templates with the same name that are different (or just the same...)",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bce6ddff_1e3cdd33",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-15T17:11:44Z",
+      "side": 1,
+      "message": "The default might be better to be some combination of \u0027config\u0027, profile, and pk. (i.e. dell config 22)",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a961ffc_59ce7a2e",
+        "filename": "src/resource_inventory/pdf_templater.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-15T17:11:44Z",
+      "side": 1,
+      "message": "Using ResourceQuery instead of Server would allow this to scale, unless you really just want servers",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8eb1489_2651414a",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-15T17:11:44Z",
+      "side": 1,
+      "message": "Does this need to be here?",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "888d1fe7_8f9c020e",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-15T17:11:44Z",
+      "side": 1,
+      "message": "Does this do anything?",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13e11c32_e4da7260",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-15T17:11:44Z",
+      "side": 1,
+      "message": "Still need this?",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad5a5e31_759e949c",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-15T17:11:44Z",
+      "side": 1,
+      "message": "Still need this?",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "008c406b_48600d92",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-15T17:11:44Z",
+      "side": 1,
+      "message": "verified?",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
