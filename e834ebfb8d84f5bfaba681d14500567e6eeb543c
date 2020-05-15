@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c8ff84af_d4dfb204",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-15T17:31:58Z",
+      "side": 1,
+      "message": "names are explicitly not unique as if they\u0027re private then there\u0027s an opaque negative feedback when someone names theirs something nonunique, since they can\u0027t see any of the other pods so it becomes a game of trying to guess what names aren\u0027t taken",
+      "parentUuid": "472929cc_a42d7630",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bce6ddff_1e3cdd33",
         "filename": "src/resource_inventory/models.py",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2020-05-15T17:11:44Z",
       "side": 1,
       "message": "The default might be better to be some combination of \u0027config\u0027, profile, and pk. (i.e. dell config 22)",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d0543fc_0729c251",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-15T17:31:58Z",
+      "side": 1,
+      "message": "Not entirely sure how to do that, can that be done as just an expression here or does that require messing with the migrations themselves?",
+      "parentUuid": "bce6ddff_1e3cdd33",
       "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ff4fe240_c563032a",
+        "filename": "src/resource_inventory/pdf_templater.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-15T17:31:58Z",
+      "side": 1,
+      "message": "I think that would be a separate change, actually I probably shouldn\u0027t have changed this file at all (was just cleaning up flake8 errors)",
+      "parentUuid": "8a961ffc_59ce7a2e",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b8eb1489_2651414a",
         "filename": "src/static/js/dashboard.js",
         "patchSetId": 5
@@ -64,6 +118,24 @@
       "writtenOn": "2020-05-15T17:11:44Z",
       "side": 1,
       "message": "Does this need to be here?",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e47f0828_254ac124",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-15T17:31:58Z",
+      "side": 1,
+      "message": "Am using it just for documentation since figuring out input schemas for a lot of these functions gets very messy very quickly",
+      "parentUuid": "b8eb1489_2651414a",
       "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "a9c5293a_50f9209f",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-15T17:31:58Z",
+      "side": 1,
+      "message": "I don\u0027t quite remember what this does, it\u0027s probably not necessary",
+      "parentUuid": "888d1fe7_8f9c020e",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "13e11c32_e4da7260",
         "filename": "src/workflow/resource_bundle_workflow.py",
         "patchSetId": 5
@@ -98,6 +188,24 @@
       "writtenOn": "2020-05-15T17:11:44Z",
       "side": 1,
       "message": "Still need this?",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5699bab_96745936",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-15T17:31:58Z",
+      "side": 1,
+      "message": "No, will remove",
+      "parentUuid": "13e11c32_e4da7260",
       "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "4abe3ce5_8b097d3f",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-15T17:31:58Z",
+      "side": 1,
+      "message": "No, will remove",
+      "parentUuid": "ad5a5e31_759e949c",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "008c406b_48600d92",
         "filename": "src/workflow/resource_bundle_workflow.py",
         "patchSetId": 5
@@ -132,6 +258,24 @@
       "writtenOn": "2020-05-15T17:11:44Z",
       "side": 1,
       "message": "verified?",
+      "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bff174b3_cf54f55c",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-15T17:31:58Z",
+      "side": 1,
+      "message": "Not yet, still a todo here",
+      "parentUuid": "008c406b_48600d92",
       "revId": "e834ebfb8d84f5bfaba681d14500567e6eeb543c",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
