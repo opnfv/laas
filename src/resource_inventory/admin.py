@@ -32,8 +32,10 @@ from resource_inventory.models import (
     Image,
     RemoteInfo,
     PhysicalNetwork,
-    NetworkConnection
+    NetworkConnection,
+    InterfaceConfigurationAdmin
 )
+
 
 admin.site.register([
     ResourceProfile,
@@ -43,7 +45,6 @@ admin.site.register([
     RamProfile,
     ResourceTemplate,
     ResourceConfiguration,
-    InterfaceConfiguration,
     Server,
     Interface,
     Network,
@@ -58,3 +59,5 @@ admin.site.register([
     PhysicalNetwork,
     NetworkConnection,
     RemoteInfo])
+
+admin.site.register(InterfaceConfiguration, InterfaceConfigurationAdmin)
