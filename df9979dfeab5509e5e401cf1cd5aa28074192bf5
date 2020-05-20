@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd01ca2f_84450170",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 448,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-20T20:54:27Z",
+      "side": 1,
+      "message": "would generally suggest putting these in forms.py rather than models.py, don\u0027t expect to try to look for it here",
+      "revId": "df9979dfeab5509e5e401cf1cd5aa28074192bf5",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
