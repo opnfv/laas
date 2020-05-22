@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3da54401_1c393916",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-22T20:10:59Z",
+      "side": 1,
+      "message": "This was just me playing around, it shouldn\u0027t be there",
+      "parentUuid": "3c9776bb_db2089b4",
+      "revId": "2fcf37f411bc5c79b17d81b7e87a7a3087c62113",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4a050a5e_c7c192fc",
         "filename": "src/resource_inventory/pdf_templater.py",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2020-05-22T19:35:20Z",
       "side": 1,
       "message": "were any other changes required to this? I thought I remembered there being a bad field access",
+      "revId": "2fcf37f411bc5c79b17d81b7e87a7a3087c62113",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5eb3230f_8458a64d",
+        "filename": "src/resource_inventory/pdf_templater.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-22T20:10:59Z",
+      "side": 1,
+      "message": "We did with the resource_manager instantiateTemplate because Resource Manager was getting statically called instead of getting the instance and calling that.",
+      "parentUuid": "4a050a5e_c7c192fc",
       "revId": "2fcf37f411bc5c79b17d81b7e87a7a3087c62113",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
