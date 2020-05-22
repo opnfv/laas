@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c9776bb_db2089b4",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-22T19:35:20Z",
+      "side": 1,
+      "message": "am not really sure where this backref would come in useful, seems dangerous to use usually actually since it isn\u0027t guaranteed one-to-one but is easy to think of as such",
+      "revId": "2fcf37f411bc5c79b17d81b7e87a7a3087c62113",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a050a5e_c7c192fc",
+        "filename": "src/resource_inventory/pdf_templater.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-05-22T19:35:20Z",
+      "side": 1,
+      "message": "were any other changes required to this? I thought I remembered there being a bad field access",
+      "revId": "2fcf37f411bc5c79b17d81b7e87a7a3087c62113",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
