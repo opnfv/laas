@@ -66,6 +66,7 @@ class PDFTemplater:
             )
             jumphost = booking.resource.hosts.get(config=jumphost_opnfv_config.host_config)
         else:  # if there is no opnfv config, use headnode
+            print(booking.resource)
             jumphost = Server.objects.filter(
                 bundle=booking.resource,
                 config__is_head_node=True

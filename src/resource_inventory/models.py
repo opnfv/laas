@@ -175,7 +175,6 @@ class ResourceTemplate(models.Model):
 class ResourceBundle(models.Model):
     """
     Collection of Resource objects.
-
     This is just a way of aggregating all the resources in a booking into a single model.
     """
 
@@ -212,7 +211,7 @@ class ResourceConfiguration(models.Model):
     name = models.CharField(max_length=3000, default="<Hostname>")
 
     def __str__(self):
-        return "config with " + str(self.template) + " and image " + str(self.image)
+        return str(self.name)
 
 
 def get_default_remote_info():
@@ -394,7 +393,7 @@ class Network(models.Model):
 
 class PhysicalNetwork(models.Model):
     vlan_id = models.IntegerField()
-    generic_network = models.ForeignKey(Network, on_delete=models.CASCADE)
+    generic_network = models.ForeignKey(Network, on_delete=models.CASCADE, related_name="physical_networks")
 
     def get_configuration(self, state):
         """
@@ -413,10 +412,16 @@ class PhysicalNetwork(models.Model):
         # vlan_manager = self.bundle.lab.vlan_manager
         return False
 
+    def __str__(self):
+        return 'Physical Network for ' + self.generic_network.name
+
 
 class NetworkConnection(models.Model):
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
     vlan_is_tagged = models.BooleanField()
+
+    def __str__(self):
+        return 'Connection to ' + str(self.network.name)
 
 
 class Vlan(models.Model):

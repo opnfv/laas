@@ -120,8 +120,7 @@ class ResourceManager:
             iface_config = iface_configs.first()
             physical_interface.acts_as = iface_config
             physical_interface.acts_as.save()
-            #if not iface_config:
-            #    continue
+
             physical_interface.config.clear()
             for connection in iface_config.connections.all():
                 physicalNetwork = PhysicalNetwork.objects.create(

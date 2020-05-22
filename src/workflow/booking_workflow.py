@@ -81,8 +81,8 @@ class SWConfig_Select(AbstractSelectOrCreate):
 
     def get_form_queryset(self):
         user = self.repo_get(self.repo.SESSION_USER)
-        grb = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE)
-        qs = ResourceTemplate.objects.filter(Q(hidden=False) & (Q(owner=user) | Q(public=True))).filter(bundle=grb)
+        # grb = self.repo_get(self.repo.SELECTED_RESOURCE_TEMPLATE)
+        qs = ResourceTemplate.objects.filter(Q(temporary=False) & (Q(owner=user) | Q(public=True)))
         return qs
 
     def put_confirm_info(self, bundle):

@@ -14,6 +14,7 @@ from django.utils import timezone
 
 import yaml
 import requests
+import traceback
 
 from workflow.forms import ConfirmationForm
 from api.models import JobFactory
@@ -159,7 +160,7 @@ class BookingAuthManager():
             return True  # admin override for this user
         if Booking.objects.filter(owner=booking.owner, end__gt=timezone.now()).count() >= 3:
             return False
-        if len(booking.resource.template.getResources()) < 2:
+        if len(booking.resource.template.getConfigs()) < 2:
             return True  # if they only have one server, we dont care
         if repo.BOOKING_INFO_FILE not in repo.el:
             return False  # INFO file not provided
@@ -602,7 +603,8 @@ class Repository():
         else:
             return "BOOK, collaborators not defined. CODE:0x0013"
         try:
-            resource_bundle = ResourceManager.getInstance().convertResourceBundle(selected_grb, config=booking.config_bundle)
+            res_manager = ResourceManager.getInstance()
+            resource_bundle = res_manager.instantiateTemplate(selected_grb, booking.config_bundle)
         except ResourceAvailabilityException as e:
             return "BOOK, requested resources are not available. Exception: " + str(e) + " CODE:0x0014"
         except ModelValidationException as e:
@@ -625,9 +627,11 @@ class Repository():
             booking.collaborators.add(collaborator)
 
         try:
-            booking.pdf = PDFTemplater.makePDF(booking)
+            # print(booking)
+            # booking.pdf = PDFTemplater.makePDF(booking)
             booking.save()
         except Exception as e:
+            # traceback.print_exc(e)
             return "BOOK, failed to create Pod Desriptor File: " + str(e)
 
         try:
