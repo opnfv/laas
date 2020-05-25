@@ -16,6 +16,24 @@
       "revId": "208eab8666591cc4be5b9ce594544736f0823c8c",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a4a2cca_78b38ba1",
+        "filename": "src/resource_inventory/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-05-25T15:43:43Z",
+      "side": 1,
+      "message": "Django blank is falsey... in the context of model validation this just works",
+      "parentUuid": "4313d968_7cbaae8c",
+      "revId": "208eab8666591cc4be5b9ce594544736f0823c8c",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }
