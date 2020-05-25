@@ -162,7 +162,7 @@ class ResourceTemplate(models.Model):
     description = models.CharField(max_length=1000, default="")
     public = models.BooleanField(default=False)
     temporary = models.BooleanField(default=False)
-    copy_of = models.ForeignKey("ResourceTemplate", null=True, on_delete=models.SET_NULL)
+    copy_of = models.ForeignKey("ResourceTemplate", null=True, blank=True, on_delete=models.SET_NULL)
 
     def getConfigs(self):
         configs = self.resourceConfigurations.all()
@@ -170,6 +170,9 @@ class ResourceTemplate(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
 
 class ResourceBundle(models.Model):
@@ -238,9 +241,9 @@ class Resource(models.Model):
     class Meta:
         abstract = True
 
-    bundle = models.ForeignKey(ResourceBundle, on_delete=models.SET_NULL, null=True)
+    bundle = models.ForeignKey(ResourceBundle, on_delete=models.SET_NULL, null=True, blank=True)
     profile = models.ForeignKey(ResourceProfile, on_delete=models.CASCADE)
-    config = models.ForeignKey(ResourceConfiguration, on_delete=models.SET_NULL, null=True)
+    config = models.ForeignKey(ResourceConfiguration, on_delete=models.SET_NULL, null=True, blank=True)
     working = models.BooleanField(default=True)
     vendor = models.CharField(max_length=100, default="unknown")
     model = models.CharField(max_length=150, default="unknown")
@@ -292,6 +295,7 @@ class Resource(models.Model):
         if len(res) == 1:
             if not self.same_instance(res[0]):
                 raise ValidationError("Too many resources with labid " + str(self.labid))
+
         super().save(*args, **kwargs)
 
 
@@ -507,14 +511,14 @@ class Interface(models.Model):
     mac_address = models.CharField(max_length=17)
     bus_address = models.CharField(max_length=50)
     config = models.ManyToManyField(Vlan)
-    acts_as = models.OneToOneField(InterfaceConfiguration, null=True, on_delete=models.CASCADE)
+    acts_as = models.OneToOneField(InterfaceConfiguration, null=True, blank=True, on_delete=models.CASCADE)
     profile = models.ForeignKey(InterfaceProfile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.mac_address + " on host " + str(self.profile.host.name)
 
     def clean(self, *args, **kwargs):
-        if self.acts_as.profile != self.profile:
+        if self.acts_as and self.acts_as.profile != self.profile:
             raise ValidationError("Interface Configuration's Interface Profile does not match Interface Profile chosen for Interface.")
         super().clean(*args, **kwargs)
 
