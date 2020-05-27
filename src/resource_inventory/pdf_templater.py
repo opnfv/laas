@@ -23,6 +23,7 @@ class PDFTemplater:
         info = {}
         info['details'] = cls.get_pdf_details(booking.resource)
         info['jumphost'] = cls.get_pdf_jumphost(booking)
+        print('cccccccccccccccccccccccccccc')
         info['nodes'] = cls.get_pdf_nodes(booking)
 
         return render_to_string(template, context=info)
