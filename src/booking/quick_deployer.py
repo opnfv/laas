@@ -103,6 +103,10 @@ def update_template(old_template, image, hostname, user):
     # there is never multiple networks anyway. This may have to change in the future
 
     for old_config in old_template.getConfigs():
+        image_to_set = image
+        if not image:
+            image_to_set = old_config.image
+
         config = ResourceConfiguration.objects.create(
             profile=old_config.profile,
             image=image,
