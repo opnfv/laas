@@ -23,6 +23,7 @@ from resource_inventory.models import (
     OPNFVRole,
     Installer,
     Scenario,
+    ResourceQuery
 )
 from resource_inventory.resource_manager import ResourceManager
 from booking.lib import get_user_items, get_user_field_opts
@@ -314,8 +315,10 @@ class FormUtils:
                 'selectable': true,
                 'follow': multiple_hosts,
                 'multiple': false,
-                'class': 'lab'
+                'class': 'lab',
+                'available_resources': ResourceQuery.filter(lab=lab, booked=False)
             }
+
             items[lab_node['id']] = lab_node
             neighbors[lab_node['id']] = []
             labs[lab_node['id']] = lab_node
@@ -331,7 +334,8 @@ class FormUtils:
                     'selectable': true,
                     'follow': false,
                     'multiple': multiple_hosts,
-                    'class': 'resource'
+                    'class': 'resource',
+                    'required_resources': template.get_required_resources()
                 }
                 if multiple_hosts:
                     resource_node['values'] = []  # place to store multiple values

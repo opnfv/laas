@@ -64,7 +64,7 @@ class BookingAuthManager():
 
         except Exception:
             pass
-
+        
         return project_leads
 
     def parse_gerrit_url(self, url):

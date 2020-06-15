@@ -40,6 +40,7 @@ def quick_create(request):
 
     if request.method == 'GET':
         context = {}
+        print('ddd')
         attrs = FormUtils.getLabData(user=request.user)
         context['form'] = QuickBookingForm(lab_data=attrs, default_user=request.user.username, user=request.user)
         context['lab_profile_map'] = {}
@@ -47,6 +48,7 @@ def quick_create(request):
         return render(request, 'booking/quick_deploy.html', context)
 
     if request.method == 'POST':
+        print('aaa')
         attrs = FormUtils.getLabData(user=request.user)
         form = QuickBookingForm(request.POST, lab_data=attrs, user=request.user)
 

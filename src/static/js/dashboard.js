@@ -604,7 +604,7 @@ class NetworkStep {
      *             connections: [
      *                 {
      *                     network: int, [networks.id]
-     *                     tagged: bool 
+     *                     tagged: bool
      *                 }
      *             ],
      *         ],
@@ -1113,7 +1113,7 @@ class NetworkStep {
         document.getElementById("network_list").appendChild(newNet);
     }
 
-    /** 
+    /**
      * Expects format:
      * {
      *     'id': int,
