@@ -28,6 +28,7 @@ from django.views.generic import RedirectView, TemplateView, UpdateView
 from django.shortcuts import render
 from jira import JIRA
 from rest_framework.authtoken.models import Token
+from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
 from account.forms import AccountSettingsForm
 from account.jira_util import SignatureMethod_RSA_SHA1
@@ -149,6 +150,20 @@ class JiraAuthenticatedView(RedirectView):
         login(self.request, user)
         # redirect user to settings page to complete profile
         return url
+
+
+class MyOIDCAB(OIDCAuthenticationBackend):
+    def filter_users_by_claims(self, claims):
+        email = claims.get('email')
+        if not email:
+            return self.UserModel.objects.none()
+
+        try:
+            profile = Profile.objects.get(email=email)
+            return profile.user
+
+        except Profile.DoesNotExist:
+            return self.UserModel.objects.none()
 
 
 @method_decorator(login_required, name='dispatch')

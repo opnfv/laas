@@ -42,7 +42,8 @@ from account.views import (
     resource_delete_view,
     booking_cancel_view,
     image_delete_view,
-    configuration_delete_view
+    configuration_delete_view,
+    MyOIDCAB
 )
 
 app_name = "account"
@@ -50,6 +51,7 @@ urlpatterns = [
     url(r'^settings/', AccountSettingsView.as_view(), name='settings'),
     url(r'^authenticated/$', JiraAuthenticatedView.as_view(), name='authenticated'),
     url(r'^login/$', JiraLoginView.as_view(), name='login'),
+    url(r'^openid_login/$', MyOIDCAB, name='openid_login'),
     url(r'^logout/$', JiraLogoutView.as_view(), name='logout'),
     url(r'^users/$', UserListView.as_view(), name='users'),
     url(r'^my/resources/$', account_resource_view, name="my-resources"),

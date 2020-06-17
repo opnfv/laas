@@ -52,6 +52,10 @@ MIDDLEWARE = [
     'account.middleware.TimezoneMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'mozilla_django_oidc.auth.OIDCAuthenticationBackend',
+    )
+
 ROOT_URLCONF = 'laas_dashboard.urls'
 
 TEMPLATE_OVERRIDE = os.environ.get("TEMPLATE_OVERRIDE_DIR", "")  # the user's custom template dir
