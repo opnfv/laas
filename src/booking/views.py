@@ -40,7 +40,7 @@ def quick_create(request):
 
     if request.method == 'GET':
         context = {}
-        attrs = FormUtils.getLabData(user=request.user)
+        attrs = FormUtils.getLabData(multiple_hosts=True, user=request.user)
         context['form'] = QuickBookingForm(lab_data=attrs, default_user=request.user.username, user=request.user)
         context['lab_profile_map'] = {}
         context.update(drop_filter(request.user))
