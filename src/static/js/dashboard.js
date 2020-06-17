@@ -206,6 +206,7 @@ function continue_workflow() {
 class MultipleSelectFilterWidget {
 
     constructor(neighbors, items, initial) {
+        console.log(arguments)
         this.inputs = [];
         this.graph_neighbors = neighbors;
         this.filter_items = items;
@@ -220,7 +221,7 @@ class MultipleSelectFilterWidget {
         this.make_selection(initial);
     }
 
-    make_selection( initial_data ){
+    make_selection(initial_data){
         if(!initial_data || jQuery.isEmptyObject(initial_data))
             return;
         for(let item_class in initial_data) {
@@ -242,7 +243,7 @@ class MultipleSelectFilterWidget {
 
     make_multiple_selection(node, selection_data){
         const prepop_data = selection_data.values;
-        for(let k in prepop_data){
+        for(let k in prepop_data) {
             const div = this.add_item_prepopulate(node, prepop_data[k]);
             this.updateObjectResult(node, div.id, prepop_data[k]);
         }
@@ -257,12 +258,11 @@ class MultipleSelectFilterWidget {
         const toCheck = [root];
         while(toCheck.length > 0){
             const node = toCheck.pop();
-            if(!node['marked']) {
-                continue; //already visited, just continue
-            }
+
             node['marked'] = false; //mark as visited
             if(node['follow'] || node == root){ //add neighbors if we want to follow this node
                 const neighbors = this.graph_neighbors[node.id];
+                console.log(neighbors)
                 for(let neighId of neighbors) {
                     const neighbor = this.filter_items[neighId];
                     toCheck.push(neighbor);
@@ -302,6 +302,12 @@ class MultipleSelectFilterWidget {
 
     select(node) {
         const elem = document.getElementById(node['id']);
+
+        if(node['class'] == 'lab') {
+            console.log('This is a lab')
+        }
+    
+
         node['selected'] = true;
         elem.classList.remove('bg-white', 'not-allowed', 'bg-light');
         elem.classList.add('selected_node');

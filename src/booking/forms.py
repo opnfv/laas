@@ -56,6 +56,7 @@ class QuickBookingForm(forms.Form):
                 }
             )
         )
+        
 
         self.fields['filter_field'] = MultipleSelectFilterField(widget=MultipleSelectFilterWidget(**lab_data))
 
