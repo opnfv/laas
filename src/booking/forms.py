@@ -57,6 +57,7 @@ class QuickBookingForm(forms.Form):
             )
         )
 
+
         self.fields['filter_field'] = MultipleSelectFilterField(widget=MultipleSelectFilterWidget(**lab_data))
 
     def build_user_list(self):

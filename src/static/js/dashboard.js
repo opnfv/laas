@@ -220,7 +220,7 @@ class MultipleSelectFilterWidget {
         this.make_selection(initial);
     }
 
-    make_selection( initial_data ){
+    make_selection(initial_data){
         if(!initial_data || jQuery.isEmptyObject(initial_data))
             return;
         for(let item_class in initial_data) {
