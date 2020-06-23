@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8f737c5_343444fc",
+        "filename": "src/workflow/forms.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-06-23T16:21:48Z",
+      "side": 1,
+      "message": "ws",
+      "range": {
+        "startLine": 336,
+        "startChar": 47,
+        "endLine": 336,
+        "endChar": 48
+      },
+      "revId": "072919752e38233204028a7811eb98f07b2bfb60",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23c14520_3008660c",
+        "filename": "src/workflow/forms.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-06-23T16:21:48Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "072919752e38233204028a7811eb98f07b2bfb60",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
