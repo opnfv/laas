@@ -16,6 +16,24 @@
       "revId": "f96012fae9a106228ad80671a8c66476834a50db",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea643dec_fdd8fc88",
+        "filename": "src/templates/akraino/base.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-06-23T16:30:29Z",
+      "side": 0,
+      "message": "This only implements LFID for akraino, but since we don\u0027t have client keys I left this as just for Akraino, do we need a fix that accounts for Laas right now or is that a down the road thing?",
+      "parentUuid": "5c918d47_4dcd63f1",
+      "revId": "f96012fae9a106228ad80671a8c66476834a50db",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }

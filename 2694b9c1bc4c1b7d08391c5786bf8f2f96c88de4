@@ -16,6 +16,24 @@
       "revId": "2694b9c1bc4c1b7d08391c5786bf8f2f96c88de4",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b9d0c64_5289aa8a",
+        "filename": "config.env.sample",
+        "patchSetId": 6
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-06-23T16:30:29Z",
+      "side": 1,
+      "message": "oof, I\u0027ll fix this",
+      "parentUuid": "3007ed5a_8971088c",
+      "revId": "2694b9c1bc4c1b7d08391c5786bf8f2f96c88de4",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }
