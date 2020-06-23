@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c918d47_4dcd63f1",
+        "filename": "src/templates/akraino/base.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-06-23T16:19:27Z",
+      "side": 0,
+      "message": "Does this still work if applied to the LaaS dashboard or is Jira login broken by adding this change?",
+      "revId": "f96012fae9a106228ad80671a8c66476834a50db",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
