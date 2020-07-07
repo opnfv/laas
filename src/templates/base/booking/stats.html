@@ -8,7 +8,8 @@
 
 function drawGraph(data, graph_id, graph_title){
     var container = document.getElementById(graph_id);
-    var plot_data = { x: data[0],
+    var plot_data = { 
+        x: data[0],
         y: data[1],
         line: {shape: "hv"},
         type: "scatter",
@@ -21,7 +22,7 @@ function drawGraph(data, graph_id, graph_title){
             autorange: true
         }
     };
-    Plotly.newPlot(container, [plot_data], layout);
+    Plotly.newPlot(container, [plot_data], layout, {displayModeBar: false});
 }
 
 function getData() {
@@ -57,8 +58,16 @@ function getData() {
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-12 col-md-10">
+{% comment %} <div class="row">
+    <div class="col-3">
+        <div id="booking_guage">
+            <h1> AHH </h1>
+        </div>
+        <div id="user_guage">
+            <h1> AHH </h1>
+        </div>
+    </div>
+    <div class="col-8 col-md-10">
         <!-- These graphs do NOT get redrawn when the browser size is changed -->
         <div id="all_graph_container border" class="mw-100">
             <div id="booking_graph_wrapper">
@@ -69,6 +78,32 @@ function getData() {
             </div>
         </div>
     </div>
+</div>  {% endcomment %}
+<div id="all_graph_container border" class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-4"> 
+            <div id="booking_gauge">
+                <h1> AGHGHHGHG </h1>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8" id="booking_graph_container"> 
+            <div id="booking_graph_wrapper">
+                <div id="booking_graph_container"/>
+            </div> 
+        </div>
+    </div>
+    {% comment %} <div class="row">
+        <div class="col-lg-4 col-md-4"> 
+            <div id="booking_gauge">
+                <h1> AGHGHHGHG </h1>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8" id="user_graph_container"> 
+            <div id="user_graph_wrapper">
+                <div id="user_graph_container"/>
+            </div>
+        </div>
+    </div> {% endcomment %}
 </div>
 <script>
 var data = {{data|safe}};
