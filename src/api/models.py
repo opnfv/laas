@@ -9,12 +9,14 @@
 
 
 from django.contrib.auth.models import User
+
 from django.db import models
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseNotFound
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 import json
 import uuid
@@ -50,6 +52,13 @@ class JobStatus(object):
     CURRENT = 100
     DONE = 200
     ERROR = 300
+
+
+class JobType(object):
+    """ Another poor man's enum for a job type """
+
+    BOOKING = 0
+    ANALYTICS = 1
 
 
 class LabManagerTracker(object):
@@ -176,12 +185,12 @@ class LabManager(object):
 
     def format_user(self, userprofile):
         return {
-                    "id": userprofile.user.id,
-                    "username": userprofile.user.username,
-                    "email": userprofile.email_addr,
-                    "first_name": userprofile.user.first_name,
-                    "last_name": userprofile.user.last_name,
-                    "company": userprofile.company
+            "id": userprofile.user.id,
+            "username": userprofile.user.username,
+            "email": userprofile.email_addr,
+            "first_name": userprofile.user.first_name,
+            "last_name": userprofile.user.last_name,
+            "company": userprofile.company
         }
 
     def get_users(self):
@@ -337,9 +346,19 @@ class Job(models.Model):
     This is the class that is serialized and put into the api
     """
 
+    JOB_TYPES = (
+        ('BOOKING', 'BOOK'),
+        ('ANALYTICS', 'DATA')  # This is the most appropriate "acronym" I could think of)
+    )
+
     booking = models.OneToOneField(Booking, on_delete=models.CASCADE, null=True)
     status = models.IntegerField(default=JobStatus.NEW)
     complete = models.BooleanField(default=False)
+    job_type = models.charField(
+        max_length=4,
+        choices=JOB_TYPES,
+        default=JobType.BOOKING
+    )
 
     def to_dict(self):
         d = {}
@@ -742,6 +761,16 @@ class SnapshotConfig(TaskConfig):
         super().save(*args, **kwargs)
 
 
+class ActiveUsersConfig(TaskConfig):
+    """
+    Task for getting active VPN users
+
+    StackStorm needs no information to run this job
+    so this task is very bare, but neccessary to fit
+    job creation convention.
+    """
+
+
 def get_task(task_id):
     for taskclass in [AccessRelation, SoftwareRelation, HostHardwareRelation, HostNetworkRelation, SnapshotRelation]:
         try:
@@ -870,6 +899,14 @@ class SnapshotRelation(TaskRelation):
         return super(self.__class__, self).delete(*args, **kwargs)
 
 
+class ActiveUsersRelation(TaskRelation):
+    config = models.OneToOneField(ActiveUsersConfig, on_delete=models.CASCADE)
+    job_key = "active users task"
+
+    def type_str(self):
+        return "Active Users Task"
+
+
 class JobFactory(object):
     """This class creates all the API models (jobs, tasks, etc) needed to fulfill a booking."""
 
@@ -910,6 +947,20 @@ class JobFactory(object):
 
         config.clear_delta()
         config.set_host(host)
+        config.save()
+
+    @classmethod
+    def makeActiveUsersTask(cls):
+        """ Append active users task to analytics job """
+        config = ActiveUsersConfig()
+        relation = ActiveUsersRelation()
+        job = Job.objects.filter(job_type='DATA')
+
+        relation.job = job
+        relation.config = config
+        relation.config.save()
+        relation.config = relation.config
+        relation.save()
         config.save()
 
     @classmethod
@@ -955,6 +1006,23 @@ class JobFactory(object):
                 )
             except Exception:
                 continue
+
+    @classmethod
+    def makeAnalyticsJob(cls, job=Job.objects.filter(job_type='DATA')):
+        """
+        Create the analytics job
+
+        This will only run once since there will only be one analytics job.
+        All analytics tasks get appended to analytics job.
+        """
+
+        if job:
+            raise Exception("Cannot have more than one analytics job")
+
+        job = Job()
+        job.job_type = 'DATA'
+
+        cls.makeActiveUsersTask()  # Initialize first user task
 
     @classmethod
     def makeHardwareConfigs(cls, resources=[], job=Job()):
@@ -1087,7 +1155,8 @@ JOB_TASK_CLASSLIST = [
     AccessRelation,
     HostNetworkRelation,
     SoftwareRelation,
-    SnapshotRelation
+    SnapshotRelation,
+    ActiveUsersRelation
 ]
 
 
