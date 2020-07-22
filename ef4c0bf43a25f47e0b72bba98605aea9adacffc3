@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b047d01_74b67290",
+        "filename": "src/api/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1018,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-07-22T19:59:27Z",
+      "side": 1,
+      "message": "This comment doesn\u0027t make sense",
+      "revId": "ef4c0bf43a25f47e0b72bba98605aea9adacffc3",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b669b462_0a47f76b",
+        "filename": "src/api/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1152,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-07-22T19:59:27Z",
+      "side": 1,
+      "message": "Not sure if the active users relation needs to be included in this task list",
+      "revId": "ef4c0bf43a25f47e0b72bba98605aea9adacffc3",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
