@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9756cedc_be5330e9",
+        "filename": "src/account/tasks.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-07-24T17:01:48Z",
+      "side": 1,
+      "message": "I\u0027m not sure this actually raises a keyerror, I think they override indexing operations on the user objects from the api and I thought I remembered it giving a different error.",
+      "revId": "4cc9426d72fe9baa8a4a7f56c6d43493bd011f02",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcb340f6_f37d27dc",
+        "filename": "src/account/views.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-07-24T17:01:48Z",
+      "side": 1,
+      "message": "See other comment, want to verify both of these",
+      "revId": "4cc9426d72fe9baa8a4a7f56c6d43493bd011f02",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
