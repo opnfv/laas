@@ -34,6 +34,24 @@
       "revId": "682f7ebb6d0be5ddd8e4c699e1f87fc20a3fe1e3",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1df6fdb0_0b6c8159",
+        "filename": "src/workflow/resource_bundle_workflow.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-07-24T17:13:20Z",
+      "side": 0,
+      "message": "Never trust FE or client side operations to provide anything but malformed or malicious input",
+      "parentUuid": "021601a2_4fe0f43a",
+      "revId": "682f7ebb6d0be5ddd8e4c699e1f87fc20a3fe1e3",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }
