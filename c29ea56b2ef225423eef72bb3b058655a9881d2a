@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32841adf_87b2d87e",
+        "filename": "src/resource_inventory/migrations/0016_auto_20200723_2100.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-07-27T17:10:34Z",
+      "side": 1,
+      "message": "why is all of this part of this change?",
+      "revId": "c29ea56b2ef225423eef72bb3b058655a9881d2a",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
