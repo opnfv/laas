@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "76b89b35_66db1401",
+        "filename": "src/templates/laas/dashboard/landing.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 2034
+      },
+      "writtenOn": "2020-07-28T14:35:29Z",
+      "side": 1,
+      "message": "Would it be better to use the \"Share this page\" link of https://wiki.opnfv.org/x/HAE-Ag ?",
+      "revId": "07bfa2233dca68daeb5124dff6ac68519cb35d7b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
