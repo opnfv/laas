@@ -200,7 +200,7 @@ class Lab(models.Model):
     contact_email = models.EmailField(max_length=200, null=True, blank=True)
     contact_phone = models.CharField(max_length=20, null=True, blank=True)
     status = models.IntegerField(default=LabStatus.UP)
-    vlan_manager = models.ForeignKey(VlanManager, on_delete=models.CASCADE, null=True)
+    vlan_manager = models.ForeignKey(VlanManager, on_delete=models.CASCADE, null=True, blank=True)
     location = models.TextField(default="unknown")
     # This token must apear in API requests from this lab
     api_token = models.CharField(max_length=50)
