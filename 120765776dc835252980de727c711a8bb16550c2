@@ -16,6 +16,24 @@
       "revId": "120765776dc835252980de727c711a8bb16550c2",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d46a84c8_9856b399",
+        "filename": "src/account/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-07-28T15:33:13Z",
+      "side": 1,
+      "message": "That\u0027s probably there for django migrations, because if it can be null you wouldn\u0027t need a default value on the migration, I can remove that blank\u003dTrue though",
+      "parentUuid": "2f41914b_4463c43b",
+      "revId": "120765776dc835252980de727c711a8bb16550c2",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }
