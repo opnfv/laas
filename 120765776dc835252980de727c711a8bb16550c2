@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2f41914b_4463c43b",
+        "filename": "src/account/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-07-28T15:30:21Z",
+      "side": 1,
+      "message": "I almost feel as though this shouldn\u0027t be nullable in the first place, and only is because it allowed for migrations to be nicer in the past",
+      "revId": "120765776dc835252980de727c711a8bb16550c2",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
