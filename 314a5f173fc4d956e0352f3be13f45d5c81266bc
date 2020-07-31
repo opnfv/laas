@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf96abe3_f723706b",
+        "filename": "src/templates/base/config_bundle/steps/define_software.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-07-31T17:09:18Z",
+      "side": 1,
+      "message": "oof",
+      "revId": "314a5f173fc4d956e0352f3be13f45d5c81266bc",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "808b9310_39cec550",
+        "filename": "src/templates/base/config_bundle/steps/define_software.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-07-31T17:09:18Z",
+      "side": 0,
+      "message": "Not sure how this got here, but it made everything break",
+      "revId": "0b714de9fbec893927d843317c1e2deadf4416b8",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
