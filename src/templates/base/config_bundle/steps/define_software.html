@@ -27,13 +27,14 @@
 
 {% block tablejs %}
 <script>
-    document.getElementById("radio_{{headnode}}").checked = true;
 
     function radio_pre_submit(){
         var parents = document.getElementsByClassName("table_hidden_input_parent");
+        console.log(parents)
         for(const node of parents){
             const radio = node.getElementsByClassName("my_radio")[0];
             const checkbox = radio.nextElementSibling;
+            console.log(radio.cheked)
             if(radio.checked){
                 checkbox.value = "True";
             }
