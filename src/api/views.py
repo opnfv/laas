@@ -176,6 +176,13 @@ def current_jobs(request, lab_name=""):
     return JsonResponse(lab_manager.get_current_jobs(), safe=False)
 
 
+def analytics_job(request, lab_name=""):
+    """ returns all jobs with type booking"""
+    lab_token = request.META.get('HTTP_AUTH_TOKEN')
+    lab_manager = LabManagerTracker.get(lab_name, lab_token)
+    return JsonResponse(lab_manager.get_analytics_job(), safe=False)
+
+
 def lab_downtime(request, lab_name=""):
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
