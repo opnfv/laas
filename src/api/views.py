@@ -26,6 +26,8 @@ from account.models import UserProfile
 from booking.models import Booking
 from api.models import LabManagerTracker, get_task
 from notifier.manager import NotificationHandler
+from analytics.models import ActiveVPNUsers
+import json
 
 """
 API views.
@@ -174,6 +176,22 @@ def current_jobs(request, lab_name=""):
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return JsonResponse(lab_manager.get_current_jobs(), safe=False)
+
+
+@csrf_exempt
+def analytics_job(request, lab_name=""):
+    """ returns all jobs with type booking"""
+    lab_token = request.META.get('HTTP_AUTH_TOKEN')
+    lab_manager = LabManagerTracker.get(lab_name, lab_token)
+    if request.method == "GET":
+        return JsonResponse(lab_manager.get_analytics_job(), safe=False)
+    if request.method == "POST":
+        users = json.loads(request.body.decode('utf-8'))['active_users']
+        active_vpn_users = ActiveVPNUsers()
+        active_vpn_users.active_users = users
+        active_vpn_users.save()
+        return JsonResponse("Success!", safe=False)
+    return HttpResponse(status=405)
 
 
 def lab_downtime(request, lab_name=""):

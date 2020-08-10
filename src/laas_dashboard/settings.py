@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'notifier',
     'workflow',
     'api',
+    'analytics',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
