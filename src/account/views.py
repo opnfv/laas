@@ -61,15 +61,14 @@ class AccountSettingsView(UpdateView):
 
 class MyOIDCAB(OIDCAuthenticationBackend):
     def filter_users_by_claims(self, claims):
-        email = claims.get(email=email)
+        email = claims.get('email')
         if not email:
-            return self.UserModel.objects.none()
+            return self.User.objects.none()
 
         try:
-            profile = Profile.objects.get(email=email)
-            return profile.user
-
-        except Profile.DoesNotExist:
+            profile = UserProfile.objects.get('email')
+            return profile
+        except UserProfile.DoesNotExist:
             return self.UserModel.objects.none()
 
 
