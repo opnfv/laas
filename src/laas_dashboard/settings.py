@@ -51,9 +51,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'account.middleware.TimezoneMiddleware',
 ]
-
-AUTHENTICATION_BACKENDS = ['account.views.MyOIDCAB']
-
+if os.environ['AUTH_SETTING'] == 'LFID':
+    AUTHENTICATION_BACKENDS = ['account.views.MyOIDCAB']
 
 # OpenID Authentications
 OIDC_RP_CLIENT_ID = os.environ['OIDC_CLIENT_ID']
@@ -65,6 +64,15 @@ OIDC_OP_USER_ENDPOINT = os.environ['OIDC_USER_ENDPOINT']
 
 LOGIN_REDIRECT_URL = os.environ['DASHBOARD_URL']
 LOGOUT_REDIRECT_URL = os.environ['DASHBOARD_URL']
+
+OIDC_RP_SIGN_ALGO = os.environ["OIDC_RP_SIGN_ALGO"]
+
+if OIDC_RP_SIGN_ALGO == "RS256":
+    OIDC_OP_JWKS_ENDPOINT = os.environ["OIDC_OP_JWKS_ENDPOINT"]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', "https")
+
+USE_X_FORWARDED_HOST = True
 
 ROOT_URLCONF = 'laas_dashboard.urls'
 
