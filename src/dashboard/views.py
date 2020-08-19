@@ -22,6 +22,8 @@ from booking.models import Booking
 from resource_inventory.models import Image, ResourceProfile, ResourceQuery
 from workflow.workflow_manager import ManagerTracker
 
+import os
+
 
 def lab_list_view(request):
     labs = Lab.objects.all()
@@ -78,6 +80,7 @@ def landing_view(request):
     else:
         bookings = None
 
+    LFID = True if os.environ['AUTH_SETTING'] == 'LFID' else False
     return render(
         request,
         'dashboard/landing.html',
@@ -85,6 +88,7 @@ def landing_view(request):
             'manager': manager is not None,
             'title': "Welcome to the Lab as a Service Dashboard",
             'bookings': bookings
+            'LFID': LFID
         }
     )
 
