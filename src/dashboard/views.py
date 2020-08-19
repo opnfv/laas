@@ -18,6 +18,8 @@ from account.models import Lab
 from resource_inventory.models import Image, ResourceProfile, ResourceQuery
 from workflow.workflow_manager import ManagerTracker
 
+import os
+
 
 def lab_list_view(request):
     labs = Lab.objects.all()
@@ -65,12 +67,14 @@ def host_profile_detail_view(request):
 
 def landing_view(request):
     manager = ManagerTracker.managers.get(request.session.get('manager_session'))
+    LFID = True if os.environ['AUTH_SETTING'] == 'LFID' else False
     return render(
         request,
         'dashboard/landing.html',
         {
             'manager': manager is not None,
-            'title': "Welcome to the Lab as a Service Dashboard"
+            'title': "Welcome to the Lab as a Service Dashboard",
+            'LFID': LFID
         }
     )
 
