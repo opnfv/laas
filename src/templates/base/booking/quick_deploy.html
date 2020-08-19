@@ -87,6 +87,11 @@
     var sup_scenario_dict = {{scenario_filter | safe}};
     var resource_profile_map = {{resource_profile_map | safe}};
 
+    console.log(sup_image_dict)
+    console.log(sup_installer_dict)
+    console.log(sup_scenario_dict)
+    console.log(resource_profile_map)
+
     function imageFilter() {
         var drop = document.getElementById("id_image");
         var lab_pk = get_selected_value("lab");
