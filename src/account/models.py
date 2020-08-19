@@ -61,11 +61,11 @@ class UserProfile(models.Model):
 
     def clean(self, *args, **kwargs):
         company = self.company
-        regex = r'[a-z\_\-\.\$]*'
+        regex = r'[a-zA-Z\_\-\.\$]*'
         pattern = re.compile(regex)
 
         if not pattern.fullmatch(company):
-            raise ValidationError('Company may only include lowercase letters, _, -, . and $')
+            raise ValidationError('Company may only include letters, _, -, . and $')
 
         super().clean(*args, **kwargs)
 
