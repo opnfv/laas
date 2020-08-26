@@ -410,7 +410,8 @@ Networking configuration models
 class Network(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    bundle = models.ForeignKey(ResourceTemplate, on_delete=models.CASCADE, related_name="networks")
+    bundle = models.ForeignKey(ResourceTemplate, null=True, blank=True,
+                               on_delete=models.CASCADE, related_name="networks")
     is_public = models.BooleanField()
 
     def __str__(self):
@@ -420,7 +421,7 @@ class Network(models.Model):
 class PhysicalNetwork(models.Model):
     vlan_id = models.IntegerField()
     generic_network = models.ForeignKey(Network, on_delete=models.CASCADE)
-    bundle = models.ForeignKey(ResourceBundle, null=True, on_delete=models.CASCADE)
+    bundle = models.ForeignKey(ResourceBundle, null=True, blank=True, on_delete=models.CASCADE)
 
     def get_configuration(self, state):
         """
