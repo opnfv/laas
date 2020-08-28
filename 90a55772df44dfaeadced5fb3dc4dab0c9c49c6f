@@ -16,6 +16,24 @@
       "revId": "90a55772df44dfaeadced5fb3dc4dab0c9c49c6f",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b034a94_6c4f7656",
+        "filename": "src/account/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-08-28T17:36:08Z",
+      "side": 0,
+      "message": "oof, you are right",
+      "parentUuid": "74775e31_7341a76e",
+      "revId": "90a55772df44dfaeadced5fb3dc4dab0c9c49c6f",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }
