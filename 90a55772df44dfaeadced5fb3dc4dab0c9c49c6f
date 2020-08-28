@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74775e31_7341a76e",
+        "filename": "src/account/models.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-08-28T17:35:26Z",
+      "side": 0,
+      "message": "probably don\u0027t need to delete str def",
+      "revId": "90a55772df44dfaeadced5fb3dc4dab0c9c49c6f",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
