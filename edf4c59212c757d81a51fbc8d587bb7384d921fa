@@ -22,6 +22,30 @@
       "revId": "edf4c59212c757d81a51fbc8d587bb7384d921fa",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9f514b7_d2efe21e",
+        "filename": "src/templates/base/booking/booking_detail.html",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2020-09-24T16:06:45Z",
+      "side": 1,
+      "message": "It\u0027s a hyperlink reference, so here is a link to email, so we don\u0027t need a space.",
+      "parentUuid": "e6694b40_18a9c8d3",
+      "range": {
+        "startLine": 163,
+        "startChar": 16,
+        "endLine": 163,
+        "endChar": 114
+      },
+      "revId": "edf4c59212c757d81a51fbc8d587bb7384d921fa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }
