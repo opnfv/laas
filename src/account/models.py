@@ -80,7 +80,7 @@ class VlanManager(models.Model):
     # if they use QinQ or a vxlan overlay, for example
     allow_overlapping = models.BooleanField()
 
-    def get_vlan(self, count=1):
+    def get_vlans(self, count=1):
         """
         Return the ID of available vlans, but does not reserve them.
 
