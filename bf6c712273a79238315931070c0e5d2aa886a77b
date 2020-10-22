@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "28708527_1b845a82",
+        "filename": "src/account/models.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 3543
+      },
+      "writtenOn": "2020-10-22T17:15:40Z",
+      "side": 1,
+      "message": "This looks like the comment description is still incorrect, compared to your described behavior.",
+      "revId": "bf6c712273a79238315931070c0e5d2aa886a77b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5825664_495c4eab",
+        "filename": "src/dashboard/testing_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 3543
+      },
+      "writtenOn": "2020-10-22T17:15:40Z",
+      "side": 1,
+      "message": "Don\u0027t love this fix, since it\u0027s dependent on no one changing the above get_vlans call to ask for count \u003e 1.",
+      "revId": "bf6c712273a79238315931070c0e5d2aa886a77b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
