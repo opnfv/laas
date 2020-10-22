@@ -33,6 +33,24 @@
       "revId": "bf6c712273a79238315931070c0e5d2aa886a77b",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "100b6b71_62dafbc6",
+        "filename": "src/dashboard/testing_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2020-10-22T18:45:12Z",
+      "side": 1,
+      "message": "Not sure how to easily fix that without going to the other behavior of \"returns a single vlan if only one asked for, otherwise a list\" since in this case this is only creating a single network.",
+      "parentUuid": "a5825664_495c4eab",
+      "revId": "bf6c712273a79238315931070c0e5d2aa886a77b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
     }
   ]
 }
