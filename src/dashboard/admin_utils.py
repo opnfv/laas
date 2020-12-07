@@ -7,6 +7,8 @@ from resource_inventory.models import (
     InterfaceProfile
 )
 
+import json
+
 from django.contrib.auth.models import User
 
 from account.models import Lab
@@ -162,7 +164,6 @@ def map_cntt_interfaces(labid: str):
 
         iface.save()
 
-
 def detect_leaked_hosts(labid="unh_iol"):
     """
     Use this to try to detect leaked hosts.
@@ -207,3 +208,18 @@ def force_release_booking(booking_id):
     for task in tasks:
         task.status = JobStatus.DONE
         task.save()
+
+from resource_inventory.models import PhysicalNetwork
+def get_network_metadata(booking_id: int):
+    booking = Booking.objects.get(id=booking_id)
+    bundle = booking.resource
+    pnets = PhysicalNetwork.objects.filter(bundle=bundle).all()
+    metadata = {}
+    for pnet in pnets:
+        net = pnet.generic_network
+        mdata = {"vlan_id": pnet.vlan_id, "netname": net.name, "public": net.is_public}
+        metadata[net.name] = mdata
+    return metadata
+
+def print_dict_pretty(a_dict):
+    print(json.dumps(a_dict, sort_keys=True, indent=4))
