@@ -12,7 +12,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get install -y npm
 
 ADD requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
 
 ADD web/init.sh /init.sh
 ADD src/ /laas_dashboard/
