@@ -127,6 +127,9 @@ class JiraLoginView(RedirectView):
             '&oauth_callback=' + settings.OAUTH_CALLBACK_URL
         return url
 
+class OIDCLoginView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('oidc_authentication_init')
 
 class JiraLogoutView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
