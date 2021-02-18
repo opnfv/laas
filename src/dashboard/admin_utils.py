@@ -76,9 +76,10 @@ def book_host(owner_username, host_labid, lab_username, hostname, image_id, temp
             host.config = config
             rmanager.configureNetworking(resource_bundle, host, vlan_map)
             host.save()
-        except Exception:
+        except Exception as e:
             host.booked = False
             host.save()
+            print(e)
             print("Failed to book host due to error configuring it")
             return
 
