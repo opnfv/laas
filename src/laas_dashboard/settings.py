@@ -240,7 +240,11 @@ CELERYBEAT_SCHEDULE = {
     'query_vpn_users': {
         'task': 'dashboard.tasks.query_vpn_users',
         'schedule': timedelta(hours=1)
-    }
+    },
+    'dispatch_emails': {
+        'task': 'notifier.tasks.dispatch_emails', 
+        'schedule': timedelta(hours=1)
+    },
 }
 
 # Notifier Settings
