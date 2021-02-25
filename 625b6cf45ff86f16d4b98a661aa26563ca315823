@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed80c060_5337373c",
+        "filename": "src/dashboard/actions.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-02-25T18:34:04Z",
+      "side": 1,
+      "message": "would be good to disassociate the host from the booking as well, just in case there are remaining active jobs that could be accidentally rerun at some point and steal it back (this prevents any jobs from touching it)",
+      "revId": "625b6cf45ff86f16d4b98a661aa26563ca315823",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
