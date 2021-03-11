@@ -216,7 +216,7 @@ class MultipleSelectFilterWidget {
 
         for(let nodeId in this.filter_items) {
             const node = this.filter_items[nodeId];
-            this.result[node.class] = {}
+            this.result[node.class] = {};
         }
 
         this.make_selection(initial);
@@ -225,7 +225,7 @@ class MultipleSelectFilterWidget {
     make_selection(initial_data){
         if(!initial_data || jQuery.isEmptyObject(initial_data))
             return;
-        
+
         // Need to sort through labs first
         let initial_lab = initial_data['lab'];
         let initial_resources = initial_data['resource'];
@@ -242,6 +242,7 @@ class MultipleSelectFilterWidget {
                 this.make_multiple_selection(node, selection_data);
             }
             this.currentLab = node;
+            this.available_resources = JSON.parse(node['available_resources']);
         }
 
         for( let node_id in initial_resources){
@@ -256,6 +257,7 @@ class MultipleSelectFilterWidget {
                 this.make_multiple_selection(node, selection_data);
             }
         }
+        this.updateAvailibility()
     }
 
     make_multiple_selection(node, selection_data){
@@ -375,6 +377,8 @@ class MultipleSelectFilterWidget {
             let currCount;
             let quantityDescription;
             let quantityNode;
+
+
 
             for(let resource in required_resources) {
                 currCount = Math.floor(this.available_resources[resource] / required_resources[resource]);
