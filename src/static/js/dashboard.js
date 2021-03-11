@@ -216,7 +216,7 @@ class MultipleSelectFilterWidget {
 
         for(let nodeId in this.filter_items) {
             const node = this.filter_items[nodeId];
-            this.result[node.class] = {}
+            this.result[node.class] = {};
         }
 
         this.make_selection(initial);
@@ -230,9 +230,11 @@ class MultipleSelectFilterWidget {
         let initial_lab = initial_data['lab'];
         let initial_resources = initial_data['resource'];
 
+
         for( let node_id in initial_lab) { // This should only be length one
             const node = this.filter_items[node_id];
             const selection_data = initial_lab[node_id];
+
             if( selection_data.selected ) {
                 this.select(node);
                 this.markAndSweep(node);
@@ -242,6 +244,7 @@ class MultipleSelectFilterWidget {
                 this.make_multiple_selection(node, selection_data);
             }
             this.currentLab = node;
+            this.available_resources = JSON.parse(node['available_resources']);
         }
 
         for( let node_id in initial_resources){
@@ -256,6 +259,8 @@ class MultipleSelectFilterWidget {
                 this.make_multiple_selection(node, selection_data);
             }
         }
+
+        this.updateAvailibility()
     }
 
     make_multiple_selection(node, selection_data){
@@ -349,7 +354,7 @@ class MultipleSelectFilterWidget {
 
     labCheck(node){
         // if lab is not already selected update available resources
-        if(!node['selected']) {
+        if (!node['selected']) {
             this.currentLab = node;
             this.available_resources = JSON.parse(node['available_resources']);
             this.updateAvailibility();
@@ -366,6 +371,7 @@ class MultipleSelectFilterWidget {
     updateAvailibility() {
         const lab_resources = this.graph_neighbors[this.currentLab.id];
 
+
         // need to loop through and update all quantities
         for(let i in lab_resources) {
             const resource_node = this.filter_items[lab_resources[i]];
@@ -375,6 +381,8 @@ class MultipleSelectFilterWidget {
             let currCount;
             let quantityDescription;
             let quantityNode;
+
+
 
             for(let resource in required_resources) {
                 currCount = Math.floor(this.available_resources[resource] / required_resources[resource]);
