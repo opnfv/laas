@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4476fb83_87c60583",
+        "filename": "src/templates/lfedge/dashboard/landing.html",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-16T22:40:39Z",
+      "side": 1,
+      "message": "LFN should be different from LF Edge",
+      "range": {
+        "startLine": 3,
+        "startChar": 83,
+        "endLine": 3,
+        "endChar": 86
+      },
+      "revId": "d1d7969156a618f886ff7a12e66225395b8103c7",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
