@@ -66,6 +66,30 @@
     },
     {
       "key": {
+        "uuid": "3ad1a59e_5bebaa9c",
+        "filename": "src/dashboard/admin_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-17T16:19:24Z",
+      "side": 1,
+      "message": "If it breaks the function to add a lab username why don\u0027t rewrite to catch that error? I understand the distinction you are making now and it\u0027s just an edge case we don\u0027t cover.",
+      "parentUuid": "e8c17874_75441653",
+      "range": {
+        "startLine": 55,
+        "startChar": 1,
+        "endLine": 56,
+        "endChar": 38
+      },
+      "revId": "dc9464e221895286355d14dffd9e08f2eed97755",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5af966bb_1e57bc8b",
         "filename": "src/dashboard/admin_utils.py",
         "patchSetId": 1
@@ -110,6 +134,30 @@
       "revId": "dc9464e221895286355d14dffd9e08f2eed97755",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a9bcd0b_60ae9a59",
+        "filename": "src/dashboard/admin_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-17T16:19:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42f17f4e_ff026561",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 72
+      },
+      "revId": "dc9464e221895286355d14dffd9e08f2eed97755",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     },
     {
       "key": {
@@ -204,6 +252,30 @@
       "revId": "dc9464e221895286355d14dffd9e08f2eed97755",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4571700b_ae6e5377",
+        "filename": "src/dashboard/admin_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-17T16:19:24Z",
+      "side": 1,
+      "message": "oh yup, that was a silly miss",
+      "parentUuid": "8aa3f310_1a7a6da3",
+      "range": {
+        "startLine": 143,
+        "startChar": 3,
+        "endLine": 143,
+        "endChar": 23
+      },
+      "revId": "dc9464e221895286355d14dffd9e08f2eed97755",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     },
     {
       "key": {
@@ -524,6 +596,30 @@
       "side": 1,
       "message": "Uname refers to the actual name of the server, which is globally unique. This should not be labid as labid is not globally unique and would be the incorrect selector. It may make sense to add a distinct labid later on to the function header but uname is definitely required at least.",
       "parentUuid": "52196846_37714e63",
+      "range": {
+        "startLine": 449,
+        "startChar": 0,
+        "endLine": 450,
+        "endChar": 74
+      },
+      "revId": "dc9464e221895286355d14dffd9e08f2eed97755",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03831636_988c2bd9",
+        "filename": "src/dashboard/admin_utils.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-17T16:19:24Z",
+      "side": 1,
+      "message": "Can this change from uname to just name? since that\u0027s actually the field we are working with. If I was confused about uname from the docs and looked at the model I wouldn\u0027t be 100% sure which field you\u0027re referencing, only about 85% sure",
+      "parentUuid": "7ccaa48d_37777869",
       "range": {
         "startLine": 449,
         "startChar": 0,
