@@ -357,7 +357,7 @@ class MultipleSelectFilterWidget {
             let quantityDescription;
             let quantityNode;
 
-            // console.log(this.available_resources);
+
             for(let resource in required_resources) {
                 currCount = Math.floor(this.available_resources[resource] / required_resources[resource]);
                 if(currCount < leastAvailable)
