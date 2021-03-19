@@ -45,7 +45,13 @@ from api.views import (
     lab_users,
     lab_user,
     GenerateTokenView,
-    analytics_job
+    analytics_job,
+    user_bookings,
+    make_booking,
+    available_templates,
+    images_for_template,
+    specific_booking, 
+    extend_booking
 )
 
 urlpatterns = [
@@ -65,5 +71,14 @@ urlpatterns = [
     path('labs/<slug:lab_name>/jobs/getByType/DATA', analytics_job),
     path('labs/<slug:lab_name>/users', lab_users),
     path('labs/<slug:lab_name>/users/<int:user_id>', lab_user),
+
+    path('booking', user_bookings),
+    path('booking/<int:booking_id>', specific_booking),
+    path('booking/<int:booking_id>/extendBooking/<int:days>', extend_booking),
+    path('booking/makeBooking', make_booking),
+
+    path('resource_inventory/availableTemplates', available_templates),
+    path('resource_inventory/<int:template_id>/images', images_for_template),
+
     url(r'^token$', GenerateTokenView.as_view(), name='generate_token'),
 ]
