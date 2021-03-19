@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a5fed86_4605b0ba",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-19T17:36:43Z",
+      "side": 1,
+      "message": "IMO somewhat confusing name, what\u0027s the rationale here?",
+      "revId": "14e2084a299c5b0e62193cb603e2d8d056feb745",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a93e1349_699fc9c0",
+        "filename": "src/booking/quick_deployer.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-19T17:36:43Z",
+      "side": 1,
+      "message": "I want to make sure I understand the semantics of this before we commit, does this apply to the full function call stack? And if exceptions occur and bubble up does it still roll back correctly?",
+      "revId": "14e2084a299c5b0e62193cb603e2d8d056feb745",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b5ba501_6b8328e1",
+        "filename": "src/resource_inventory/migrations/0018_manual_change_rconfig_default_name.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-19T17:36:43Z",
+      "side": 1,
+      "message": "should probably split out this deletion into a separate change (also note the cause, I know it\u0027s a conflicting migration but the commit log should hopefully reflect that)",
+      "revId": "14e2084a299c5b0e62193cb603e2d8d056feb745",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b03d657_1faf0153",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-19T17:36:43Z",
+      "side": 1,
+      "message": "unrelated change",
+      "revId": "14e2084a299c5b0e62193cb603e2d8d056feb745",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
