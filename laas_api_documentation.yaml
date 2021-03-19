@@ -1,0 +1,331 @@
+swagger: '2.0'
+info:
+  description: |-
+    This is a sandbox environment for the LaaS automation API. 
+     In the current version users are able to make and cancel bookings through the LaaS dashboard.
+  version: 1.0.0
+  title: LaaS Automation API
+  termsOfService: 'http://labs.lfnetworking.org'
+  contact:
+    email: opnfv@iol.unh.edu
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: labs.lfnetworking.org
+basePath: /api
+tags:
+  - name: Bookings
+    description: View and edit existing bookings
+  - name: Resource Inventory
+    description: Examine and manage resources in a lab
+  - name: Users
+    description: All actions for referencing 
+schemes:
+  - https
+  - http
+security:
+  - AutomationAPI: []
+paths:
+  /booking:
+    get:
+      tags:
+        - Bookings
+      summary: Get all bookings belonging to user
+      description: Get all bookings belonging to the user authenticated by API key.
+      operationId: retrieveBookings
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Booking'
+        '401':
+          description: Unauthorized API key
+  /booking/makeBooking:
+    put:
+      tags:
+        - Bookings
+      summary: Make booking by specifying information
+      description: Exposes same functionality as quick bookng form from dashboard
+      operationId: makeBooking
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: booking
+          description: the bookng to create
+          schema:
+            $ref: '#/definitions/MakeBookingTemplate'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Booking'
+        '400':
+          description: Error in booking info
+        '401':
+          description: Unauthorized API key
+  '/booking/{bookingID}':
+    get:
+      tags:
+        - Bookings
+      summary: See all info for specific booking
+      description: ''
+      operationId: specificBooking
+      parameters:
+        - in: path
+          name: bookingID
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Booking'
+        '404':
+          description: Booking does not exist
+        '401':
+          description: Unauthorized API key
+    delete:
+      tags:
+        - Bookings
+      summary: Cancel booking
+      description: ''
+      operationId: cancelBooking
+      parameters:
+        - in: path
+          name: bookingID
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successfully canceled booking
+        '404':
+          description: Booking does not exist
+        '400':
+          description: Cannnot cancel booking
+        '401':
+          description: Unauthorized API key
+  '/booking/{bookingID}/extendBooking/{days}':
+    post:
+      tags:
+        - Bookings
+      summary: Extend end date of booking
+      description: ''
+      operationId: extendBooking
+      parameters:
+        - in: path
+          name: bookingID
+          required: true
+          type: integer
+        - in: path
+          name: days
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Booking'
+        '404':
+          description: Booking to extend does not exist
+        '400':
+          description: Cannot extend Booking
+        '401':
+          description: Unauthorized API key
+  '/resource_inventory/{templateLabID}/images':
+    get:
+      tags:
+        - Resource Inventory
+      summary: See valid images for a resource template
+      description: ''
+      operationId: viewImages
+      parameters:
+        - in: path
+          name: templateLabID
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Image'
+        '404':
+          description: Resource Template does not exist
+        '401':
+          description: Unauthorized API key
+  /resource_inventory/availableTemplates:
+    get:
+      tags:
+        - Resource Inventory
+      summary: All Resource Templates currently available
+      description: ''
+      operationId: listTemplates
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/ResourceTemplate'
+        '401':
+          description: Unauthorized API key
+  /users:
+    get:
+      tags:
+        - Lab
+      summary: See all public users that can be added to a booking
+      description: ''
+      operationId: getUsers
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successfel operation
+          schema:
+            $ref: '#/definitions/UserProfile'
+        '401':
+          description: Unauthorized API key
+  '/labs/{labID}/users':
+    get:
+      tags:
+        - Lab
+      summary: Get all users at a lab
+      description: ''
+      operationId: labUsers
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: labID
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful
+        '400':
+          description: invalid lab id
+securityDefinitions:
+  AutomationAPI:
+    type: apiKey
+    in: header
+    name: auth-token
+definitions:
+  Lab:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  MakeBookingTemplate:
+    type: object
+    properties:
+      templateID:
+        type: integer
+      purpose:
+        type: string
+      project:
+        type: string
+      collaborators:
+        type: array
+        items:
+          type: integer
+      hostname:
+        type: string
+      length:
+        type: integer
+      imageLabID:
+        type: integer
+  Booking:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      owner:
+        type: string
+      collaborators:
+        $ref: '#/definitions/UserProfile'
+      start:
+        type: string
+        format: date-time
+      end:
+        type: string
+        format: date-time
+      lab:
+        $ref: '#/definitions/Lab'
+      purpose:
+        type: string
+      resourceBundle:
+        $ref: '#/definitions/ResourceBundle'
+      project:
+        type: string
+  Image:
+    type: object
+    properties:
+      labID:
+        type: integer
+        format: int64
+      name:
+        type: string
+  ResourceBundle:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      resources:
+        type: array
+        items:
+          $ref: '#/definitions/Server'
+  ResourceProfile:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  UserProfile:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  ResourceTemplate:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      resourceProfiles:
+        type: array
+        items:
+          $ref: '#/definitions/ResourceProfile'
+  Server:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      profile:
+        $ref: '#/definitions/ResourceProfile'
+      labid:
+        type: string
