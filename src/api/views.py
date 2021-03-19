@@ -8,9 +8,8 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
 
-
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.views import View
@@ -19,16 +18,20 @@ from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
+import json
+import math
 
 from api.serializers.booking_serializer import BookingSerializer
 from api.serializers.old_serializers import UserSerializer
 from api.forms import DowntimeForm
-from account.models import UserProfile
+from account.models import UserProfile, Lab
 from booking.models import Booking
-from api.models import LabManagerTracker, get_task
+from api.models import LabManagerTracker, AutomationAPIManager, get_task
 from notifier.manager import NotificationHandler
 from analytics.models import ActiveVPNUser
-import json
+from booking.quick_deployer import create_from_API
+from resource_inventory.models import ResourceTemplate
+
 
 """
 API views.
@@ -234,3 +237,68 @@ def done_jobs(request, lab_name=""):
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return JsonResponse(lab_manager.get_done_jobs(), safe=False)
+
+
+"""
+Booking API Views
+"""
+
+
+def user_bookings(request):
+    user_token = request.META.get('HTTP_AUTH_TOKEN')
+    token = get_object_or_404(Token, key=user_token)
+    bookings = Booking.objects.filter(owner=token.user, end__gte=timezone.now())
+    output = [AutomationAPIManager.serialize_booking(booking)
+              for booking in bookings]
+    return JsonResponse(output, safe=False)
+
+
+@csrf_exempt
+def make_booking(request):
+    user_token = request.META.get('HTTP_AUTH_TOKEN')
+    token = get_object_or_404(Token, key=user_token)
+
+    try:
+        booking = create_from_API(request.body, token.user)
+    except Exception as e:
+        return HttpResponse(str(e))
+
+    sbooking = AutomationAPIManager.serialize_booking(booking)
+    return JsonResponse(sbooking, safe=False)
+
+
+def available_templates(request):
+    user_token = request.META.get('HTTP_AUTH_TOKEN')
+    get_object_or_404(Token, key=user_token)
+
+    # get available templates
+    # mirrors MultipleSelectFilter Widget
+    avt = []
+    for lab in Lab.objects.all():
+        for template in ResourceTemplate.objects.filter(lab=lab, public=True):
+            available_resources = lab.get_available_resources()
+            required_resources = template.get_required_resources()
+            least_available = 100
+
+            for resource, count_required in required_resources.items():
+                try:
+                    curr_count = math.floor(available_resources[str(resource)] / count_required)
+                    if curr_count < least_available:
+                        least_available = curr_count
+                except KeyError:
+                    least_available = 0
+
+            if least_available > 0:
+                avt.append((template, least_available))
+
+    savt = [AutomationAPIManager.serialize_template(temp)
+            for temp in avt]
+
+    return JsonResponse(savt, safe=False)
+
+
+def images_for_template(request, template_id=""):
+    template = get_object_or_404(ResourceTemplate, pk=template_id)
+    images = [AutomationAPIManager.serialize_image(config.image)
+              for config in template.getConfigs()]
+    return JsonResponse(images, safe=False)
