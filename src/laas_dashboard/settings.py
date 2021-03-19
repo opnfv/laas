@@ -227,11 +227,11 @@ BROKER_URL = 'amqp://' + RABBITMQ_DEFAULT_USER + ':' + RABBITMQ_DEFAULT_PASS + '
 CELERYBEAT_SCHEDULE = {
     'booking_poll': {
         'task': 'dashboard.tasks.booking_poll',
-        'schedule': timedelta(minutes=1)
+        'schedule': timedelta(minutes=300)
     },
     'free_hosts': {
         'task': 'dashboard.tasks.free_hosts',
-        'schedule': timedelta(minutes=1)
+        'schedule': timedelta(minutes=300)
     },
     'notify_expiring': {
         'task': 'notifier.tasks.notify_expiring',

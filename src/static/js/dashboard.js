@@ -346,6 +346,8 @@ class MultipleSelectFilterWidget {
 
     updateAvailibility() {
         const lab_resources = this.graph_neighbors[this.currentLab.id];
+        
+        console.log(this.available_resources); 
 
         // need to loop through and update all quantities
         for(let i in lab_resources) {
@@ -357,7 +359,7 @@ class MultipleSelectFilterWidget {
             let quantityDescription;
             let quantityNode;
 
-            // console.log(this.available_resources);
+
             for(let resource in required_resources) {
                 currCount = Math.floor(this.available_resources[resource] / required_resources[resource]);
                 if(currCount < leastAvailable)

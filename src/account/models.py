@@ -229,10 +229,8 @@ class Lab(models.Model):
     def make_api_token():
         """Generate random 45 character string for API token."""
         alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        key = ""
-        for i in range(45):
-            key += random.choice(alphabet)
-        return key
+        key = [random.choice(alphabet) for _ in range(45)]
+        return ''.join(key)
 
     def get_available_resources(self):
         # Cannot import model normally due to ciruclar import
