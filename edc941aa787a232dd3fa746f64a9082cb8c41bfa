@@ -2,6 +2,159 @@
   "comments": [
     {
       "key": {
+        "uuid": "2293a838_5f2d9c8a",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T18:03:18Z",
+      "side": 1,
+      "message": "fair bit of trailing ws, just want to clean up before final commit",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd30ba0e_068ace5e",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T18:03:18Z",
+      "side": 1,
+      "message": "is this quite idempotent? I think this should be a post request instead, since sending a second identical one wouldn\u0027t leave the dashboard in the same state and there would be more than one booking at the end. Browsers reprompt if a post request would get sent again, but wouldn\u0027t if it would instead send a put request because it\u0027s expected to not cause any issues to accidentally resent a put request.",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29f2b1bf_2f6b6b48",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T18:03:18Z",
+      "side": 1,
+      "message": "What does `templateLabID` represent here? Is this not just the id for the template within the django db? If it\u0027s actually some LabID then that would need to also be qualified by which lab it\u0027s at (labid\u0027s are only unique within a lab, so {lab, labid} would be a key but {labid} would not)",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c3165b8_8203d6ac",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T18:03:18Z",
+      "side": 1,
+      "message": "typo",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54bd590b_62a62f93",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T18:03:18Z",
+      "side": 1,
+      "message": "needs schema I\u0027d imagine?",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d10204d6_51c1027c",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T18:03:18Z",
+      "side": 1,
+      "message": "do remember that this id isn\u0027t globally unique, so a different key should be used during enumeration.",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "182e21da_2372929c",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T18:03:18Z",
+      "side": 1,
+      "message": "would be super useful to have this include `network -\u003e vlanid` mappings for use by api consumers",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c42a5666_b9b0a59a",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T18:03:18Z",
+      "side": 1,
+      "message": "May be useful to include interface info here",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64b5ed9b_f8f3c427",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T18:03:18Z",
+      "side": 1,
+      "message": "this should include network info probably? Not sure how we want to represent that",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "97ae3bc4_82e3bd04",
         "filename": "src/booking/quick_deployer.py",
         "patchSetId": 5
