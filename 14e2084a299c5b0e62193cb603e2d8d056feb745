@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8f2e2e2e_7238bb0a",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-22T17:06:01Z",
+      "side": 1,
+      "message": "That\u0027s a typo, initially I had an architecture booking option but decided it wasn\u0027t worth keeping, I\u0027ll fix this",
+      "parentUuid": "4a5fed86_4605b0ba",
+      "revId": "14e2084a299c5b0e62193cb603e2d8d056feb745",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a93e1349_699fc9c0",
         "filename": "src/booking/quick_deployer.py",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2021-03-19T17:36:43Z",
       "side": 1,
       "message": "I want to make sure I understand the semantics of this before we commit, does this apply to the full function call stack? And if exceptions occur and bubble up does it still roll back correctly?",
+      "revId": "14e2084a299c5b0e62193cb603e2d8d056feb745",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04473ded_7f4db068",
+        "filename": "src/booking/quick_deployer.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-22T17:06:01Z",
+      "side": 1,
+      "message": "I was having problems with host leaks trying to make the booking. If one of the fields of the booking is invalid this would create a booking and reserve the host, but the function would fail. So we only reserve a host if everything in there works and rollback if not",
+      "parentUuid": "a93e1349_699fc9c0",
       "revId": "14e2084a299c5b0e62193cb603e2d8d056feb745",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "e177c3b5_a95fcc56",
+        "filename": "src/resource_inventory/migrations/0018_manual_change_rconfig_default_name.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-22T17:06:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b5ba501_6b8328e1",
+      "revId": "14e2084a299c5b0e62193cb603e2d8d056feb745",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b03d657_1faf0153",
         "filename": "src/static/js/dashboard.js",
         "patchSetId": 3
@@ -67,6 +121,24 @@
       "revId": "14e2084a299c5b0e62193cb603e2d8d056feb745",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6373c4de_36d8b1af",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 3
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-22T17:06:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b03d657_1faf0153",
+      "revId": "14e2084a299c5b0e62193cb603e2d8d056feb745",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
