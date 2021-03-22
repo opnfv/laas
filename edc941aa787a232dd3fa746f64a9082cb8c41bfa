@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "18941a4c_7880967a",
+        "filename": "src/booking/quick_deployer.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-22T17:10:33Z",
+      "side": 1,
+      "message": "I think I like your idea below better, where we have the initial version and depreciate this functionality once we release the more advanced topology configurations.",
+      "parentUuid": "97ae3bc4_82e3bd04",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fd43d0e7_4c78516d",
         "filename": "src/booking/quick_deployer.py",
         "patchSetId": 5
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "8f9a3a3c_8c878074",
+        "filename": "src/booking/quick_deployer.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-22T17:10:33Z",
+      "side": 1,
+      "message": "Yeah we\u0027ll come up with some schema of how to configure PODs through json, but for now it makes sense to continue with this",
+      "parentUuid": "fd43d0e7_4c78516d",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4def0e9b_9836c019",
         "filename": "src/booking/quick_deployer.py",
         "patchSetId": 5
@@ -47,6 +83,24 @@
       "writtenOn": "2021-03-22T17:03:57Z",
       "side": 1,
       "message": "This is a good approach for now, it doesn\u0027t quite allow all PTLs to make multi-node bookings though since that uses a different approach (we parse the project info.yaml provided during booking for that)",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53cdf579_c3ccc419",
+        "filename": "src/booking/quick_deployer.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-22T17:10:33Z",
+      "side": 1,
+      "message": "Not sure I follow the rationale of not being able to make multi-node bookings, this should be unrelated to that",
+      "parentUuid": "4def0e9b_9836c019",
       "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
