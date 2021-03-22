@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97ae3bc4_82e3bd04",
+        "filename": "src/booking/quick_deployer.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T17:03:57Z",
+      "side": 1,
+      "message": "I wonder if this makes sense to directly include in the booking API or if we should just omit this and add it later for the topology change",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd43d0e7_4c78516d",
+        "filename": "src/booking/quick_deployer.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T17:03:57Z",
+      "side": 1,
+      "message": "Potentially same idea on this as for hostname, but harder to leave this one out beforehand. I\u0027d like for the api to have a minimum of \"convenient\" shortcuts just because it complicates the number of edge cases. Maybe make this field optional and deprecate it shortly after we add the topology editing feature?",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4def0e9b_9836c019",
+        "filename": "src/booking/quick_deployer.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-22T17:03:57Z",
+      "side": 1,
+      "message": "This is a good approach for now, it doesn\u0027t quite allow all PTLs to make multi-node bookings though since that uses a different approach (we parse the project info.yaml provided during booking for that)",
+      "revId": "edc941aa787a232dd3fa746f64a9082cb8c41bfa",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
