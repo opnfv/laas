@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a761892_d394d68a",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-23T17:53:08Z",
+      "side": 1,
+      "message": "should remove trailing ws while we\u0027re at this",
+      "revId": "9e025da8425433be37716a2a1fe954267e21f6a1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a780e0c6_43a27847",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-23T17:53:08Z",
+      "side": 1,
+      "message": "unrelated edit?",
+      "revId": "9e025da8425433be37716a2a1fe954267e21f6a1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
