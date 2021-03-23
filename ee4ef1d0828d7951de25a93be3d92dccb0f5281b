@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9212bcca_e3221751",
+        "filename": "src/booking/quick_deployer.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-23T17:29:52Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be other way around? Only set to hostname if the old len is 1, and use the old name if len \u003e 1?",
+      "revId": "ee4ef1d0828d7951de25a93be3d92dccb0f5281b",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
