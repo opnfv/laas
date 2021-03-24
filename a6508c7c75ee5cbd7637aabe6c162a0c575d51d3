@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8abbf5bd_5d316d00",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-24T19:44:23Z",
+      "side": 1,
+      "message": "trailing ws",
+      "revId": "a6508c7c75ee5cbd7637aabe6c162a0c575d51d3",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f916cab_79df752b",
+        "filename": "src/static/js/dashboard.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-24T19:44:23Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "a6508c7c75ee5cbd7637aabe6c162a0c575d51d3",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
