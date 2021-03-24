@@ -209,7 +209,7 @@ class UserListView(TemplateView):
     template_name = "account/user_list.html"
 
     def get_context_data(self, **kwargs):
-        users = User.objects.all()
+        users = [up.user for up in UserProfile.objects.filter(public_user=True)]
         context = super(UserListView, self).get_context_data(**kwargs)
         context.update({'title': "Dashboard Users", 'users': users})
         return context
