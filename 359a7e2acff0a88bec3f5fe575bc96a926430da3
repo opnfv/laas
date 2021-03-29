@@ -34,6 +34,24 @@
       "revId": "359a7e2acff0a88bec3f5fe575bc96a926430da3",
       "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c16cfc99_ed06052a",
+        "filename": "src/account/views.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-03-29T19:20:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a003694b_b5994795",
+      "revId": "359a7e2acff0a88bec3f5fe575bc96a926430da3",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": false
     }
   ]
 }
