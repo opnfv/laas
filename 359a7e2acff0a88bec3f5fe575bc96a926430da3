@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82f1cbaf_5348c831",
+        "filename": "src/account/views.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-03-29T17:00:11Z",
+      "side": 1,
+      "message": "may be a good idea to do a select_related here so that it isn\u0027t doing a separate query for every user",
+      "revId": "359a7e2acff0a88bec3f5fe575bc96a926430da3",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
