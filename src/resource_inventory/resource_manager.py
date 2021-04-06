@@ -64,9 +64,10 @@ class ResourceManager:
 
     # public interface
     def deleteResourceBundle(self, resourceBundle):
-        for resource in resourceBundle.get_resources():
-            resource.release()
-        resourceBundle.delete()
+        raise NotImplementedError("Resource Bundle Deletion Not Implemented")
+
+    def releaseResourceBundle(self, resourceBundle):
+        resourceBundle.release()
 
     def get_vlans(self, resourceTemplate):
         networks = {}
