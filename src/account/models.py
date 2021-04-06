@@ -54,6 +54,8 @@ class UserProfile(models.Model):
     full_name = models.CharField(max_length=100, null=True, blank=True, default='')
     booking_privledge = models.BooleanField(default=False)
 
+    public_user = models.BooleanField(default=False)
+
     class Meta:
         db_table = 'user_profile'
 
@@ -237,7 +239,7 @@ class Lab(models.Model):
     def get_available_resources(self):
         # Cannot import model normally due to ciruclar import
         Server = apps.get_model('resource_inventory', 'Server')  # TODO: Find way to import ResourceQuery
-        resources = [str(resource.profile) for resource in Server.objects.filter(lab=self, booked=False)]
+        resources = [str(resource.profile) for resource in Server.objects.filter(lab=self, working=True, booked=False)]
         return dict(Counter(resources))
 
     def __str__(self):
