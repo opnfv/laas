@@ -28,3 +28,19 @@ class ActiveVPNUser(models.Model):
         avu = cls(lab=lab, active_users=active_users)
         avu.save()
         return avu
+
+
+class BookingUsers(models.Model):
+    """ Stores how many users are involved in active bookings """
+    time_stamp = models.DateTimeField(auto_now_add=True)
+    lab = models.ForeignKey(Lab, on_delete=models.CASCADE, null=False)
+    active_users = models.IntegerField()
+    
+
+class ActiveBookings(models.Model):
+    """ Stores how many open bookings are in the lab """
+    time_stamp = models.DateTimeField(auto_now_add=True)
+    lab = models.ForeignKey(Lab, on_delete=models.CASCADE, null=False)
+    active_bookings = models.IntegerField()
+
+class 
