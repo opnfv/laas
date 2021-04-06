@@ -7,7 +7,9 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
 from booking.models import Booking
+from resource_inventory.models import ResourceQuery
 from datetime import datetime, timedelta
+from collections import Counter
 import pytz
 
 
@@ -26,6 +28,7 @@ class StatisticsManager(object):
         x = []
         y = []
         users = []
+        projects = []
 
         now = datetime.now(pytz.utc)
         delta = timedelta(days=span)
@@ -49,10 +52,24 @@ class StatisticsManager(object):
             for booking in books:
                 active_users += booking.collaborators.all().count() + 1
 
-            x.append(str(start))
+            x.append(str(start.month) + '-' + str(start.day))
             y.append(books.count())
             users.append(active_users)
 
             start += timedelta(hours=12)
 
-        return {"booking": [x, y], "user": [x, users]}
+        in_use = len(ResourceQuery.filter(booked=True))
+        not_in_use = len(ResourceQuery.filter(booked=False))
+
+        projects = [x.project for x in bookings]
+        proj_count = sorted(Counter(projects).items(), key=lambda x: x[1])
+
+        project_keys = [proj[0] for proj in proj_count[-5:]]
+        project_counts = [proj[1] for proj in proj_count[-5:]]
+
+        return {
+            "booking": [x, y],
+            "user": [x, users],
+            "utils": [in_use, not_in_use],
+            "projects": [project_keys, project_counts]
+        }
