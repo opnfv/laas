@@ -9,6 +9,7 @@
 
 from django.db import models
 from account.models import Lab
+# from resource_inventory.models import ResoureProfile
 
 
 class ActiveVPNUser(models.Model):
