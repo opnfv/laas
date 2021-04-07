@@ -83,8 +83,9 @@ def free_hosts():
         job__complete=True,
         resource__isnull=False
     )
+
     for booking in bookings:
-        ResourceManager.getInstance().deleteResourceBundle(booking.resource)
+        ResourceManager.getInstance().releaseResourceBundle(booking.resource)
 
 
 @shared_task

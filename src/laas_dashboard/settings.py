@@ -53,7 +53,9 @@ MIDDLEWARE = [
     'account.middleware.TimezoneMiddleware',
 ]
 
-if os.environ['AUTH_SETTING'] == 'LFID':
+AUTH_SETTING = os.environ.get('AUTH_SETTING', 'JIRA')
+
+if AUTH_SETTING == 'LFID':
     AUTHENTICATION_BACKENDS = ['account.views.MyOIDCAB']
 
     # OpenID Authentications
@@ -238,6 +240,10 @@ CELERYBEAT_SCHEDULE = {
     'query_vpn_users': {
         'task': 'dashboard.tasks.query_vpn_users',
         'schedule': timedelta(hours=1)
+    },
+    'dispatch_emails': {
+        'task': 'notifier.tasks.dispatch_emails',
+        'schedule': timedelta(minutes=10)
     }
 }
 
