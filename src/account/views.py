@@ -128,6 +128,11 @@ class JiraLoginView(RedirectView):
         return url
 
 
+class OIDCLoginView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('oidc_authentication_init')
+
+
 class JiraLogoutView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         logout(self.request)
@@ -204,7 +209,7 @@ class UserListView(TemplateView):
     template_name = "account/user_list.html"
 
     def get_context_data(self, **kwargs):
-        users = User.objects.all()
+        users = UserProfile.objects.filter(public_user=True).select_related('user')
         context = super(UserListView, self).get_context_data(**kwargs)
         context.update({'title': "Dashboard Users", 'users': users})
         return context

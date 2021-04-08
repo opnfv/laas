@@ -111,7 +111,8 @@ def update_template(old_template, image, hostname, user):
             profile=old_config.profile,
             image=image_to_set,
             template=template,
-            is_head_node=old_config.is_head_node
+            is_head_node=old_config.is_head_node,
+            name=hostname if len(old_template.getConfigs()) == 1 else old_config.name
         )
 
         for old_iface_config in old_config.interface_configs.all():
@@ -204,7 +205,7 @@ def create_from_form(form, request):
     purpose_field = form.cleaned_data['purpose']
     project_field = form.cleaned_data['project']
     users_field = form.cleaned_data['users']
-    hostname = form.cleaned_data['hostname']
+    hostname = 'opnfv_host' if not form.cleaned_data['hostname'] else form.cleaned_data['hostname']
     length = form.cleaned_data['length']
 
     image = form.cleaned_data['image']

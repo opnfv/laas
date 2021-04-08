@@ -21,7 +21,7 @@ from booking.lib import get_user_items, get_user_field_opts
 class QuickBookingForm(forms.Form):
     purpose = forms.CharField(max_length=1000)
     project = forms.CharField(max_length=400)
-    hostname = forms.CharField(max_length=400)
+    hostname = forms.CharField(required=False, max_length=400)
 
     installer = forms.ModelChoiceField(queryset=Installer.objects.all(), required=False)
     scenario = forms.ModelChoiceField(queryset=Scenario.objects.all(), required=False)
@@ -35,12 +35,20 @@ class QuickBookingForm(forms.Form):
 
         super(QuickBookingForm, self).__init__(data=data, **kwargs)
 
+        image_help_text = 'Image can be set only for single-node bookings. For multi-node bookings set image through Design a POD.'
         self.fields["image"] = forms.ModelChoiceField(
             Image.objects.filter(public=True) | Image.objects.filter(owner=user), required=False
         )
 
+        self.fields['image'].widget.attrs.update({
+            'class': 'has-popover',
+            'data-content': image_help_text,
+            'data-placement': 'bottom',
+            'data-container': 'body'
+        })
+
         self.fields['users'] = SearchableSelectMultipleField(
-            queryset=UserProfile.objects.select_related('user').exclude(user=user),
+            queryset=UserProfile.objects.filter(public_user=True).select_related('user').exclude(user=user),
             items=get_user_items(exclude=user),
             required=False,
             **get_user_field_opts()
@@ -58,6 +66,14 @@ class QuickBookingForm(forms.Form):
         )
 
         self.fields['filter_field'] = MultipleSelectFilterField(widget=MultipleSelectFilterWidget(**lab_data))
+
+        hostname_help_text = 'Hostname can be set only for single-node bookings. For multi-node bookings set hostname through Design a POD.'
+        self.fields['hostname'].widget.attrs.update({
+            'class': 'has-popover',
+            'data-content': hostname_help_text,
+            'data-placement': 'top',
+            'data-container': 'body'
+        })
 
     def build_user_list(self):
         """
