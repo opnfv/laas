@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "738588e2_a55d2a21",
+        "filename": "src/templates/base/base.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 7613
+      },
+      "writtenOn": "2021-05-20T16:52:09Z",
+      "side": 1,
+      "message": "I think this looks better with bg-light just to break up the colors a bit, but that\u0027s super small",
+      "revId": "addf96063cfe41d9cddabeb8faeabe4b8be10be3",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
