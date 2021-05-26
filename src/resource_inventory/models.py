@@ -372,6 +372,9 @@ class Server(Resource):
 class Opsys(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
+    cobbler_id = models.CharField(max_length=100)
+    obsolete = models.BooleanField(default=False)
+    available = models.BooleanField(default=False) # marked true by Cobbler if it exists there
     sup_installers = models.ManyToManyField("Installer", blank=True)
 
     def __str__(self):
@@ -382,14 +385,16 @@ class Image(models.Model):
     """Model for representing OS images / snapshots of hosts."""
 
     id = models.AutoField(primary_key=True)
-    lab_id = models.IntegerField()  # ID the lab who holds this image knows
     from_lab = models.ForeignKey(Lab, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
+    cobbler_id = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     public = models.BooleanField(default=True)
     host_type = models.ForeignKey(ResourceProfile, on_delete=models.CASCADE)
     description = models.TextField()
     os = models.ForeignKey(Opsys, null=True, on_delete=models.CASCADE)
+    
+    available = models.BooleanField(default=False) # marked True by cobbler if it exists there
 
     def __str__(self):
         return self.name
