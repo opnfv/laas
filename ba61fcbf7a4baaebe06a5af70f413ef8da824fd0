@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46cde4be_5a3b7a73",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 19
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-05-28T14:21:09Z",
+      "side": 1,
+      "message": "bookng -\u003e booking",
+      "revId": "ba61fcbf7a4baaebe06a5af70f413ef8da824fd0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c088c5f_ac9acaff",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 19
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-05-28T14:21:09Z",
+      "side": 1,
+      "message": "bookng -\u003e booking",
+      "revId": "ba61fcbf7a4baaebe06a5af70f413ef8da824fd0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db5d47b0_a7c7f32a",
+        "filename": "laas_api_documentation.yaml",
+        "patchSetId": 19
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-05-28T14:21:09Z",
+      "side": 1,
+      "message": "seems strange to have this an array of integers instead of string (username)",
+      "revId": "ba61fcbf7a4baaebe06a5af70f413ef8da824fd0",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
