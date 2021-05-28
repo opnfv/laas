@@ -298,7 +298,7 @@ class LabManager(object):
             images_ser.append(
                 {
                     "name": image.name,
-                    "lab_id": image.lab_id,
+                    "cobbler_id": image.cobbler_id,
                     "dashboard_id": image.id
                 }
             )
@@ -722,7 +722,7 @@ class NetworkConfig(TaskConfig):
 class SnapshotConfig(TaskConfig):
 
     resource_id = models.CharField(max_length=200, default="default_id")
-    image = models.IntegerField(null=True)
+    image = models.CharField(max_length=200,null=True) # cobbler ID
     dashboard_id = models.IntegerField()
     delta = models.TextField(default="{}")
 
@@ -921,7 +921,7 @@ class JobFactory(object):
         job = Job.objects.get(booking=booking)
         # make hardware task new
         hardware_relation = HostHardwareRelation.objects.get(resource_id=host, job=job)
-        hardware_relation.config.image = new_image.lab_id
+        hardware_relation.config.image = new_image.cobbler_id
         hardware_relation.config.save()
         hardware_relation.status = JobStatus.NEW
 

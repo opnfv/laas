@@ -340,7 +340,7 @@ class Server(Resource):
     def get_configuration(self, state):
         ipmi = state == ConfigState.NEW
         power = "off" if state == ConfigState.CLEAN else "on"
-        image = self.config.image.lab_id if self.config else "unknown"
+        image = self.config.image.cobbler_id if self.config else "unknown"
 
         return {
             "id": self.labid,
