@@ -226,6 +226,9 @@ securityDefinitions:
 definitions:
   Lab:
     type: object
+    required:
+      - id
+      - name
     properties:
       id:
         type: integer
@@ -234,6 +237,14 @@ definitions:
         type: string
   MakeBookingTemplate:
     type: object
+    required:
+      - templateID
+      - purpose
+      - project
+      - collaborators
+      - hostname
+      - length
+      - imageLabID
     properties:
       templateID:
         type: integer
@@ -244,15 +255,27 @@ definitions:
       collaborators:
         type: array
         items:
-          type: integer
+          type: string
+          description: username of the referred user
       hostname:
         type: string
       length:
         type: integer
+        description: length of the booking in days (max 21, min 1)
       imageLabID:
         type: integer
   Booking:
     type: object
+    required:
+      - id
+      - owner
+      - collaborators
+      - start
+      - end
+      - lab
+      - purpose
+      - project
+      - resourceBundle
     properties:
       id:
         type: integer
@@ -260,7 +283,9 @@ definitions:
       owner:
         type: string
       collaborators:
-        $ref: '#/definitions/UserProfile'
+        type: array
+        items:
+          $ref: '#/definitions/UserProfile'
       start:
         type: string
         format: date-time
@@ -277,6 +302,9 @@ definitions:
         type: string
   Image:
     type: object
+    required:
+      - labID
+      - resources
     properties:
       labID:
         type: integer
@@ -285,6 +313,9 @@ definitions:
         type: string
   ResourceBundle:
     type: object
+    required:
+      - id
+      - resources
     properties:
       id:
         type: integer
@@ -295,6 +326,9 @@ definitions:
           $ref: '#/definitions/Server'
   ResourceProfile:
     type: object
+    required:
+      - id
+      - name
     properties:
       id:
         type: integer
@@ -303,6 +337,9 @@ definitions:
         type: string
   UserProfile:
     type: object
+    required:
+      - id
+      - name
     properties:
       id:
         type: integer
@@ -311,6 +348,10 @@ definitions:
         type: string
   ResourceTemplate:
     type: object
+    required:
+      - id
+      - name
+      - resourceProfiles
     properties:
       id:
         type: integer
@@ -323,6 +364,10 @@ definitions:
           $ref: '#/definitions/ResourceProfile'
   Server:
     type: object
+    required:
+      - id
+      - labid
+      - profile
     properties:
       id:
         type: integer

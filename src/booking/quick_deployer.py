@@ -219,8 +219,8 @@ def create_from_API(body, user):
     data = {}
     data['purpose'] = booking_info['purpose']
     data['project'] = booking_info['project']
-    data['users'] = [UserProfile.objects.get(pk=user_id)
-                     for user_id in booking_info['collaborators']]
+    data['users'] = [UserProfile.objects.get(user__username=username)
+                     for username in booking_info['collaborators']]
     data['hostname'] = booking_info['hostname']
     data['length'] = booking_info['length']
     data['installer'] = None
