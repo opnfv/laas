@@ -25,7 +25,7 @@ from api.serializers.old_serializers import UserSerializer
 from api.forms import DowntimeForm
 from account.models import UserProfile
 from booking.models import Booking
-from api.models import LabManagerTracker, get_task
+from api.models import LabManagerTracker, get_task, CloudInitFile
 from notifier.manager import NotificationHandler
 from analytics.models import ActiveVPNUser
 import json
@@ -165,6 +165,21 @@ def specific_job(request, lab_name="", job_id=""):
     if request.method == "POST":
         return JsonResponse(lab_manager.update_job(job_id, request.POST), safe=False)
     return JsonResponse(lab_manager.get_job(job_id), safe=False)
+
+@csrf_exempt
+def resource_cidata(request, lab_name="", job_id="", resource_id=""):
+    lab_token = request.META.get('HTTP_AUTH_TOKEN')
+    lab_manager = LabManagerTracker.get(lab_name, lab_token)
+
+    job = lab_manager.get_job(job_id)
+
+    cifile = None
+    try:
+        cifile = CloudInitFile.get(job.booking.id, resource_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound("Could not find a matching resource by id " + str(resource_id))
+
+    return HttpResponse(cifile.serialize(), status=200)
 
 
 def new_jobs(request, lab_name=""):
