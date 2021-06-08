@@ -59,6 +59,7 @@ urlpatterns = [
     path('labs/<slug:lab_name>/booking/<int:booking_id>/idf', get_idf, name="get-idf"),
     path('labs/<slug:lab_name>/jobs/<int:job_id>', specific_job),
     path('labs/<slug:lab_name>/jobs/<int:job_id>/<slug:task_id>', specific_task),
+    path('labs/<slug:lab_name>/jobs/<int:job_id>/cidata/<slug:resource_id', resource_cidata),
     path('labs/<slug:lab_name>/jobs/new', new_jobs),
     path('labs/<slug:lab_name>/jobs/current', current_jobs),
     path('labs/<slug:lab_name>/jobs/done', done_jobs),
