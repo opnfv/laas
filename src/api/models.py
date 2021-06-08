@@ -18,6 +18,7 @@ from django.utils import timezone
 
 import json
 import uuid
+import yaml
 
 from booking.models import Booking
 from resource_inventory.models import (
@@ -29,7 +30,8 @@ from resource_inventory.models import (
     RemoteInfo,
     OPNFVConfig,
     ConfigState,
-    ResourceQuery
+    ResourceQuery,
+    ResourceConfiguration
 )
 from resource_inventory.idf_templater import IDFTemplater
 from resource_inventory.pdf_templater import PDFTemplater
@@ -336,6 +338,99 @@ class LabManager(object):
             profile_ser.append(p)
         return profile_ser
 
+class CloudInitFile(models.Model):
+    resource_id = models.CharField(max_length=200)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
+    rconfig = models.ForeignKey(ResourceConfiguration, on_delete=models.CASCADE)
+
+    def _normalize_username(self, username: str) -> str:
+        # TODO: make usernames posix compliant
+        return username
+
+    def _get_ssh_string(self, username: str) -> str:
+        user = User.objects.get(username=username)
+        uprofile = user.userprofile
+
+        ssh_file = uprofile.ssh_public_key
+
+        escaped_file = ssh_file.open().read().decode(encoding="UTF-8").replace("\n", " ")
+
+        return escaped_file
+
+    def _serialize_users(self):
+        """
+        returns the dictionary to be placed behind the `users` field of the toplevel c-i dict
+        """
+        user_array = ["default"]
+        users = list(self.booking.collaborators.all())
+        users.append(self.booking.owner.userprofile)
+        for collaborator in users:
+            userdict = {}
+
+            # TODO: validate if usernames are valid as linux usernames (and provide an override potentially)
+            userdict['name'] = self._normalize_username(collaborator.user.username)
+
+            userdict['groups'] = "sudo"
+            userdict['sudo'] = "ALL=(ALL) NOPASSWD:ALL"
+
+            userdict['ssh_authorized_keys'] = [self._get_ssh_string(collaborator.user.username)]
+
+            user_array.append(userdict)
+
+        return user_array
+
+    def _serialize_netconf_v1(self):
+        config_arr = []
+
+        for interface in self._resource().interfaces.all():
+            interface_name = interface.profile.name
+            interface_mac = interface.mac_address
+
+            for vlan in interface.config.all():
+                vlan_dict_entry = {'type': 'vlan'}
+                vlan_dict_entry['name'] = str(interface_name) + "." + str(vlan.vlan_id)
+                vlan_dict_entry['link'] = str(interface_name)
+                vlan_dict_entry['vlan_id'] = int(vlan.vlan_id)
+                vlan_dict_entry['mac_address'] = str(interface_mac)
+                #vlan_dict_entry['mtu'] = # TODO, determine override MTU if needed
+
+                config_arr.append(vlan_dict_entry)
+
+        ns_dict = {
+                'type': 'nameserver',
+                'address': ['10.64.0.1', '8.8.8.8']
+        }
+
+        config_arr.append(ns_dict)
+
+        full_dict = {'version': 1, 'config': config_arr}
+
+        return full_dict
+
+    @classmethod
+    def get(booking_id: int, resource_lab_id: str):
+        return CloudInitFile.objects.get(resource_id=resource_lab_id, booking__id=booking_id)
+
+    def _resource(self):
+        return ResourceQuery.get(labid=self.resource_id, lab=self.booking.lab)
+
+    def _get_facts(self):
+        resource = self._resource()
+
+        hostname = self.rconfig.name
+        iface_configs = for_config.interface_configs.all()
+
+    def _to_dict(self):
+        main_dict = {}
+
+        main_dict['users'] = self._serialize_users()
+        main_dict['network'] = self._serialize_netconf_v1()
+        main_dict['hostname'] = self.rconfig.name
+
+        return main_dict
+
+    def serialize(self) -> str:
+        return yaml.dump(self._to_dict())
 
 class Job(models.Model):
     """
@@ -670,8 +765,10 @@ class HardwareConfig(TaskConfig):
         return self.get_delta()
 
     def get_delta(self):
+        # TODO: grab the CloudInitFile urls from self.hosthardwarerelation.get_resource()
         return self.format_delta(
             self.hosthardwarerelation.get_resource().get_configuration(self.state),
+            self.cloudinit_file.get_delta_url(),
             self.hosthardwarerelation.lab_token)
 
 
@@ -1013,6 +1110,10 @@ class JobFactory(object):
             booking=booking,
             job=job
         )
+        cls.makeCloudInitFiles(
+            resources=resources,
+            job=job
+        )
         all_users = list(booking.collaborators.all())
         all_users.append(booking.owner)
         cls.makeAccessConfig(
@@ -1035,6 +1136,12 @@ class JobFactory(object):
                 )
             except Exception:
                 continue
+
+    @classmethod
+    def makeCloudInitFiles(cls, resources=[], job=Job()):
+        for res in resources:
+            cif = CloudInitFile.objects.create(resource_id=res.labid, booking=job.booking, rconfig=res.config)
+            cif.save()
 
     @classmethod
     def makeHardwareConfigs(cls, resources=[], job=Job()):
