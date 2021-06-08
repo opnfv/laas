@@ -336,6 +336,95 @@ class LabManager(object):
             profile_ser.append(p)
         return profile_ser
 
+class CloudInitFile(models.Model):
+    resource_id = models.(max_length=200, on_delete=models.CASCADE)
+    booking = models.ForeignKey(Job, on_delete=models.CASCADE)
+    rconfig = models.ForeignKey(ResourceConfiguration, on_delete=models.CASCADE)
+
+    def _normalize_username(self, username: str) -> str:
+        # TODO: make usernames posix compliant
+        return username
+
+    def _get_ssh_string(self, username: str) -> str:
+        user = User.objects.get(username=username)
+        uprofile = user.userprofile
+
+        ssh_file = uprofile.ssh_public_key
+
+        # python should automatically escape the characters of the string when placed into a dict and serialized
+        escaped_file = ssh_file.open().read().decode(encoding="UTF-8")
+        
+        return escaped_file
+
+    def _serialize_users(self):
+        """
+        returns the dictionary to be placed behind the `users` field of the toplevel c-i dict
+        """
+        user_array = ["default"]
+        for collaborator in zip(list(booking.collaborators.all()), [booking.owner.userprofile]):
+            userdict = {}
+
+            # TODO: validate if usernames are valid as linux usernames (and provide an override potentially)
+            userdict['name'] = self._normalize_username(collaborator.user.username)
+
+            userdict['groups'] = "sudo"
+            userdict['sudo'] = "ALL=(ALL) NOPASSWD:ALL"
+
+            userdict['ssh_authorized_keys'] = [self._get_ssh_string(collaborator.user.username)]
+
+            user_array.append(userdict)
+
+        return user_array
+
+    def _serialize_netconf_v2(self):
+        config_arr = []
+
+        for interface in self._resource().interfaces.all():
+            interface_name = interface.profile.name
+            interface_mac = interface.mac_address
+
+            for vlan in interface.config.all():
+                vlan_dict_entry = {'type': 'vlan'}
+                vlan_dict_entry['name'] = interface_name.join(str(vlan.vlan_id))
+                vlan_dict_entry['link'] = str(interface_name)
+                vlan_dict_entry['vlan_id'] = int(vlan.vlan_id)
+                vlan_dict_entry['mac_address'] = str(interface_mac)
+                #vlan_dict_entry['mtu'] = # TODO, determine override MTU if needed
+
+                config_arr.append(vlan_dict_entry)
+
+        ns_dict = {
+                'type': 'nameserver',
+                'address': ['10.64.0.1', '8.8.8.8']
+        }
+
+        config_arr.append(ns_dict)
+
+        full_dict = {'version': 1, 'config': config_arr}
+
+        return full_dict
+
+    @classmethod
+    def get(booking_id: int, resource_lab_id: str):
+        return CloudInitFile.objects.get(resource_id=resource_lab_id, booking__id=booking_id)
+
+    def _resource(self):
+        return ResourceQuery.filter(labid=self.resource_id, lab=self.booking.lab)
+
+    def _get_facts(self):
+        resource = self._resource()
+
+        hostname = self.rconfig.name
+        iface_configs = for_config.interface_configs.all()
+
+    def get_delta_url(self):
+        raise NotImplementedError
+
+    def serialize(self):
+        main_dict = {}
+
+        main_dict['users'] = self._serialize_users()
+        main_dict['network'] = self._serialize_netconf_v2()
 
 class Job(models.Model):
     """
@@ -670,8 +759,10 @@ class HardwareConfig(TaskConfig):
         return self.get_delta()
 
     def get_delta(self):
+        # TODO: grab the CloudInitFile urls from self.hosthardwarerelation.get_resource()
         return self.format_delta(
             self.hosthardwarerelation.get_resource().get_configuration(self.state),
+            self.cloudinit_file.get_delta_url(),
             self.hosthardwarerelation.lab_token)
 
 
