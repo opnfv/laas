@@ -336,6 +336,18 @@ class LabManager(object):
             profile_ser.append(p)
         return profile_ser
 
+class CloudInitFile(models.Model):
+    for_config = models.ForeignKey(ResourceConfiguration, on_delete=models.CASCADE)
+
+    def _get_facts(self):
+        hostname = for_config.name
+        iface_configs = for_config.interface_configs.all()
+
+    def get_delta_url(self):
+        raise NotImplementedError
+
+    def serialize(self):
+        raise NotImplementedError
 
 class Job(models.Model):
     """
@@ -670,8 +682,10 @@ class HardwareConfig(TaskConfig):
         return self.get_delta()
 
     def get_delta(self):
+        # TODO: grab the CloudInitFile urls from self.hosthardwarerelation.get_resource()
         return self.format_delta(
             self.hosthardwarerelation.get_resource().get_configuration(self.state),
+            self.cloudinit_file.get_delta_url(),
             self.hosthardwarerelation.lab_token)
 
 
