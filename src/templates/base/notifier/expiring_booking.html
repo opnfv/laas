@@ -1,15 +1,25 @@
 <html>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Philosopher&display=swap" rel="stylesheet">
+    <style>
+        h2{font-family: Philosopher;}
+        p{font-family: Montserrat; font-weight: bold;}
+        li{font-family: Montserrat; font-weight: bold;}
+        .textFormatting{text-align: justify; color:#343a40;}
+        a{color:#E36386;}
+    </style>
     <body>
-        <div id="message_content_wrapper">
+        <div id="message_content_wrapper" class="textFormatting">
             {% if owner %}
-            <h3>Your booking is about to expire</h3>
+            <h2>Your booking is about to expire</h2>
             <p>Your booking will expire within 48 hours ({{booking.end}}).</p>
             {% else %}
-            <h3>A booking that you collaborate on is about to expire</h3>
+            <h2>A booking that you collaborate on is about to expire</h2>
             <p>The booking owned by {{booking.owner.username}} that you work on is about to expire</p>
             {% endif %}
             <p>Please take the time to backup all data or extend the booking if needed.</p>
-            <p>Booking information:</p>
+            <br>
+            <p style="text-decoration: underline; font-size: larger;">Booking information:</p>
             <ul>
                 <li>owner: {{booking.owner.username}}</li>
                 <li>id: {{booking.id}}</li>

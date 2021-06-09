@@ -1,14 +1,24 @@
 <html>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Philosopher&display=swap" rel="stylesheet">
+    <style>
+        h2{font-family: Philosopher;}
+        p{font-family: Montserrat; font-weight: bold;}
+        li{font-family: Montserrat; font-weight: bold;}
+        .textFormatting{text-align: justify; color:#343a40;}
+        a{color:#E36386;}
+    </style>
     <body>
-        <div id="message_content_wrapper">
+        <div id="message_content_wrapper" class="textFormatting">
             {% if owner %}
-            <h3>You have created a new booking</h3>
+            <h2>You have created a new booking</h2>
             <p>We have recieved your booking request and will start working on it right away.</p>
             {% else %}
-            <h3>You have been added as a collaborator to a booking</h3>
+            <h2>You have been added as a collaborator to a booking</h2>
             <p>{{booking.owner.username}} has given you access to their booking.</p>
             {% endif %}
-            <p>Booking information:</p>
+            <br>
+            <p style="text-decoration: underline; font-size: larger;">Booking information:</p>
             <ul>
                 <li>owner: {{booking.owner.username}}</li>
                 <li>id: {{booking.id}}</li>

@@ -1,16 +1,26 @@
 <html>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Philosopher&display=swap" rel="stylesheet">
+    <style>
+        h2{font-family: Philosopher;}
+        p{font-family: Montserrat; font-weight: bold;}
+        li{font-family: Montserrat; font-weight: bold;}
+        .textFormatting{text-align: justify; color:#343a40;}
+        a{color:#E36386;}
+    </style>
     <body>
-        <div id="message_content_wrapper">
+        <div id="message_content_wrapper" class="textFormatting">
             {% if owner %}
-            <h3>Your booking has expired</h3>
+            <h2>Your booking has expired</h2>
             <p>Your booking has ended and the machines have been cleaned up.</p>
             <p>Thank you for working on {{booking.lab.project}}, and feel free to book more machines if you need them.</p>
             {% else %}
-            <h3>A booking that you collaborated on has expired</h3>
+            <h2>A booking that you collaborated on has expired</h2>
             <p>The booking owned by {{booking.owner.username}} that you worked on has ended</p>
             <p>Thank you for contributing to {{booking.lab.project}}.</p>
             {% endif %}
-            <p>Booking information:</p>
+            <br>
+            <p style="text-decoration: underline; font-size: larger;">Booking information:</p>
             <ul>
                 <li>owner: {{booking.owner.username}}</li>
                 <li>id: {{booking.id}}</li>
