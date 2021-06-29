@@ -47,9 +47,17 @@ from api.views import (
     GenerateTokenView,
     analytics_job,
     resource_cidata,
+    all_images,
+    all_opsyss,
+    single_image,
+    single_opsys
 )
 
 urlpatterns = [
+    path('labs/<slug:lab_name>/opsys/<slug:opsys_id>', single_opsys),
+    path('labs/<slug:lab_name>/image/<slug:image_id>', single_image),
+    path('labs/<slug:lab_name>/opsys', all_opsyss),
+    path('labs/<slug:lab_name>/image', all_images),
     path('labs/<slug:lab_name>/profile', lab_profile),
     path('labs/<slug:lab_name>/status', lab_status),
     path('labs/<slug:lab_name>/inventory', lab_inventory),
