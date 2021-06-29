@@ -9,17 +9,18 @@
 ##############################################################################
 
 from django.contrib.auth.models import User
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 import traceback
+import json
 
 import re
 from collections import Counter
 
 from account.models import Lab
 from dashboard.utils import AbstractModelQuery
-
 
 """
 Profiles of resources hosted by labs.
@@ -33,6 +34,10 @@ Profile models (e.g. an x86 server profile and armv8 server profile.
 class ResourceProfile(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, unique=True)
+    architecture = models.CharField(max_length=50, choices=[
+        ("x86_64", "x86_64"),
+        ("aarch64", "aarch64")
+    ])
     description = models.TextField()
     labs = models.ManyToManyField(Lab, related_name="resourceprofiles")
 
@@ -340,7 +345,7 @@ class Server(Resource):
     def get_configuration(self, state):
         ipmi = state == ConfigState.NEW
         power = "off" if state == ConfigState.CLEAN else "on"
-        image = self.config.image.lab_id if self.config else "unknown"
+        image = self.config.image.cobbler_id if self.config else "unknown"
 
         return {
             "id": self.labid,
@@ -369,10 +374,43 @@ class Server(Resource):
         return isinstance(other, Server) and other.name == self.name
 
 
+def is_serializable(data):
+    try:
+        json.dumps(data)
+        return True
+    except:
+        return False
+
+
 class Opsys(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
-    sup_installers = models.ManyToManyField("Installer", blank=True)
+    cobbler_id = models.CharField(max_length=100)
+    obsolete = models.BooleanField(default=False)
+    available = models.BooleanField(default=False) # marked true by Cobbler if it exists there
+    from_lab = models.ForeignKey(Lab, on_delete=models.CASCADE)
+
+    indexes = [
+        models.Index(fields=['cobbler_id'])
+    ]
+
+    def new_from_data(data):
+        opsys = Opsys()
+        opsys.update(data)
+        return opsys
+
+    def serialize(self):
+        d = {}
+        for field in vars(self):
+            attr = getattr(self, field)
+            if is_serializable(attr):
+                d[field] = attr
+        return d
+
+    def update(self, data):
+        for field in vars(self):
+            if field in data:
+                setattr(self, field, data[field] if data[field] else getattr(self, field))
 
     def __str__(self):
         return self.name
@@ -382,17 +420,45 @@ class Image(models.Model):
     """Model for representing OS images / snapshots of hosts."""
 
     id = models.AutoField(primary_key=True)
-    lab_id = models.IntegerField()  # ID the lab who holds this image knows
     from_lab = models.ForeignKey(Lab, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
+    architecture = models.CharField(max_length=50, choices=[
+        ("x86_64", "x86_64"),
+        ("aarch64", "aarch64")
+    ])
+    cobbler_id = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     public = models.BooleanField(default=True)
-    host_type = models.ForeignKey(ResourceProfile, on_delete=models.CASCADE)
     description = models.TextField()
     os = models.ForeignKey(Opsys, null=True, on_delete=models.CASCADE)
+    
+    available = models.BooleanField(default=False) # marked True by cobbler if it exists there
+
+    indexes = [
+        models.Index(fields=['architecture']),
+        models.Index(fields=['cobbler_id'])
+    ]
 
     def __str__(self):
         return self.name
+
+    def serialize(self):
+        d = {}
+        for field in vars(self):
+            attr = getattr(self, field)
+            if is_serializable(attr):
+                d[field] = attr
+        return d
+
+    def update(self, data):
+        for field in vars(self):
+            if field in data:
+                setattr(self, field, data[field] if data[field] else getattr(self, field))
+
+    def new_from_data(data):
+        img = Image()
+        img.update(data)
+        return img
 
     def in_use(self):
         for resource in ResourceQuery.filter(config__image=self):
