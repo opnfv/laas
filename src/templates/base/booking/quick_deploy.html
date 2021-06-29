@@ -88,15 +88,22 @@
     function imageFilter() {
         var drop = document.getElementById("id_image");
         var lab_pk = get_selected_value("lab");
-        var host_pk = get_selected_value("resource");
+        var profile_pk = get_selected_value("resource");
 
         for (const childNode of drop.childNodes) {
             var image_object = sup_image_dict[childNode.value];
             if (image_object) //weed out empty option
             {
+                console.log("image object:");
+                console.log(image_object);
                 const img_at_lab = image_object.lab == lab_pk;
-                const profiles = resource_profile_map[host_pk];
-                const img_in_template = profiles && profiles.indexOf(image_object.host_profile) > -1
+                const profiles = resource_profile_map[profile_pk];
+                console.log("profiles are:");
+                console.log(profiles);
+                console.log("profile map is:");
+                console.log(resource_profile_map);
+                console.log("host profile is" + image_object.architecture);
+                const img_in_template = profiles && profiles.indexOf(image_object.architecture) > -1
                 childNode.disabled = !img_at_lab || !img_in_template;
             }
         }

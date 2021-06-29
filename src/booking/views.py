@@ -138,7 +138,7 @@ def build_image_mapping(lab, user):
     for profile in ResourceProfile.objects.filter(labs=lab):
         images = Image.objects.filter(
             from_lab=lab,
-            host_type=profile
+            architecture=profile.architecture
         ).filter(
             Q(public=True) | Q(owner=user)
         )
