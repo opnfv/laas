@@ -25,6 +25,7 @@ from resource_inventory.models import (
     Lab,
     ResourceProfile,
     Image,
+    Opsys,
     Interface,
     ResourceOPNFVConfig,
     RemoteInfo,
@@ -84,6 +85,18 @@ class LabManager(object):
 
     def __init__(self, lab):
         self.lab = lab
+
+    def get_opsyss(self):
+        return Opsys.objects.filter(from_lab=self.lab)
+
+    def get_images(self):
+        return Image.objects.filter(from_lab=self.lab)
+
+    def get_image(self, image_id):
+        return Image.objects.filter(from_lab=self.lab, lab_id=image_id)
+        
+    def get_opsys(self, opsys_id):
+        return Opsys.objects.filter(from_lab=self.lab, lab_id=opsys_id)
 
     def get_downtime(self):
         return Downtime.objects.filter(start__lt=timezone.now(), end__gt=timezone.now(), lab=self.lab)
@@ -819,7 +832,7 @@ class NetworkConfig(TaskConfig):
 class SnapshotConfig(TaskConfig):
 
     resource_id = models.CharField(max_length=200, default="default_id")
-    image = models.IntegerField(null=True)
+    image = models.CharField(max_length=200,null=True) # cobbler ID
     dashboard_id = models.IntegerField()
     delta = models.TextField(default="{}")
 
