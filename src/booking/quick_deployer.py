@@ -176,13 +176,6 @@ def check_invariants(request, **kwargs):
     length = kwargs['length']
     # check that image os is compatible with installer
     if image:
-        if installer or scenario:
-            if installer in image.os.sup_installers.all():
-                # if installer not here, we can omit that and not check for scenario
-                if not scenario:
-                    raise ValidationError("An OPNFV Installer needs a scenario to be chosen to work properly")
-                if scenario not in installer.sup_scenarios.all():
-                    raise ValidationError("The chosen installer does not support the chosen scenario")
         if image.from_lab != lab:
             raise ValidationError("The chosen image is not available at the chosen hosting lab")
         # TODO
@@ -272,23 +265,14 @@ def drop_filter(user):
     that installer is supported on that image
     """
     installer_filter = {}
-    for image in Image.objects.all():
-        installer_filter[image.id] = {}
-        for installer in image.os.sup_installers.all():
-            installer_filter[image.id][installer.id] = 1
-
     scenario_filter = {}
-    for installer in Installer.objects.all():
-        scenario_filter[installer.id] = {}
-        for scenario in installer.sup_scenarios.all():
-            scenario_filter[installer.id][scenario.id] = 1
 
     images = Image.objects.filter(Q(public=True) | Q(owner=user))
     image_filter = {}
     for image in images:
         image_filter[image.id] = {
             'lab': 'lab_' + str(image.from_lab.lab_user.id),
-            'host_profile': str(image.host_type.id),
+            'architecture': str(image.architecture),
             'name': image.name
         }
 
@@ -296,7 +280,7 @@ def drop_filter(user):
     templates = ResourceTemplate.objects.filter(Q(public=True) | Q(owner=user))
     for rt in templates:
         profiles = [conf.profile for conf in rt.getConfigs()]
-        resource_filter["resource_" + str(rt.id)] = [str(p.id) for p in profiles]
+        resource_filter["resource_" + str(rt.id)] = [str(p.architecture) for p in profiles]
 
     return {
         'installer_filter': json.dumps(installer_filter),
