@@ -82,6 +82,7 @@ urlpatterns = [
     path('resource_inventory/<int:template_id>/images', images_for_template),
 
     path('users', all_users),
+    path('labs', all_labs),
 
     url(r'^token$', GenerateTokenView.as_view(), name='generate_token'),
 ]
