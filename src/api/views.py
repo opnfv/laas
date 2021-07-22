@@ -10,6 +10,7 @@
 
 import json
 import math
+import traceback
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
@@ -362,7 +363,8 @@ def make_booking(request):
     try:
         booking = create_from_API(request.body, token.user)
     except Exception as e:
-        return HttpResponse(str(e), status=400)
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        return HttpResponse(str(traceback.format_exception(exc_type, exc_value, exc_traceback)), status=400)
 
     sbooking = AutomationAPIManager.serialize_booking(booking)
     return JsonResponse(sbooking, safe=False)
@@ -383,7 +385,7 @@ def available_templates(request):
     # mirrors MultipleSelectFilter Widget
     avt = []
     for lab in Lab.objects.all():
-        for template in ResourceTemplate.objects.filter(lab=lab, owner=token.user, public=True):
+        for template in ResourceTemplate.objects.filter(Q(lab=lab), Q(owner=token.user) | Q(public=True)):
             available_resources = lab.get_available_resources()
             required_resources = template.get_required_resources()
             least_available = 100
@@ -417,7 +419,7 @@ def images_for_template(request, template_id=""):
 """
 User API Views
 """
-
+lab_info
 
 def all_users(request):
     token = auth_and_log(request, 'users')
@@ -429,3 +431,28 @@ def all_users(request):
              for up in UserProfile.objects.exclude(user=token.user)]
 
     return JsonResponse(users, safe=False)
+
+
+"""
+Lab API Views
+"""
+
+
+def all_labs():
+    lab_list=[]
+    for lab in Lab.objects.all():
+        lab_info = {
+        'name':lab.name,
+        'username':lab.lab_user.username,
+        'status':lab.status,
+        'project':lab.project,
+        'description':lab.description,
+        'location':lab.location,
+        'info':lab.lab_info_link,
+        'email':lab.contact_email,
+        'phone':lab.contact_phone
+        }
+        lab_list.append(lab_info)
+
+    return JsonResponse(lab_list, safe=False)
+    
