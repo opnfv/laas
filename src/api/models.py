@@ -390,6 +390,14 @@ class CloudInitFile(models.Model):
 
             user_array.append(userdict)
 
+        user_array.append({
+            "name": "opnfv",
+            "plain_text_passwd": "OPNFV_HOST",
+            "ssh_redirect_user": True,
+            "sudo": "ALL=(ALL) NOPASSWD:ALL",
+            "groups": "sudo",
+            })
+
         return user_array
 
     def _serialize_netconf_v1(self):
@@ -399,12 +407,27 @@ class CloudInitFile(models.Model):
             interface_name = interface.profile.name
             interface_mac = interface.mac_address
 
+            iface_dict_entry = {
+                    "type": "physical",
+                    "name": interface_name,
+                    "mac_address": interface_mac,
+                    "subnets": [
+                        {
+                            "type": "dhcp",
+                        }
+                    ]
+                }
+
+            config_arr.append(iface_dict_entry)
+
             for vlan in interface.config.all():
                 vlan_dict_entry = {'type': 'vlan'}
                 vlan_dict_entry['name'] = str(interface_name) + "." + str(vlan.vlan_id)
-                vlan_dict_entry['link'] = str(interface_name)
+                vlan_dict_entry['vlan_link'] = str(interface_name)
                 vlan_dict_entry['vlan_id'] = int(vlan.vlan_id)
                 vlan_dict_entry['mac_address'] = str(interface_mac)
+                vlan_dict_entry["subnets"] = [ { "type": "dhcp" } ]
+
                 #vlan_dict_entry['mtu'] = # TODO, determine override MTU if needed
 
                 config_arr.append(vlan_dict_entry)
@@ -443,7 +466,7 @@ class CloudInitFile(models.Model):
         return main_dict
 
     def serialize(self) -> str:
-        return yaml.dump(self._to_dict())
+        return str("#cloud-config\n") + yaml.dump(self._to_dict())
 
 class Job(models.Model):
     """
