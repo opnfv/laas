@@ -11,6 +11,7 @@
 import json
 import math
 import traceback
+import sys
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
@@ -362,9 +363,13 @@ def make_booking(request):
 
     try:
         booking = create_from_API(request.body, token.user)
+
     except Exception as e:
+        finalTrace = ''
         exc_type, exc_value, exc_traceback = sys.exc_info()
-        return HttpResponse(str(traceback.format_exception(exc_type, exc_value, exc_traceback)), status=400)
+        for i in traceback.format_exception(exc_type, exc_value, exc_traceback):
+            finalTrace += '<br>' + i.strip()
+        return HttpResponse(finalTrace, status=400)
 
     sbooking = AutomationAPIManager.serialize_booking(booking)
     return JsonResponse(sbooking, safe=False)
@@ -419,7 +424,6 @@ def images_for_template(request, template_id=""):
 """
 User API Views
 """
-lab_info
 
 def all_users(request):
     token = auth_and_log(request, 'users')
@@ -438,19 +442,19 @@ Lab API Views
 """
 
 
-def all_labs():
+def list_labs(request):
     lab_list=[]
     for lab in Lab.objects.all():
         lab_info = {
-        'name':lab.name,
-        'username':lab.lab_user.username,
-        'status':lab.status,
-        'project':lab.project,
-        'description':lab.description,
-        'location':lab.location,
-        'info':lab.lab_info_link,
-        'email':lab.contact_email,
-        'phone':lab.contact_phone
+            'name':lab.name,
+            'username':lab.lab_user.username,
+            'status':lab.status,
+            'project':lab.project,
+            'description':lab.description,
+            'location':lab.location,
+            'info':lab.lab_info_link,
+            'email':lab.contact_email,
+            'phone':lab.contact_phone
         }
         lab_list.append(lab_info)
 
