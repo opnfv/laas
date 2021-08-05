@@ -6,14 +6,16 @@
 # which accompanies this distribution, and is available at
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
+from __future__ import annotations
+
 import re
-import typing
 from typing import Optional
 from django.db.models import Q
 
 from dashboard.exceptions import ResourceAvailabilityException
 
 from resource_inventory.models import (
+    Resource,
     ResourceBundle,
     ResourceTemplate,
     ResourceConfiguration,
@@ -22,6 +24,9 @@ from resource_inventory.models import (
     PhysicalNetwork,
     InterfaceConfiguration,
 )
+
+from account.models import Lab
+from django.contrib.auth.models import User
 
 
 class ResourceManager:

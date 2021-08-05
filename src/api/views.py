@@ -11,6 +11,7 @@
 import json
 import math
 import traceback
+import sys
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
@@ -34,6 +35,7 @@ from notifier.manager import NotificationHandler
 from analytics.models import ActiveVPNUser
 from booking.quick_deployer import create_from_API
 from resource_inventory.models import ResourceTemplate
+from django.db.models import Q
 
 
 """
@@ -362,9 +364,13 @@ def make_booking(request):
 
     try:
         booking = create_from_API(request.body, token.user)
-    except Exception as e:
+
+    except Exception:
+        finalTrace = ''
         exc_type, exc_value, exc_traceback = sys.exc_info()
-        return HttpResponse(str(traceback.format_exception(exc_type, exc_value, exc_traceback)), status=400)
+        for i in traceback.format_exception(exc_type, exc_value, exc_traceback):
+            finalTrace += '<br>' + i.strip()
+        return HttpResponse(finalTrace, status=400)
 
     sbooking = AutomationAPIManager.serialize_booking(booking)
     return JsonResponse(sbooking, safe=False)
@@ -419,7 +425,7 @@ def images_for_template(request, template_id=""):
 """
 User API Views
 """
-lab_info
+
 
 def all_users(request):
     token = auth_and_log(request, 'users')
@@ -428,7 +434,7 @@ def all_users(request):
         return HttpResponse('Unauthorized', status=401)
 
     users = [AutomationAPIManager.serialize_userprofile(up)
-             for up in UserProfile.objects.exclude(user=token.user)]
+             for up in UserProfile.objects.filter(public_user=True)]
 
     return JsonResponse(users, safe=False)
 
@@ -438,21 +444,20 @@ Lab API Views
 """
 
 
-def all_labs():
-    lab_list=[]
+def list_labs(request):
+    lab_list = []
     for lab in Lab.objects.all():
         lab_info = {
-        'name':lab.name,
-        'username':lab.lab_user.username,
-        'status':lab.status,
-        'project':lab.project,
-        'description':lab.description,
-        'location':lab.location,
-        'info':lab.lab_info_link,
-        'email':lab.contact_email,
-        'phone':lab.contact_phone
+            'name': lab.name,
+            'username': lab.lab_user.username,
+            'status': lab.status,
+            'project': lab.project,
+            'description': lab.description,
+            'location': lab.location,
+            'info': lab.lab_info_link,
+            'email': lab.contact_email,
+            'phone': lab.contact_phone
         }
         lab_list.append(lab_info)
 
     return JsonResponse(lab_list, safe=False)
-    

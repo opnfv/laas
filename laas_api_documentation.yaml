@@ -192,16 +192,36 @@ paths:
         - application/json
       responses:
         '200':
-          description: successfel operation
+          description: successful operation
           schema:
-            $ref: '#/definitions/UserProfile'
+            type: array
+            items:
+              $ref: '#/definitions/UserProfile'
         '401':
           description: Unauthorized API key
+  /labs:
+    get:
+      tags:
+        - Lab
+      summary: List all labs and some of their info
+      description: ''
+      operationId: listLabs
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Lab'
+        '401':
+          description: Unauthorized API Key
   /labs/{labID}/users:
     get:
       tags:
         - Lab
-      summary: Get all users at a lab
+      summary: Get all users that are visible to a lab for operational purposes
       description: ''
       operationId: labUsers
       consumes:
@@ -216,6 +236,9 @@ paths:
       responses:
         '200':
           description: successful
+          schema: array
+          items:
+            $ref: '#/definitions/UserProfile'
         '400':
           description: invalid lab id
 securityDefinitions:
