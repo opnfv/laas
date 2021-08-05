@@ -192,11 +192,25 @@ paths:
         - application/json
       responses:
         '200':
-          description: successfel operation
+          description: successful operation
           schema:
             $ref: '#/definitions/UserProfile'
         '401':
           description: Unauthorized API key
+  /labs:
+    get:
+      tags:
+        - Lab
+      summary: List all labs and some of their info
+      description: ''
+      operationId: listLabs
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+        '401':
+          description: Unauthorized API Key
   /labs/{labID}/users:
     get:
       tags:
