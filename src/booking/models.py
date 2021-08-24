@@ -26,8 +26,6 @@ class Booking(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
     reset = models.BooleanField(default=False)
-    jira_issue_id = models.IntegerField(null=True, blank=True)
-    jira_issue_status = models.CharField(max_length=50, blank=True)
     purpose = models.CharField(max_length=300, blank=False)
     # bookings can be extended a limited number of times
     ext_count = models.IntegerField(default=2)
