@@ -391,7 +391,7 @@ def available_templates(request):
     # mirrors MultipleSelectFilter Widget
     avt = []
     for lab in Lab.objects.all():
-        for template in ResourceTemplate.objects.filter(Q(lab=lab), Q(owner=token.user) | Q(public=True)):
+        for template in ResourceTemplate.objects.filter(Q(owner=token.user) | Q(public=True), lab=lab, temporary=False):
             available_resources = lab.get_available_resources()
             required_resources = template.get_required_resources()
             least_available = 100

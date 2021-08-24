@@ -227,7 +227,6 @@ def create_from_API(body, user):
     data['scenario'] = None
 
     data['image'] = Image.objects.get(pk=booking_info['imageLabID'])
-
     data['resource_template'] = ResourceTemplate.objects.get(pk=booking_info['templateID'])
     data['lab'] = data['resource_template'].lab
     data['owner'] = user
