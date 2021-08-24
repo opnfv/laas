@@ -50,7 +50,6 @@ class UserProfile(models.Model):
     oauth_token = models.CharField(max_length=1024, blank=False)
     oauth_secret = models.CharField(max_length=1024, blank=False)
 
-    jira_url = models.CharField(max_length=100, null=True, blank=True, default='')
     full_name = models.CharField(max_length=100, null=True, blank=True, default='')
     booking_privledge = models.BooleanField(default=False)
 
