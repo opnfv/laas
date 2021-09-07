@@ -3,6 +3,13 @@
 {% load bootstrap4 %}
 {% block content %}
 
+<style>
+/* hides images not in use. Not applied globally since doesn't make sense in all cases */
+select option:disabled {
+    display:none;
+}
+</style>
+
 {% bootstrap_form_errors form type='non_fields' %}
 <form id="quick_booking_form" action="/booking/quick/" method="POST" class="form  class="Anuket-Text"">
     {% csrf_token %}
@@ -18,7 +25,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-4 my-2">
+            <div class="col-12 col-lg-6 my-2">
                 <div class="col border rounded py-2 h-100">
                     {% bootstrap_field form.purpose %}
                     {% bootstrap_field form.project %}
@@ -31,17 +38,24 @@
                 </div>
             </div>
             {% block collab %}
-            <div class="col-12 col-lg-4 my-2">
+            <div class="col-12 col-lg-6 my-2">
                 <div class="col border rounded py-2 h-100">
                     <label>Collaborators</label>
                     {{ form.users }}
                 </div>
             </div>
             {% endblock collab %}
-            <div class="col-12 col-lg-4 my-2">
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-6 my-2">
                 <div class="col border rounded py-2 h-100">
                     {% bootstrap_field form.hostname %}
                     {% bootstrap_field form.image %}
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 my-2">
+                <div class="col border rounded py-2 h-100">
+                    {% bootstrap_field form.global_cloud_config %}
                 </div>
             </div>
             <div class="col-12 d-flex mt-2 justify-content-end">

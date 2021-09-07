@@ -15,6 +15,7 @@ from django.db import models
 from django.db.models import Q
 import traceback
 import json
+import yaml
 
 import re
 from collections import Counter
@@ -152,6 +153,26 @@ with varying degrees of abstraction.
 """
 
 
+class CloudInitFile(models.Model):
+    text = models.TextField()
+
+    # higher priority is applied later, so "on top" of existing files
+    priority = models.IntegerField()
+
+    @classmethod
+    def merge_strategy(cls):
+        return [
+                { 'name': 'list', 'settings': ['append'] },
+                { 'name': 'dict', 'settings': ['recurse_list', 'replace'] },
+                ]
+
+    @classmethod
+    def create(cls, text="", priority=0):
+        prepended_text = "#cloud-config\n"
+        prepended_text = prepended_text + yaml.dump(CloudInitFile.merge_strategy()) + "\n"
+        print("in cloudinitfile create")
+        return CloudInitFile.objects.create(priority=priority, text=(prepended_text + text))
+
 class ResourceTemplate(models.Model):
     """
     Models a "template" of a complete, configured collection of resources that can be booked.
@@ -240,8 +261,13 @@ class ResourceConfiguration(models.Model):
     is_head_node = models.BooleanField(default=False)
     name = models.CharField(max_length=3000, default="opnfv_host")
 
+    cloud_init_files = models.ManyToManyField(CloudInitFile, blank=True)
+
     def __str__(self):
         return str(self.name)
+
+    def ci_file_list(self):
+        return list(self.cloud_init_files.order_by("priority").all())
 
 
 def get_default_remote_info():
@@ -577,6 +603,12 @@ class NetworkRole(models.Model):
     name = models.CharField(max_length=100)
     network = models.ForeignKey(Network, on_delete=models.CASCADE)
 
+
+def create_resource_ref_string(for_hosts: [str]) -> str:
+    # need to sort the list, then do dump
+    for_hosts.sort()
+
+    return json.dumps(for_hosts)
 
 class OPNFVConfig(models.Model):
     id = models.AutoField(primary_key=True)

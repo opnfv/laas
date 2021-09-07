@@ -24,14 +24,16 @@ from django.core.exceptions import ObjectDoesNotExist
 from api.serializers.booking_serializer import BookingSerializer
 from api.serializers.old_serializers import UserSerializer
 from api.forms import DowntimeForm
-from account.models import UserProfile
+from account.models import UserProfile, Lab
 from booking.models import Booking
-from api.models import LabManagerTracker, get_task, CloudInitFile, Job
+from api.models import LabManagerTracker, get_task, Job
 from notifier.manager import NotificationHandler
 from analytics.models import ActiveVPNUser
 from resource_inventory.models import (
     Image,
-    Opsys
+    Opsys,
+    CloudInitFile,
+    ResourceQuery,
 )
 
 import json
@@ -248,7 +250,7 @@ def specific_job(request, lab_name="", job_id=""):
     return JsonResponse(lab_manager.get_job(job_id), safe=False)
 
 @csrf_exempt
-def resource_ci_userdata(request, lab_name="", job_id="", resource_id=""):
+def resource_ci_userdata(request, lab_name="", job_id="", resource_id="", file_id=0):
     #lab_token = request.META.get('HTTP_AUTH_TOKEN')
     #lab_manager = LabManagerTracker.get(lab_name, lab_token)
 
@@ -257,15 +259,24 @@ def resource_ci_userdata(request, lab_name="", job_id="", resource_id=""):
 
     cifile = None
     try:
-        cifile = CloudInitFile.get(job.booking.id, resource_id)
+        cifile = CloudInitFile.objects.get(id=file_id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound("Could not find a matching resource by id " + str(resource_id))
 
-    return HttpResponse(cifile.serialize(), status=200)
+    return HttpResponse(cifile.text, status=200)
 
 @csrf_exempt
-def resource_ci_metadata(request, lab_name="", job_id="", resource_id=""):
+def resource_ci_metadata(request, lab_name="", job_id="", resource_id="", file_id=0):
     return HttpResponse("#cloud-config", status=200)
+
+@csrf_exempt
+def resource_ci_userdata_directory(request, lab_name="", job_id="", resource_id=""):
+    #files = [{"id": file.file_id, "priority": file.priority} for file in CloudInitFile.objects.filter(job__id=job_id, resource_id=resource_id).order_by("priority").all()]
+    resource = ResourceQuery.get(labid=resource_id, lab=Lab.objects.get(name=lab_name))
+    files = resource.config.cloud_init_files
+    files = [{"id": file.id, "priority": file.priority} for file in files.order_by("priority").all()]
+
+    return HttpResponse(json.dumps(files), status=200)
 
 
 def new_jobs(request, lab_name=""):
