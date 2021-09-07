@@ -60,7 +60,7 @@ def parse_resource_field(resource_json):
     return lab, template
 
 
-def update_template(old_template, image, hostname, user):
+def update_template(old_template, image, hostname, user, global_cloud_config=None):
     """
     Duplicate a template to the users account and update configured fields.
 
@@ -112,8 +112,13 @@ def update_template(old_template, image, hostname, user):
             image=image_to_set,
             template=template,
             is_head_node=old_config.is_head_node,
-            name=hostname if len(old_template.getConfigs()) == 1 else old_config.name
+            name=hostname if len(old_template.getConfigs()) == 1 else old_config.name,
+            cloud_init_files=old_cnfig.cloud_init_files
         )
+
+        if global_cloud_config:
+            config.cloud_init_files.add(global_cloud_config)
+            config.save()
 
         for old_iface_config in old_config.interface_configs.all():
             iface_config = InterfaceConfiguration.objects.create(
@@ -186,6 +191,13 @@ def check_invariants(request, **kwargs):
     if length < 1 or length > 21:
         raise BookingLengthException("Booking must be between 1 and 21 days long")
 
+# global_cloud_config is Option<str> forming a valid yaml file if Some
+def generate_cloud_configs(resource_bundle, global_cloud_config):
+    c_file = CloudInitFile.objects.new(priority=1) # apply after the internal 
+    for host in resource_bundle.get_resources():
+        #cfile = CloudInitFile::from_text(
+        pass
+        # TODO
 
 def create_from_form(form, request):
     """
@@ -200,6 +212,10 @@ def create_from_form(form, request):
     users_field = form.cleaned_data['users']
     hostname = 'opnfv_host' if not form.cleaned_data['hostname'] else form.cleaned_data['hostname']
     length = form.cleaned_data['length']
+    global_cloud_config = None if not form.cleaned_data['global_cloud_config'] else form.cleaned_data['global_cloud_config']
+
+    if global_cloud_config:
+        global_cloud_config = CloudInitFile.objects.create(text=global_cloud_config, priority=CloudInitFile.objects.count())
 
     image = form.cleaned_data['image']
     scenario = form.cleaned_data['scenario']
@@ -219,7 +235,7 @@ def create_from_form(form, request):
 
     ResourceManager.getInstance().templateIsReservable(resource_template)
 
-    resource_template = update_template(resource_template, image, hostname, request.user)
+    resource_template = update_template(resource_template, image, hostname, request.user, global_cloud_config=global_cloud_config)
 
     # if no installer provided, just create blank host
     opnfv_config = None
@@ -230,6 +246,8 @@ def create_from_form(form, request):
 
     # generate resource bundle
     resource_bundle = generate_resource_bundle(resource_template)
+
+    generate_cloud_configs(resource_bundle, global_cloud_config)
 
     # generate booking
     booking = Booking.objects.create(

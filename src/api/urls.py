@@ -48,10 +48,11 @@ from api.views import (
     analytics_job,
     resource_ci_metadata,
     resource_ci_userdata,
+    resource_ci_userdata_directory,
     all_images,
     all_opsyss,
     single_image,
-    single_opsys
+    single_opsys,
 )
 
 urlpatterns = [
@@ -69,8 +70,9 @@ urlpatterns = [
     path('labs/<slug:lab_name>/booking/<int:booking_id>/idf', get_idf, name="get-idf"),
     path('labs/<slug:lab_name>/jobs/<int:job_id>', specific_job),
     path('labs/<slug:lab_name>/jobs/<int:job_id>/<slug:task_id>', specific_task),
-    path('labs/<slug:lab_name>/jobs/<int:job_id>/cidata/<slug:resource_id>/user-data', resource_ci_userdata),
+    path('labs/<slug:lab_name>/jobs/<int:job_id>/cidata/<slug:resource_id>/user-data', resource_ci_userdata_directory),
     path('labs/<slug:lab_name>/jobs/<int:job_id>/cidata/<slug:resource_id>/meta-data', resource_ci_metadata),
+    path('labs/<slug:lab_name>/jobs/<int:job_id>/cidata/<slug:resource_id>/<int:file_id>/user_data', resource_ci_userdata),
     path('labs/<slug:lab_name>/jobs/new', new_jobs),
     path('labs/<slug:lab_name>/jobs/current', current_jobs),
     path('labs/<slug:lab_name>/jobs/done', done_jobs),
