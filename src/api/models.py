@@ -32,7 +32,8 @@ from resource_inventory.models import (
     OPNFVConfig,
     ConfigState,
     ResourceQuery,
-    ResourceConfiguration
+    ResourceConfiguration,
+    CloudInitFile
 )
 from resource_inventory.idf_templater import IDFTemplater
 from resource_inventory.pdf_templater import PDFTemplater
@@ -351,10 +352,11 @@ class LabManager(object):
             profile_ser.append(p)
         return profile_ser
 
-class CloudInitFile(models.Model):
+class GeneratedCloudConfig(models.Model):
     resource_id = models.CharField(max_length=200)
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     rconfig = models.ForeignKey(ResourceConfiguration, on_delete=models.CASCADE)
+    text = models.TextField(null=True, blank=True)
 
     def _normalize_username(self, username: str) -> str:
         # TODO: make usernames posix compliant
@@ -447,8 +449,8 @@ class CloudInitFile(models.Model):
         return full_dict
 
     @classmethod
-    def get(cls, booking_id: int, resource_lab_id: str):
-        return CloudInitFile.objects.get(resource_id=resource_lab_id, booking__id=booking_id)
+    def get(cls, booking_id: int, resource_lab_id: str, file_id: int):
+        return GeneratedCloudConfig.objects.get(resource_id=resource_lab_id, booking__id=booking_id, file_id=file_id)
 
     def _resource(self):
         return ResourceQuery.get(labid=self.resource_id, lab=self.booking.lab)
@@ -804,7 +806,7 @@ class HardwareConfig(TaskConfig):
         return self.get_delta()
 
     def get_delta(self):
-        # TODO: grab the CloudInitFile urls from self.hosthardwarerelation.get_resource()
+        # TODO: grab the GeneratedCloudConfig urls from self.hosthardwarerelation.get_resource()
         return self.format_delta(
             self.hosthardwarerelation.get_resource().get_configuration(self.state),
             self.hosthardwarerelation.lab_token)
@@ -1148,7 +1150,7 @@ class JobFactory(object):
             booking=booking,
             job=job
         )
-        cls.makeCloudInitFiles(
+        cls.makeGeneratedCloudConfigs(
             resources=resources,
             job=job
         )
@@ -1176,10 +1178,16 @@ class JobFactory(object):
                 continue
 
     @classmethod
-    def makeCloudInitFiles(cls, resources=[], job=Job()):
+    def makeGeneratedCloudConfigs(cls, resources=[], job=Job()):
         for res in resources:
-            cif = CloudInitFile.objects.create(resource_id=res.labid, booking=job.booking, rconfig=res.config)
+            cif = GeneratedCloudConfig.objects.create(resource_id=res.labid, booking=job.booking, rconfig=res.config)
             cif.save()
+
+            cif = CloudInitFile.objects.create(priority=0, text=cif.serialize())
+            cif.save()
+
+            res.config.cloud_init_files.add(cif)
+            res.config.save()
 
     @classmethod
     def makeHardwareConfigs(cls, resources=[], job=Job()):
