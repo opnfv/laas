@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7bb7ca7d_64750892",
+        "filename": "src/account/migrations/0010_remove_userprofile_jira_url.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-09-13T14:46:47Z",
+      "side": 0,
+      "message": "this is unrelated to login, the jira url is just a profile feature (and is nullable)\n\nchange should not remove this (shouldn\u0027t remove field on model, shouldn\u0027t add this migration file)",
+      "revId": "4e8c162a104a46f7625b0ad624285ed39568d3a1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e9e8656_c9410396",
+        "filename": "src/account/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-09-13T14:46:47Z",
+      "side": 0,
+      "message": "don\u0027t remove",
+      "revId": "4e8c162a104a46f7625b0ad624285ed39568d3a1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd116792_9f61ece3",
+        "filename": "src/account/views.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-09-13T14:46:47Z",
+      "side": 0,
+      "message": "not related but OK given in lab to include this change",
+      "revId": "4e8c162a104a46f7625b0ad624285ed39568d3a1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f29b8d9b_33aebcf7",
+        "filename": "src/booking/migrations/0009_auto_20210826_1340.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-09-13T14:46:47Z",
+      "side": 0,
+      "message": "don\u0027t delete these, unrelated to login (remove migration, don\u0027t remove field from model)\n\nthese are still useful for statistics from old db",
+      "revId": "4e8c162a104a46f7625b0ad624285ed39568d3a1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aecc9fca_2a0bf219",
+        "filename": "src/booking/models.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2021-09-13T14:46:47Z",
+      "side": 0,
+      "message": "don\u0027t remove",
+      "revId": "4e8c162a104a46f7625b0ad624285ed39568d3a1",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
