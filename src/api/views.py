@@ -261,7 +261,19 @@ def resource_ci_userdata(request, lab_name="", job_id="", resource_id=""):
     except ObjectDoesNotExist:
         return HttpResponseNotFound("Could not find a matching resource by id " + str(resource_id))
 
-    return HttpResponse(cifile.serialize(), status=200)
+    return HttpResponse(cifile.serialize_userdata(), status=200)
+
+@csrf_exempt
+def resource_ci_instancedata(request, lab_name="", job_id="", resource_id=""):
+    job = Job.objects.get(id=job_id)
+
+    cifile = None
+    try:
+        cifile = CloudInitFile.get(job.booking.id, resource_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound("Could not find a matching resource by id " + str(resource_id))
+
+    return HttpResponse(cifile.serialize_instancedata(), status=200)
 
 @csrf_exempt
 def resource_ci_metadata(request, lab_name="", job_id="", resource_id=""):

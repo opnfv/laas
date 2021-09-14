@@ -11,9 +11,10 @@
 
 from django.contrib import admin
 
-from account.models import UserProfile, Lab, VlanManager, PublicNetwork
+from account.models import UserProfile, Lab, VlanManager, PublicNetwork, SSHKey
 
 admin.site.register(UserProfile)
 admin.site.register(Lab)
 admin.site.register(VlanManager)
 admin.site.register(PublicNetwork)
+admin.site.register(SSHKey)

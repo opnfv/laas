@@ -36,7 +36,7 @@ from resource_inventory.models import (
 )
 from resource_inventory.idf_templater import IDFTemplater
 from resource_inventory.pdf_templater import PDFTemplater
-from account.models import Downtime, UserProfile
+from account.models import Downtime, UserProfile, SSHKey
 from dashboard.utils import AbstractModelQuery
 
 
@@ -360,15 +360,27 @@ class CloudInitFile(models.Model):
         # TODO: make usernames posix compliant
         return username
 
-    def _get_ssh_string(self, username: str) -> str:
+    def _get_ssh_keys(self, username: str) -> [str]:
         user = User.objects.get(username=username)
-        uprofile = user.userprofile
 
-        ssh_file = uprofile.ssh_public_key
+        uprofile_ssh_keys = []
+        try:
+            uprofile = user.userprofile
 
-        escaped_file = ssh_file.open().read().decode(encoding="UTF-8").replace("\n", " ")
+            ssh_file = uprofile.ssh_public_key
+            uprofile_ssh_keys = [ssh_file]
+        except:
+            # this is likely a lab, so may not have a userprofile
+            # if this is the case, just do nothing and use the ssh keys from SSHKey model
+            pass
 
-        return escaped_file
+        strings = []
+
+        for ssh_file in uprofile_ssh_keys + [skey.ssh_file for skey in SSHKey.objects.filter(user=user).all()]:
+            escaped_file = ssh_file.open().read().decode(encoding="UTF-8").replace("\n", " ")
+            strings.append(escaped_file)
+
+        return strings
 
     def _serialize_users(self):
         """
@@ -384,18 +396,21 @@ class CloudInitFile(models.Model):
             userdict['name'] = self._normalize_username(collaborator.user.username)
 
             userdict['groups'] = "sudo"
+            userdict['shell'] = "/bin/bash"
             userdict['sudo'] = "ALL=(ALL) NOPASSWD:ALL"
 
-            userdict['ssh_authorized_keys'] = [self._get_ssh_string(collaborator.user.username)]
+            userdict['ssh_authorized_keys'] = self._get_ssh_keys(collaborator.user.username)
 
             user_array.append(userdict)
 
         user_array.append({
-            "name": "opnfv",
-            "plain_text_passwd": "OPNFV_HOST",
-            "ssh_redirect_user": True,
+            "name": "lab_user",
+            "lock_passwd": False,
+            "shell": "/bin/bash",
+            "passwd": "$6$LFJdhasdugjdlks$2Ix94hHNaVA1EuDTTyEIDTCNtv0NcDyR4W9UVGtoD1U/yibv8UaHHVt7yRJviGkZ3Q35w5tEjPBuH0K/x4/Ei1",
             "sudo": "ALL=(ALL) NOPASSWD:ALL",
-            "groups": "sudo",
+            "ssh_pwauth": False, # don't want to allow users to get into this using the default passwd, only allow when in-lab
+            "ssh_authorized_keys": self._get_ssh_keys(self.booking.lab.lab_user.username),
             })
 
         return user_array
@@ -459,17 +474,47 @@ class CloudInitFile(models.Model):
         hostname = self.rconfig.name
         iface_configs = for_config.interface_configs.all()
 
-    def _to_dict(self):
+    def _userdata(self):
         main_dict = {}
 
         main_dict['users'] = self._serialize_users()
-        main_dict['network'] = self._serialize_netconf_v1()
-        main_dict['hostname'] = self.rconfig.name
+        main_dict['merge_how'] = [
+                {
+                    "name": "list",
+                    "settings": ["append"],
+                },
+                {
+                    "name": "dict",
+                    "settings": ["replace"],
+                },
+            ]
 
         return main_dict
 
-    def serialize(self) -> str:
-        return str("#cloud-config\n") + yaml.dump(self._to_dict())
+    def serialize_instancedata(self) -> str:
+        d = {
+            'network': self._serialize_netconf_v1(),
+            'hostname': self.rconfig.name,
+        }
+
+        return str("#cloud-config\n") + yaml.dump(d, default_flow_style=False)
+
+    def serialize_userdata(self) -> str:
+        d = self._userdata()
+        ud_raw = str("#cloud-config\n") + yaml.dump(d, default_flow_style=False)
+        ci_d = {
+                "datasource": {
+                    "None": {
+                        #"metadata": {
+                        #    "instance-id": "host-" + str(self.resource_id),
+                        #},
+                        "userdata_raw": ud_raw,
+                    }
+                },
+                "datasource_list": [ "None" ]
+            }
+        #return str("#cloud-config\n") + yaml.dump(d, default_flow_style=False)
+        return yaml.dump(ci_d, default_flow_style=False)
 
 class Job(models.Model):
     """

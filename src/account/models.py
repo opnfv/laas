@@ -245,6 +245,11 @@ class Lab(models.Model):
     def __str__(self):
         return self.name
 
+class SSHKey(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ssh_file = models.FileField(upload_to=upload_to)
+
 
 class PublicNetwork(models.Model):
     """L2/L3 network that can reach the internet."""
