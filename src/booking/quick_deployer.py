@@ -268,7 +268,7 @@ def create_from_form(form, request):
     )
     booking.pdf = PDFTemplater.makePDF(booking)
 
-    for collaborator in users_field:  # list of UserProfiles
+    for collaborator in users_field:  # list of Users (not UserProfile)
         booking.collaborators.add(collaborator.user)
 
     booking.save()
