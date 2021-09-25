@@ -193,6 +193,24 @@ class ResourceTemplate(models.Model):
     temporary = models.BooleanField(default=False)
     copy_of = models.ForeignKey("ResourceTemplate", blank=True, null=True, on_delete=models.SET_NULL)
 
+    # if these fields are empty ("") then they are implicitly "every vlan",
+    # otherwise we filter any allocations we try to instantiate against this list
+    # they should be represented as a json list of integers
+    private_vlan_pool = models.TextField(default="")
+    public_vlan_pool = models.TextField(default="")
+
+    def private_vlan_pool_set(self):
+        if self.private_vlan_pool != "":
+            return set(json.loads(self.private_vlan_pool))
+        else:
+            return None
+
+    def public_vlan_pool_set(self):
+        if self.private_vlan_pool != "":
+            return set(json.loads(self.public_vlan_pool))
+        else:
+            return None
+
     def getConfigs(self):
         configs = self.resourceConfigurations.all()
         return list(configs)
