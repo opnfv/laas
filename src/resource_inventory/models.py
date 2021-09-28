@@ -18,6 +18,7 @@ import json
 import yaml
 
 import re
+import uuid
 from collections import Counter
 
 from account.models import Lab
@@ -171,7 +172,19 @@ class CloudInitFile(models.Model):
         prepended_text = "#cloud-config\n"
         prepended_text = prepended_text + yaml.dump(CloudInitFile.merge_strategy()) + "\n"
         print("in cloudinitfile create")
-        return CloudInitFile.objects.create(priority=priority, text=(prepended_text + text))
+        text = prepended_text + text
+        cloud_dict = {
+                "datasource": {
+                    "None": {
+                        "metadata": {
+                            "instance-id": str(uuid.uuid4())
+                        },
+                        "userdata_raw": text,
+                    },
+                },
+                "datasource_list": ["None"],
+            }
+        return CloudInitFile.objects.create(priority=priority, text=json.dumps(cloud_dict))
 
 class ResourceTemplate(models.Model):
     """
