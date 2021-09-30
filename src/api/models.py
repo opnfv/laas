@@ -378,17 +378,17 @@ class GeneratedCloudConfig(models.Model):
         """
         user_array = ["default"]
         users = list(self.booking.collaborators.all())
-        users.append(self.booking.owner.userprofile)
+        users.append(self.booking.owner)
         for collaborator in users:
             userdict = {}
 
             # TODO: validate if usernames are valid as linux usernames (and provide an override potentially)
-            userdict['name'] = self._normalize_username(collaborator.user.username)
+            userdict['name'] = self._normalize_username(collaborator.username)
 
             userdict['groups'] = "sudo"
             userdict['sudo'] = "ALL=(ALL) NOPASSWD:ALL"
 
-            userdict['ssh_authorized_keys'] = [self._get_ssh_string(collaborator.user.username)]
+            userdict['ssh_authorized_keys'] = [self._get_ssh_string(collaborator.username)]
 
             user_array.append(userdict)
 

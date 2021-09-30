@@ -184,7 +184,7 @@ class CloudInitFile(models.Model):
                 },
                 "datasource_list": ["None"],
             }
-        return CloudInitFile.objects.create(priority=priority, text=json.dumps(cloud_dict))
+        return CloudInitFile.objects.create(priority=priority, text=yaml.dump(cloud_dict))
 
 class ResourceTemplate(models.Model):
     """
