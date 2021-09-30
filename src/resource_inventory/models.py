@@ -170,7 +170,8 @@ class CloudInitFile(models.Model):
     @classmethod
     def create(cls, text="", priority=0):
         prepended_text = "#cloud-config\n"
-        prepended_text = prepended_text + yaml.dump(CloudInitFile.merge_strategy()) + "\n"
+        mstrat = CloudInitFile.merge_strategy()
+        prepended_text = prepended_text + yaml.dump({"merge_strategy": mstrat}) + "\n"
         print("in cloudinitfile create")
         text = prepended_text + text
         cloud_dict = {
@@ -184,7 +185,7 @@ class CloudInitFile(models.Model):
                 },
                 "datasource_list": ["None"],
             }
-        return CloudInitFile.objects.create(priority=priority, text=json.dumps(cloud_dict))
+        return CloudInitFile.objects.create(priority=priority, text=yaml.dump(cloud_dict))
 
 class ResourceTemplate(models.Model):
     """
