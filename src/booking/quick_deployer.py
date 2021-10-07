@@ -219,6 +219,12 @@ def create_from_form(form, request):
     global_cloud_config = None if not form.cleaned_data['global_cloud_config'] else form.cleaned_data['global_cloud_config']
 
     if global_cloud_config:
+        try:
+            d = yaml.load(global_cloud_config)
+            if not (type(d) is dict):
+                raise Exception("CI file was valid yaml but was not a dict")
+        except Exception as e:
+            raise ValidationError("The provided Cloud Config is not valid yaml, please refer to the Cloud Init documentation for expected structure")
         print("about to create global cloud config")
         global_cloud_config = CloudInitFile.create(text=global_cloud_config, priority=CloudInitFile.objects.count())
         print("made global cloud config")

@@ -37,6 +37,7 @@ from resource_inventory.models import (
 )
 
 import json
+from deepmerge import Merger
 
 """
 API views.
@@ -263,7 +264,26 @@ def resource_ci_userdata(request, lab_name="", job_id="", resource_id="", file_i
     except ObjectDoesNotExist:
         return HttpResponseNotFound("Could not find a matching resource by id " + str(resource_id))
 
-    return HttpResponse(cifile.text, status=200)
+    text = cifile.text
+
+    prepended_text = "#cloud-config\n"
+    #mstrat = CloudInitFile.merge_strategy()
+    #prepended_text = prepended_text + yaml.dump({"merge_strategy": mstrat}) + "\n"
+    #print("in cloudinitfile create")
+    text = prepended_text + text
+    cloud_dict = {
+            "datasource": {
+                "None": {
+                    "metadata": {
+                        "instance-id": str(uuid.uuid4())
+                    },
+                    "userdata_raw": text,
+                },
+            },
+            "datasource_list": ["None"],
+        }
+
+    return HttpResponse(yaml.dump(cloud_dict), status=200)
 
 @csrf_exempt
 def resource_ci_metadata(request, lab_name="", job_id="", resource_id="", file_id=0):
@@ -276,7 +296,36 @@ def resource_ci_userdata_directory(request, lab_name="", job_id="", resource_id=
     files = resource.config.cloud_init_files
     files = [{"id": file.id, "priority": file.priority} for file in files.order_by("priority").all()]
 
-    return HttpResponse(json.dumps(files), status=200)
+    d = {
+            'merge_failures': []
+        }
+
+    merger = Merger(
+            [
+                (list, ["append"]),
+                (dict, ["merge"]),
+            ],
+            ["override"], # fallback
+            ["override"], # if types conflict (shouldn't happen in CI, but handle case)
+        )
+
+    for file in files.order_by("priority").all():
+        try:
+            other_dict = yaml.load(file.text)
+            if not (type(d) is dict):
+                raise Exception("CI file was valid yaml but was not a dict")
+
+            merger.merge(d, other_dict)
+        except Exception as e:
+            # if fail to merge, then just skip
+            print("Failed to merge file in, as it had invalid content:", file.id)
+            print("File text was:")
+            print(file.text)
+            d['merge_failures'].append({file.id: str(e)})
+
+    file = CloudInitFile.create(text=yaml.dump(d), priority=0)
+
+    return HttpResponse(json.dumps([{"id": file.id, "priority": file.priority}]), status=200)
 
 
 def new_jobs(request, lab_name=""):
