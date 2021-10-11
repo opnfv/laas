@@ -37,6 +37,8 @@ from resource_inventory.models import (
 )
 
 import json
+import yaml
+import uuid
 from deepmerge import Merger
 
 """
@@ -309,19 +311,19 @@ def resource_ci_userdata_directory(request, lab_name="", job_id="", resource_id=
             ["override"], # if types conflict (shouldn't happen in CI, but handle case)
         )
 
-    for file in files.order_by("priority").all():
+    for f in resource.config.cloud_init_files.order_by("priority").all():
         try:
-            other_dict = yaml.load(file.text)
+            other_dict = yaml.load(f.text)
             if not (type(d) is dict):
                 raise Exception("CI file was valid yaml but was not a dict")
 
             merger.merge(d, other_dict)
         except Exception as e:
             # if fail to merge, then just skip
-            print("Failed to merge file in, as it had invalid content:", file.id)
+            print("Failed to merge file in, as it had invalid content:", f.id)
             print("File text was:")
-            print(file.text)
-            d['merge_failures'].append({file.id: str(e)})
+            print(f.text)
+            d['merge_failures'].append({f.id: str(e)})
 
     file = CloudInitFile.create(text=yaml.dump(d), priority=0)
 

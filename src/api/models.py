@@ -376,7 +376,9 @@ class GeneratedCloudConfig(models.Model):
         """
         returns the dictionary to be placed behind the `users` field of the toplevel c-i dict
         """
+        # conserves distro default user
         user_array = ["default"]
+
         users = list(self.booking.collaborators.all())
         users.append(self.booking.owner)
         for collaborator in users:
@@ -392,15 +394,38 @@ class GeneratedCloudConfig(models.Model):
 
             user_array.append(userdict)
 
-        user_array.append({
-            "name": "opnfv",
-            "plain_text_passwd": "OPNFV_HOST",
-            "ssh_redirect_user": True,
-            "sudo": "ALL=(ALL) NOPASSWD:ALL",
-            "groups": "sudo",
-            })
+        #user_array.append({
+        #    "name": "opnfv",
+        #    "passwd": "$6$k54L.vim1cLaEc4$5AyUIrufGlbtVBzuCWOlA1yV6QdD7Gr2MzwIs/WhuYR9ebSfh3Qlb7djkqzjwjxpnSAonK1YOabPP6NxUDccu.",
+        #    "ssh_redirect_user": True,
+        #    "sudo": "ALL=(ALL) NOPASSWD:ALL",
+        #    "groups": "sudo",
+        #    })
 
         return user_array
+
+    # TODO: make this configurable
+    def _serialize_sysinfo(self):
+        defuser = {}
+        defuser['name'] = 'opnfv'
+        defuser['plain_text_passwd'] = 'OPNFV_HOST'
+        defuser['home'] = '/home/opnfv'
+        defuser['shell'] = '/bin/bash'
+        defuser['lock_passwd'] = True
+        defuser['gecos'] = 'Lab Manager User'
+        defuser['groups'] = 'sudo'
+
+        return { 'default_user': defuser }
+
+    # TODO: make this configurable
+    def _serialize_runcmds(self):
+        cmdlist = [ ]
+
+        # have hosts run dhcp on boot
+        cmdlist.append(['sudo', 'dhclient', '-r'])
+        cmdlist.append(['sudo', 'dhclient'])
+
+        return cmdlist
 
     def _serialize_netconf_v1(self):
         interfaces = {} # map from iface_name => dhcp_config
@@ -467,6 +492,12 @@ class GeneratedCloudConfig(models.Model):
         main_dict['users'] = self._serialize_users()
         main_dict['network'] = self._serialize_netconf_v1()
         main_dict['hostname'] = self.rconfig.name
+
+        # add first startup commands
+        main_dict['runcmd'] = self._serialize_runcmds()
+
+        # configure distro default user
+        main_dict['system_info'] = self._serialize_sysinfo()
 
         return main_dict
 
