@@ -1,12 +1,15 @@
 {% extends "base/base.html" %}
 {% load staticfiles %}
 {% block logo %}
+
+<link rel="stylesheet" href="{% static "css/anuket.css" %}">
+
 <div class="col-12 col-sm order-1 order-sm-2 text-center text-lg-left">
-    <a href="https://www.opnfv.org/" class="navbar-brand">
-        <img src="{% static "img/opnfv-logo.png" %}">
+    <a href="https://anuket.io/" class="navbar-brand">
+        <img src="{% static "img/Anuket-logo.svg" %}" alt="Anuket logo" width="134.2" height="50" style="vertical-align:middle; margin:12px 12px 12px -20px;">
     </a>
-    <a class="navbar-brand d-none d-lg-inline" href={% url 'dashboard:index' %}>
-        Laas Dashboard
+    <a class="navbar-brand d-none d-lg-inline Anuket-Text" href={% url 'dashboard:index' %} style="margin-left:10px; font-size:26px; vertical-align:middle;">
+        LaaS Dashboard
     </a>
 </div>
 {% endblock logo %}
