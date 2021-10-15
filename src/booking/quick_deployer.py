@@ -11,10 +11,11 @@
 import json
 import yaml
 from django.db.models import Q
+from django.db import transaction
 from datetime import timedelta
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-from account.models import Lab
+from account.models import Lab, UserProfile
 
 from resource_inventory.models import (
     ResourceTemplate,
@@ -114,7 +115,7 @@ def update_template(old_template, image, hostname, user, global_cloud_config=Non
             image=image_to_set,
             template=template,
             is_head_node=old_config.is_head_node,
-            name=hostname if len(old_template.getConfigs()) == 1 else old_config.name,
+            name=hostname if (hostname and len(old_template.getConfigs()) == 1) else old_config.name,
             #cloud_init_files=old_config.cloud_init_files.set()
         )
 
@@ -177,13 +178,21 @@ def generate_resource_bundle(template):
     return resource_bundle
 
 
-def check_invariants(request, **kwargs):
+def check_invariants(**kwargs):
     # TODO: This should really happen in the BookingForm validation methods
     installer = kwargs['installer']
     image = kwargs['image']
     scenario = kwargs['scenario']
     lab = kwargs['lab']
     length = kwargs['length']
+
+    user = kwargs['owner']
+
+    if not user.userprofile:
+        raise ValidationError("The given owner did not have a userprofile, owner should be an enrolled user")
+    if not user.userprofile.ssh_public_key:
+        raise ValidationError("User has no uploaded ssh key. User should upload a key in settings")
+
     # check that image os is compatible with installer
     if image:
         if image.from_lab != lab:
@@ -191,7 +200,7 @@ def check_invariants(request, **kwargs):
         # TODO
         # if image.host_type != host_profile:
         #    raise ValidationError("The chosen image is not available for the chosen host type")
-        if not image.public and image.owner != request.user:
+        if not image.public and image.owner != kwargs['owner']:
             raise ValidationError("You are not the owner of the chosen private image")
     if length < 1 or length > 21:
         raise BookingLengthException("Booking must be between 1 and 21 days long")
@@ -206,18 +215,60 @@ def generate_cloud_configs(resource_bundle, global_cloud_config):
 
 def create_from_form(form, request):
     """
-    Create a Booking from the user's form.
-
-    Large, nasty method to create a booking or return a useful error
-    based on the form from the frontend
+    Parse data from QuickBookingForm to create booking
     """
     resource_field = form.cleaned_data['filter_field']
-    purpose_field = form.cleaned_data['purpose']
-    project_field = form.cleaned_data['project']
-    users_field = form.cleaned_data['users']
-    hostname = 'opnfv_host' if not form.cleaned_data['hostname'] else form.cleaned_data['hostname']
-    length = form.cleaned_data['length']
-    global_cloud_config = None if not form.cleaned_data['global_cloud_config'] else form.cleaned_data['global_cloud_config']
+
+    lab, resource_template = parse_resource_field(resource_field)
+    data = form.cleaned_data
+    data['lab'] = lab
+    data['resource_template'] = resource_template
+    data['owner'] = request.user
+
+    return _create_booking(data)
+
+
+def create_from_API(body, user):
+    """
+    Parse data from Automation API to create booking
+    """
+    booking_info = json.loads(body.decode('utf-8'))
+
+    data = {}
+    data['purpose'] = booking_info['purpose']
+    data['project'] = booking_info['project']
+    data['users'] = [UserProfile.objects.get(user__username=username)
+                     for username in booking_info['collaborators']]
+    data['hostname'] = booking_info['hostname']
+    data['length'] = booking_info['length']
+    data['installer'] = None
+    data['scenario'] = None
+
+    data['image'] = Image.objects.get(pk=booking_info['imageLabID'])
+
+    data['resource_template'] = ResourceTemplate.objects.get(pk=booking_info['templateID'])
+    data['lab'] = data['resource_template'].lab
+    data['owner'] = user
+    if 'global_cloud_config' in data.keys():
+        data['global_cloud_config'] = CloudInitFile.objects.get(id=data['global_cloud_config']).text
+
+    return _create_booking(data)
+
+@transaction.atomic
+def _create_booking(data):
+    check_invariants(**data)
+
+    # check booking privileges
+    # TODO: use the canonical booking_allowed method because now template might have multiple
+    # machines
+    if Booking.objects.filter(owner=data['owner'], end__gt=timezone.now()).count() >= 3 and not data['owner'].userprofile.booking_privledge:
+        raise PermissionError("You do not have permission to have more than 3 bookings at a time.")
+
+    global_cloud_config = None if not data['global_cloud_config'] else data['global_cloud_config']
+
+    reservable = ResourceManager.getInstance().templateIsReservable(data['resource_template'])
+    if not reservable:
+        raise ValidationError("The given template is not currently possible to reserve, try again later or try a different host")
 
     if global_cloud_config:
         try:
@@ -226,56 +277,29 @@ def create_from_form(form, request):
                 raise Exception("CI file was valid yaml but was not a dict")
         except Exception as e:
             raise ValidationError("The provided Cloud Config is not valid yaml, please refer to the Cloud Init documentation for expected structure")
-        print("about to create global cloud config")
         global_cloud_config = CloudInitFile.create(text=global_cloud_config, priority=CloudInitFile.objects.count())
-        print("made global cloud config")
 
-    image = form.cleaned_data['image']
-    scenario = form.cleaned_data['scenario']
-    installer = form.cleaned_data['installer']
+    updated_template = update_template(data['resource_template'], data['image'], 'opnfv_host' if not data['hostname'] else data['hostname'], data['owner'], global_cloud_config)
 
-    lab, resource_template = parse_resource_field(resource_field)
-    data = form.cleaned_data
-    data['lab'] = lab
-    data['resource_template'] = resource_template
-    check_invariants(request, **data)
 
-    # check booking privileges
-    # TODO: use the canonical booking_allowed method because now template might have multiple
-    # machines
-    if Booking.objects.filter(owner=request.user, end__gt=timezone.now()).count() >= 3 and not request.user.userprofile.booking_privledge:
-        raise PermissionError("You do not have permission to have more than 3 bookings at a time.")
-
-    ResourceManager.getInstance().templateIsReservable(resource_template)
-
-    resource_template = update_template(resource_template, image, hostname, request.user, global_cloud_config=global_cloud_config)
-
-    # if no installer provided, just create blank host
-    opnfv_config = None
-    if installer:
-        hconf = resource_template.getConfigs()[0]
-        opnfv_config = generate_opnfvconfig(scenario, installer, resource_template)
-        generate_hostopnfv(hconf, opnfv_config)
-
-    # generate resource bundle
-    resource_bundle = generate_resource_bundle(resource_template)
-
-    #generate_cloud_configs(resource_bundle)
+    # allocate hosts (as a resource bundle) according to template spec
+    resource_bundle = generate_resource_bundle(updated_template)
 
     # generate booking
     booking = Booking.objects.create(
-        purpose=purpose_field,
-        project=project_field,
-        lab=lab,
-        owner=request.user,
+        purpose=data['purpose'],
+        project=data['project'],
+        lab=data['lab'],
+        owner=data['owner'],
         start=timezone.now(),
-        end=timezone.now() + timedelta(days=int(length)),
+        end=timezone.now() + timedelta(days=int(data['length'])),
         resource=resource_bundle,
-        opnfv_config=opnfv_config
+        opnfv_config=None
     )
+
     booking.pdf = PDFTemplater.makePDF(booking)
 
-    for collaborator in users_field:  # list of Users (not UserProfile)
+    for collaborator in data['users']:  # list of UserProfiles
         booking.collaborators.add(collaborator.user)
 
     booking.save()
