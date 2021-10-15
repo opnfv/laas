@@ -131,7 +131,6 @@ class ResourceBookingsJSON(View):
             'start',
             'end',
             'purpose',
-            'jira_issue_status',
             'config_bundle__name'
         )
         return JsonResponse({'bookings': list(bookings)})
