@@ -40,7 +40,9 @@
         let field_initial = {{ initial|safe }};
 
         //global
+	console.log("makes search widget");
         searchable_select_multiple_widget = new SearchableSelectMultipleWidget(format_vars, field_dataset, field_initial);
+	console.log("made search widget");
     }
 
     searchableSelectMultipleWidgetEntry();
