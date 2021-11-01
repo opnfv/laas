@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df3a8d8a_d03b428a",
+        "filename": "src/templates/base/dashboard/searchable_select_multiple.html",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 7618
+      },
+      "writtenOn": "2021-11-01T21:50:31Z",
+      "side": 1,
+      "message": "These debug prints should be deleted.",
+      "revId": "d4808af9f229591626b9515b272dac7dc4a1ffac",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
