@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0884c6eb_046faf72",
+        "filename": "worker/init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 7618
+      },
+      "writtenOn": "2021-11-04T21:47:40Z",
+      "side": 1,
+      "message": "Get rid of debug logging here.",
+      "revId": "e420778b83a42eb729f94e9a9d83ecc9085ecaac",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
