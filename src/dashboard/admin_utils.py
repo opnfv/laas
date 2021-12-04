@@ -527,6 +527,30 @@ def extend_booking(booking_id, days=0, hours=0, minutes=0, weeks=0):
     booking.end = booking.end + timedelta(days=days, hours=hours, minutes=minutes, weeks=weeks)
     booking.save()
 
+def regenerate_cloud_configs(booking_id):
+    b = Booking.objects.get(id=booking_id)
+    j = b.job
+    for res in b.resource.get_resources():
+        res.config.cloud_init_files.set(res.config.cloud_init_files.filter(generated=False)) # careful!
+        res.config.save()
+        cif = GeneratedCloudConfig.objects.create(resource_id=res.labid, booking=b, rconfig=res.config)
+        cif.save()
+        cif = CloudInitFile.create(priority=0, text=cif.serialize())
+        cif.save()
+        res.config.cloud_init_files.add(cif)
+        res.config.save()
+
+
+def set_job_new(job_id):
+    j = Job.objects.get(id=job_id)
+    b = j.booking
+    regenerate_cloud_configs(b.id)
+    for task in j.get_tasklist():
+        task.status = JobStatus.NEW
+        task.save()
+    j.status = JobStatus.NEW
+    j.save()
+
 
 def docs(function=None, fulltext=False):
     """
