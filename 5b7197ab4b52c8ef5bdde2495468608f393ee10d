@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7f08dbd_45139bb3",
+        "filename": "src/static/package-lock.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7618
+      },
+      "writtenOn": "2022-01-06T20:25:56Z",
+      "side": 1,
+      "message": "Were these changes intentionally committed? If not please remove",
+      "revId": "5b7197ab4b52c8ef5bdde2495468608f393ee10d",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
