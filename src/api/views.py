@@ -651,9 +651,11 @@ def list_labs(request):
 
     return JsonResponse(lab_list, safe=False)
 
+
 """
 Booking Details API Views
 """
+
 
 def booking_details(request, booking_id=""):
     token = auth_and_log(request, 'booking/{}/details'.format(booking_id))
@@ -663,7 +665,7 @@ def booking_details(request, booking_id=""):
 
     booking = get_object_or_404(Booking, pk=booking_id, owner=token.user)
 
-    #overview
+    # overview
     overview = {
         'username': GeneratedCloudConfig._normalize_username(None, str(token.user)),
         'purpose': booking.purpose,
@@ -674,8 +676,7 @@ def booking_details(request, booking_id=""):
         'lab': booking.lab
     }
 
-
-    #deployment progress
+    # deployment progress
     task_list = []
     for task in booking.job.get_tasklist():
         task_info = {
@@ -694,8 +695,8 @@ def booking_details(request, booking_id=""):
             else:
                 task_info['lab_response'] = str(task.message)
         task_list.append(task_info)
-    
-    #pods
+
+    # pods
     pod_list = []
     for host in booking.resource.get_resources():
         pod_info = {
@@ -721,7 +722,7 @@ def booking_details(request, booking_id=""):
             pod_info['interfaces'].append(int_info)
         pod_list.append(pod_info)
 
-    #diagnostic info
+    # diagnostic info
     diagnostic_info = {
         'job_id': booking.job.id,
         'ci_files': '',
@@ -740,7 +741,7 @@ def booking_details(request, booking_id=""):
             }
             pod['configs'].append(ci_info)
         diagnostic_info['pods'].append(pod)
-    
+
     details = {
         'overview': overview,
         'deployment_progress': task_list,
