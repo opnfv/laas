@@ -7,6 +7,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
 
+from zipapp import create_archive
 from resource_inventory.models import (
     ResourceTemplate,
     Image,
@@ -35,7 +36,8 @@ from django.contrib.auth.models import User
 
 from account.models import (
     Lab,
-    PublicNetwork
+    PublicNetwork,
+    UserProfile,
 )
 
 from resource_inventory.resource_manager import ResourceManager
@@ -224,6 +226,59 @@ def get_info(host_labid, lab_username):
 
     return info
 
+def active_booking_info():
+    """
+    Gives information in json format for all active bookings in all labs including:
+    lab, booking_id, purpose, start, end, owner and collaborators (id, username, email, company)
+
+    Please note that the owners of some bookings are not users which may cause issues with trying to find them and for some info to be missing.
+    """
+    active_booking_list = []
+    for lab in Lab.objects.all():
+        for booking in Booking.objects.filter(end__gte=timezone.now()):
+            try:
+                owner_info = UserProfile.objects.get(user=booking.owner)
+                owner_email = owner_info.email_addr
+                owner_company = owner_info.company
+            except Exception as e:
+                owner_email = ""
+                owner_company = ""
+
+            owner_info = {
+                "user_id": booking.owner_id,
+                "username": booking.owner.username,
+                "email": owner_email,
+                "company": owner_company
+            }
+
+            info = {
+                "lab": lab.name,
+                "booking_id": booking.id,
+                "booking_purpose": booking.purpose,
+                "start": str(booking.start),
+                "end": str(booking.end),
+                "owner": owner_info,
+                "collaborators": [owner_info]
+            }
+
+            for collaborator in booking.collaborators.all():
+                try:
+                    collaborator_info = UserProfile.objects.get(user=collaborator)
+                    collaborator_email = collaborator_info.email_addr
+                    collaborator_company = collaborator_info.company
+                except:
+                    collaborator_email = ""
+                    collaborator_company = ""
+
+                collaborator_info = {
+                    "user_id": collaborator.id,
+                    "username": collaborator.username,
+                    "email": collaborator_email,
+                    "company": collaborator_company
+                }
+                info["collaborators"].append(collaborator_info)
+            active_booking_list.append(info)
+    print(active_booking_list)
 
 def map_cntt_interfaces(labid: str):
     """
@@ -597,3 +652,4 @@ def admin_functions():
 print("Hint: call `docs(<function name>)` or `admin_functions()` for help on using the admin utils")
 print("docs(<function name>) displays documentation on a given function")
 print("admin_functions() lists all functions available to call within this module")
+
