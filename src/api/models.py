@@ -1451,3 +1451,4 @@ JOB_TASK_CLASSLIST = [
 
 class JobTaskQuery(AbstractModelQuery):
     model_list = JOB_TASK_CLASSLIST
+
