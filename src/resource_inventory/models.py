@@ -40,6 +40,7 @@ class ResourceProfile(models.Model):
     ])
     description = models.TextField()
     labs = models.ManyToManyField(Lab, related_name="resourceprofiles")
+    uuid = models.UUIDField(null=True)
 
     def validate(self):
         validname = re.compile(r"^[A-Za-z0-9\-\_\.\/\, ]+$")
@@ -239,7 +240,6 @@ class ResourceBundle(models.Model):
         return ResourceQuery.filter(bundle=self)
 
     def get_resource_with_role(self, role):
-        # TODO
         pass
 
     def release(self):
@@ -457,7 +457,6 @@ class Opsys(models.Model):
     def __str__(self):
         return self.name
 
-
 class Image(models.Model):
     """Model for representing OS images / snapshots of hosts."""
 
@@ -474,6 +473,7 @@ class Image(models.Model):
     public = models.BooleanField(default=True)
     description = models.TextField()
     os = models.ForeignKey(Opsys, null=True, on_delete=models.CASCADE)
+    uuid = models.UUIDField(null=True) # null since current col is empty
 
     available = models.BooleanField(default=True)  # marked True by cobbler if it exists there
     obsolete = models.BooleanField(default=False)

@@ -13,6 +13,7 @@ import math
 import traceback
 import sys
 from datetime import timedelta
+from unicodedata import name
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
@@ -38,10 +39,13 @@ from notifier.manager import NotificationHandler
 from analytics.models import ActiveVPNUser
 from resource_inventory.models import (
     Image,
+    Network,
     Opsys,
     CloudInitFile,
+    ResourceProfile,
     ResourceQuery,
     ResourceTemplate,
+    Interface,
 )
 
 import yaml
@@ -415,6 +419,7 @@ def done_jobs(request, lab_name=""):
 
 
 def auth_and_log(request, endpoint):
+    
     """
     Function to authenticate an API user and log info
     in the API log model. This is to keep record of
