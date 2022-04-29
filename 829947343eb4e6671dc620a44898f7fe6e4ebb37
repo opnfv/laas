@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6926173_af91014a",
+        "filename": "src/api/views.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 7743
+      },
+      "writtenOn": "2022-04-29T18:28:39Z",
+      "side": 1,
+      "message": "Do we still need these commented lines, or can they be removed?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 30
+      },
+      "revId": "829947343eb4e6671dc620a44898f7fe6e4ebb37",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
