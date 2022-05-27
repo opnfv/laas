@@ -14,6 +14,7 @@ import traceback
 import sys
 from datetime import timedelta
 
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.decorators import method_decorator
@@ -47,6 +48,7 @@ from resource_inventory.models import (
 import yaml
 import uuid
 from deepmerge import Merger
+
 
 """
 API views.
@@ -97,6 +99,7 @@ def lab_host(request, lab_name="", host_id=""):
         return JsonResponse(lab_manager.get_host(host_id), safe=False)
     if request.method == "POST":
         return JsonResponse(lab_manager.update_host(host_id, request.POST), safe=False)
+
 
 # API extension for Cobbler integration
 
@@ -430,7 +433,12 @@ def auth_and_log(request, endpoint):
         token = Token.objects.get(key=user_token)
     except Token.DoesNotExist:
         token = None
-        response = HttpResponse('Unauthorized', status=401)
+
+        # Added logic to detect malformed token
+        if len(str(user_token)) != 40:
+            response = HttpResponse('Malformed Token', status=401)
+        else:
+            response = HttpResponse('Unauthorized', status=401)
 
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -454,6 +462,7 @@ def auth_and_log(request, endpoint):
         body=body,
         ip_addr=ip
     )
+
 
     if response:
         return response
