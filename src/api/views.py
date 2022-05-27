@@ -48,6 +48,7 @@ import yaml
 import uuid
 from deepmerge import Merger
 
+
 """
 API views.
 
@@ -430,7 +431,12 @@ def auth_and_log(request, endpoint):
         token = Token.objects.get(key=user_token)
     except Token.DoesNotExist:
         token = None
-        response = HttpResponse('Unauthorized', status=401)
+
+        # Added logic to detect malformed token
+        if len(str(user_token)) != 40:
+            response = HttpResponse('Malformed Token', status=401)
+        else:
+            response = HttpResponse('Unauthorized', status=401)
 
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -446,14 +452,16 @@ def auth_and_log(request, endpoint):
         except Exception:
             response = HttpResponse('Invalid Request Body', status=400)
 
-    APILog.objects.create(
-        user=token.user,
-        call_time=timezone.now(),
-        method=request.method,
-        endpoint=endpoint,
-        body=body,
-        ip_addr=ip
-    )
+    if token:
+        APILog.objects.create(
+            user=token.user,
+            call_time=timezone.now(),
+            method=request.method,
+            endpoint=endpoint,
+            body=body,
+            ip_addr=ip
+        )
+
 
     if response:
         return response
