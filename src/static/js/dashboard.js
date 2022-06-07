@@ -120,9 +120,18 @@ function update_description(title, desc) {
 }
 
 function update_message(message, stepstatus) {
+    let color_code;
+    if (stepstatus == 'valid') {
+        color_code = 'text-success';
+    } else if (stepstatus == 'invalid') {
+        color_code = 'text-danger';
+    } else {
+        color_code = 'none';
+    }
     document.getElementById("view_message").innerText = message;
     document.getElementById("view_message").className = "step_message";
     document.getElementById("view_message").classList.add("message_" + stepstatus);
+    document.getElementById("view_message").classList.add(color_code);
 }
 
 function submitStepForm(next_step = "current"){
