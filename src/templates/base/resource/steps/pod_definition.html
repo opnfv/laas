@@ -39,7 +39,8 @@
 </form>
 <script>
     //gather context data
-    let debug = false;
+    try {
+        let debug = false;
     {% if debug %}
     debug = true;
     {% endif %}
@@ -60,6 +61,10 @@
         document.getElementById('sidebarContainer')
     );
     form_submission_callbacks.push(() => network_step.prepareForm());
+    } catch(e) {
+        console.log(e)
+    }
+
 </script>
 {% endblock content %}
 {% block onleave %}
