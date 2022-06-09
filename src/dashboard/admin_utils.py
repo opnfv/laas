@@ -27,9 +27,11 @@ from resource_inventory.models import (
 )
 
 import json
+import yaml
 import sys
 import inspect
 import pydoc
+import os
 
 from django.contrib.auth.models import User
 
@@ -551,6 +553,35 @@ def set_job_new(job_id):
         task.save()
     j.status = JobStatus.NEW
     j.save()
+
+def verify_import(host_labid, import_file):
+    loaded = yaml.safe_load(import_file)
+    
+    host = Server.objects.get(labid=host_labid)
+
+    if host.interfaces.count() != len(loaded['interfaces']):
+        print("Count of interfaces differed, host had {} interfaces while import file had {}".format(host.interfaces.count(), len(loaded['interfaces'])))
+        return
+
+    for iface in host.interfaces:
+        matching_by_mac = loaded['interfaces'][iface.mac_address]
+
+        if iface.profile.name != matching_by_mac['name']:
+            print("Names did not match: {} vs {}".format(iface.profile.name, matching_by_mac['name']))
+
+        if iface.profile.bus_addr != matching_by_mac['busaddr']:
+            print("Busaddr did not match: {} vs {}".format(iface.profile.bus_addr, matching_by_mac['busaddr']))
+
+def verify_all(containing_directory_path):
+    for filename in os.listdir(containing_directory_path):
+        if filename.contains(".yaml"):
+            path = os.path.join(containing_directory_path, filename)
+            loaded = yaml.safe_load(path)
+
+            if Server.objects.filter(labid=loaded['hostname'].count() == 1:
+                verify_import(loaded['hostname'], path)
+            else:
+                print("Skipping file", filename, "as it does not contain an expected hostname")
 
 
 def docs(function=None, fulltext=False):
