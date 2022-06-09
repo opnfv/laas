@@ -583,6 +583,15 @@ def verify_all(containing_directory_path):
             else:
                 print("Skipping file", filename, "as it does not contain an expected hostname")
 
+def update_macs(host_labid, loaded_yaml):
+    host = Server.objects.get(labid=host_labid)
+
+    for iface in loaded_yaml['interfaces'].values():
+        matching_iface = host.interfaces.get(profile__name=iface['name'])
+        #matching_iface.mac_address = iface['mac']
+        print("Updating from mac", matching_iface.mac_address, "to mac", iface['mac']
+        #matching_iface.save()
+
 
 def docs(function=None, fulltext=False):
     """
