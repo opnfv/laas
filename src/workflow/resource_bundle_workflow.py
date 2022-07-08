@@ -14,6 +14,7 @@ from django.core.exceptions import ValidationError
 
 from typing import List
 
+import re
 import json
 from xml.dom import minidom
 import traceback
@@ -208,12 +209,15 @@ class Define_Software(WorkflowStep):
         hosts_initial = []
         configs = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {}).get("resources")
         if configs:
-            for config in configs:
+            for i in range(len(configs)):
+                default_name = 'laas-node'
+                if i > 0:
+                    default_name = default_name + "-" + str(i + 1)
                 hosts_initial.append({
-                    'host_id': config.id,
-                    'host_name': config.name,
-                    'headnode': config.is_head_node,
-                    'image': config.image
+                    'host_id': configs[i].id,
+                    'host_name': default_name,
+                    'headnode': configs[i].is_head_node,
+                    'image': configs[i].image
                 })
         else:
             for host in hostlist:
@@ -251,6 +255,8 @@ class Define_Software(WorkflowStep):
 
         # TODO: fix headnode in form, currently doesn't return a selected one
         # models['headnode_index'] = post_data.get("headnode", 1)
+        # TODO: headnode issue (NFV-439)
+        # TODO: Network web widget breaks after selecting back then next (NFV-440)
         formset = self.create_hostformset(hosts, data=post_data)
         has_headnode = False
         if formset.is_valid():
@@ -265,6 +271,17 @@ class Define_Software(WorkflowStep):
                 host.name = hostname
                 host.image = image
                 host.save()
+                # RFC921: They must start with a letter, end with a letter or digit and have only letters or digits or hyphen as interior characters.
+                if bool(re.match("^[A-Za-z0-9-]*$", hostname)) is False:
+                    self.set_invalid("Device names must only contain alphanumeric characters and dashes.")
+                    return
+                if not hostname[0].isalpha() or not hostname[-1].isalnum():
+                    self.set_invalid("Device names must start with a letter and end with a letter or digit.")
+                    return
+                for j in range(i):
+                    if j != i and hostname == hosts[j].name:
+                        self.set_invalid("Devices must have unique names. Please try again.")
+                        return
 
             if not has_headnode and len(hosts) > 0:
                 self.set_invalid("No headnode. Please set a headnode.")
