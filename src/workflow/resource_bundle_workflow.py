@@ -251,6 +251,8 @@ class Define_Software(WorkflowStep):
 
         # TODO: fix headnode in form, currently doesn't return a selected one
         # models['headnode_index'] = post_data.get("headnode", 1)
+        # TODO: headnode issue (NFV-439)
+        # TODO: Network web widget breaks after selecting back then next (NFV-440)
         formset = self.create_hostformset(hosts, data=post_data)
         has_headnode = False
         if formset.is_valid():
