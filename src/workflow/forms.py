@@ -222,7 +222,7 @@ class ResourceSelectorForm(SearchableSelectAbstractForm):
 
 
 class BookingMetaForm(forms.Form):
-
+    # Django Form class for Book a Pod
     length = forms.IntegerField(
         widget=NumberInput(
             attrs={
@@ -400,7 +400,6 @@ class NetworkConfigurationForm(forms.Form):
 
 
 class HostSoftwareDefinitionForm(forms.Form):
-
     host_name = forms.CharField(max_length=200, disabled=False, required=True)
     headnode = forms.BooleanField(required=False, widget=forms.HiddenInput)
 
