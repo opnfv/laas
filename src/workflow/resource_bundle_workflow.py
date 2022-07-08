@@ -208,12 +208,15 @@ class Define_Software(WorkflowStep):
         hosts_initial = []
         configs = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {}).get("resources")
         if configs:
-            for config in configs:
+            for i in range(len(configs)):
+                default_name = 'laas-node'
+                if i > 0:
+                    default_name = default_name + "-" + str(i + 1)
                 hosts_initial.append({
-                    'host_id': config.id,
-                    'host_name': config.name,
-                    'headnode': config.is_head_node,
-                    'image': config.image
+                    'host_id': configs[i].id,
+                    'host_name': default_name,
+                    'headnode': configs[i].is_head_node,
+                    'image': configs[i].image
                 })
         else:
             for host in hostlist:
@@ -251,6 +254,8 @@ class Define_Software(WorkflowStep):
 
         # TODO: fix headnode in form, currently doesn't return a selected one
         # models['headnode_index'] = post_data.get("headnode", 1)
+        # TODO: headnode issue (NFV-439)
+        # TODO: Network web widget breaks after selecting back then next (NFV-440)
         formset = self.create_hostformset(hosts, data=post_data)
         has_headnode = False
         if formset.is_valid():
@@ -273,7 +278,7 @@ class Define_Software(WorkflowStep):
             self.set_valid("Completed")
         else:
             self.set_invalid("Please complete all fields")
-
+            
 
 class Define_Nets(WorkflowStep):
     template = 'resource/steps/pod_definition.html'
