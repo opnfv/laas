@@ -120,9 +120,15 @@ function update_description(title, desc) {
 }
 
 function update_message(message, stepstatus) {
+    if(message == 'Completed') {
+        color_code = 'text-success'
+    } else {
+        color_code = 'text-danger'
+    }
     document.getElementById("view_message").innerText = message;
     document.getElementById("view_message").className = "step_message";
     document.getElementById("view_message").classList.add("message_" + stepstatus);
+    document.getElementById("view_message").classList.add(color_code);
 }
 
 function submitStepForm(next_step = "current"){
