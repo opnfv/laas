@@ -33,7 +33,7 @@ class LabStatus(object):
     DOWN = 200
 
 
-def upload_to(object, filename):
+def upload_to(object, filename: str) -> str:
     return object.user.username + '/' + filename
 
 
@@ -83,7 +83,7 @@ class VlanManager(models.Model):
     # if they use QinQ or a vxlan overlay, for example
     allow_overlapping = models.BooleanField()
 
-    def get_vlans(self, count=1, within=None):
+    def get_vlans(self, count=1, within=None) -> list[int]:
         """
         Return the IDs of available vlans as a list[int], but does not reserve them.
 
@@ -142,7 +142,7 @@ class VlanManager(models.Model):
         net.in_use = False
         net.save()
 
-    def public_vlan_is_available(self, vlan):
+    def public_vlan_is_available(self, vlan) -> bool:
         """
         Whether the public vlan is available.
 
@@ -152,7 +152,7 @@ class VlanManager(models.Model):
         net = PublicNetwork.objects.get(lab=self.lab_set.first(), vlan=vlan)
         return not net.in_use
 
-    def is_available(self, vlans):
+    def is_available(self, vlans) -> bool:
         """
         If the vlans are available.
 
@@ -242,7 +242,7 @@ class Lab(models.Model):
     project = models.CharField(default='LaaS', max_length=100)
 
     @staticmethod
-    def make_api_token():
+    def make_api_token() -> str:
         """Generate random 45 character string for API token."""
         alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         key = ""
@@ -250,7 +250,7 @@ class Lab(models.Model):
             key += random.choice(alphabet)
         return key
 
-    def get_available_resources(self):
+    def get_available_resources(self) -> dict[str, int]:
         # Cannot import model normally due to ciruclar import
         Server = apps.get_model('resource_inventory', 'Server')  # TODO: Find way to import ResourceQuery
         resources = [str(resource.profile) for resource in Server.objects.filter(lab=self, working=True, booked=False)]
@@ -283,7 +283,7 @@ class Downtime(models.Model):
     lab = models.ForeignKey(Lab, on_delete=models.CASCADE)
     description = models.TextField(default="This lab will be down for maintenance")
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         if self.start >= self.end:
             raise ValueError('Start date is after end date')
 

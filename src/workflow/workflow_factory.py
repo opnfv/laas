@@ -26,11 +26,11 @@ class MetaStep(object):
     INVALID = 100
     VALID = 200
 
-    def set_invalid(self, message, code=100):
+    def set_invalid(self, message: str, code=100):
         self.valid = code
         self.message = message
 
-    def set_valid(self, message, code=200):
+    def set_valid(self, message: str, code=200):
         self.valid = code
         self.message = message
 
@@ -42,7 +42,7 @@ class MetaStep(object):
         self.message = ""
         self.id = uuid.uuid4()
 
-    def to_json(self):
+    def to_json(self) -> dict:
         return {
             'title': self.short_title,
             'skip': self.skip_step,
@@ -97,7 +97,7 @@ class WorkflowFactory():
         MetaInfo
     ]
 
-    def conjure(self, workflow_type=None, repo=None):
+    def conjure(self, workflow_type=None, repo=None) -> list:
         workflow_types = [
             self.booking_steps,
             self.resource_steps,
@@ -108,19 +108,19 @@ class WorkflowFactory():
         steps = self.make_steps(workflow_types[workflow_type], repository=repo)
         return steps
 
-    def create_workflow(self, workflow_type=None, repo=None):
+    def create_workflow(self, workflow_type=None, repo=None) -> Workflow:
         steps = self.conjure(workflow_type, repo)
         c_step = self.make_step(Confirmation_Step, repo)
         steps.append(c_step)
         return Workflow(steps, repo)
 
-    def make_steps(self, step_types, repository):
+    def make_steps(self, step_types, repository) -> list:
         steps = []
         for step_type in step_types:
             steps.append(self.make_step(step_type, repository))
 
         return steps
 
-    def make_step(self, step_type, repository):
+    def make_step(self, step_type: type, repository):
         iden = step_type.description + step_type.title + step_type.template
         return step_type(iden, repository)

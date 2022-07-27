@@ -38,7 +38,7 @@ class BookingAuthManager():
 
     LFN_PROJECTS = ["opnfv"]  # TODO
 
-    def parse_github_url(self, url):
+    def parse_github_url(self, url: str) -> list:
         project_leads = []
         try:
             parts = url.split("/")
@@ -68,7 +68,7 @@ class BookingAuthManager():
 
         return project_leads
 
-    def parse_gerrit_url(self, url):
+    def parse_gerrit_url(self, url: str) -> list:
         project_leads = []
         try:
             halfs = url.split("?")
@@ -104,7 +104,7 @@ class BookingAuthManager():
 
         return project_leads
 
-    def parse_opnfv_git_url(self, url):
+    def parse_opnfv_git_url(self, url: str) -> list:
         project_leads = []
         try:
             parts = url.split("/")
@@ -132,7 +132,7 @@ class BookingAuthManager():
 
         return project_leads
 
-    def parse_url(self, info_url):
+    def parse_url(self, info_url: str) -> list:
         """
         Parse the project URL.
 
@@ -147,7 +147,7 @@ class BookingAuthManager():
         if "git.opnfv.org" in info_url:
             return self.parse_opnfv_git_url(info_url)
 
-    def booking_allowed(self, booking, repo):
+    def booking_allowed(self, booking, repo) -> bool:
         """
         Assert the current Booking Policy.
 
@@ -218,7 +218,7 @@ class WorkflowStep(object):
         self.valid = code
         self.message = message
 
-    def to_json(self):
+    def to_json(self) -> dict:
         return {
             'title': self.short_title,
             'enabled': self.enabled,
@@ -230,7 +230,7 @@ class WorkflowStep(object):
         self.repo = repo
         self.id = id
 
-    def get_context(self):
+    def get_context(self) -> dict:
         context = {}
         context['step_number'] = self.repo_get('steps')
         context['active_step'] = self.repo_get('active_step')
@@ -239,7 +239,7 @@ class WorkflowStep(object):
         context['description'] = self.description
         return context
 
-    def render(self, request):
+    def render(self, request) -> HttpResponse:
         return HttpResponse(self.render_to_string(request))
 
     def render_to_string(self, request):
@@ -252,10 +252,10 @@ class WorkflowStep(object):
     def validate(self, request):
         pass
 
-    def repo_get(self, key, default=None):
+    def repo_get(self, key: str, default=None):
         return self.repo.get(key, default, self.id)
 
-    def repo_put(self, key, value):
+    def repo_put(self, key: str, value: dict):
         return self.repo.put(key, value, self.id)
 
 
@@ -295,7 +295,7 @@ class AbstractSelectOrCreate(WorkflowStep):
         else:
             self.alert_bundle_missing()
 
-    def get_context(self):
+    def get_context(self) -> dict:
         default = []
 
         bundle = self.repo_get(self.select_repo_key, False)
@@ -309,7 +309,7 @@ class AbstractSelectOrCreate(WorkflowStep):
 
         return context
 
-    def get_page_context():
+    def get_page_context() -> dict:
         return {
             'select_type': 'generic',
             'select_type_title': 'Generic Bundle'
@@ -323,7 +323,7 @@ class Confirmation_Step(WorkflowStep):
 
     short_title = "confirm"
 
-    def get_context(self):
+    def get_context(self) -> dict:
         context = super(Confirmation_Step, self).get_context()
         context['form'] = ConfirmationForm()
         # Summary of submitted form data shown on the 'confirm' step of the workflow
@@ -405,7 +405,7 @@ class Repository():
     RESULT_KEY = "key for target index that result will be put into in parent"
     RESULT = "result object from workflow"
 
-    def get_child_defaults(self):
+    def get_child_defaults(self) -> list:
         return_tuples = []
         for key in [self.SELECTED_RESOURCE_TEMPLATE, self.SESSION_USER]:
             return_tuples.append((key, self.el.get(key)))
@@ -415,22 +415,21 @@ class Repository():
         for key, value in defaults:
             self.el[key] = value
 
-    def get(self, key, default, id):
-
+    def get(self, key: str, default: dict, id: str):
         self.add_get_history(key, id)
         return self.el.get(key, default)
 
-    def put(self, key, val, id):
+    def put(self, key: str, val: dict, id: str):
         self.add_put_history(key, id)
         self.el[key] = val
 
-    def add_get_history(self, key, id):
+    def add_get_history(self, key: str, id: str):
         self.add_history(key, id, self.get_history)
 
-    def add_put_history(self, key, id):
+    def add_put_history(self, key: str, id: str):
         self.add_history(key, id, self.put_history)
 
-    def add_history(self, key, id, history):
+    def add_history(self, key: str, id: str, history: dict):
         if key not in history:
             history[key] = [id]
         else:
