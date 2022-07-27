@@ -11,6 +11,7 @@
 from django.conf import settings
 from django.forms import formset_factory
 from django.core.exceptions import ValidationError
+from django.http.request import QueryDict
 
 from typing import List
 
@@ -56,13 +57,13 @@ class Define_Hardware(WorkflowStep):
         self.form = None
         super().__init__(*args, **kwargs)
 
-    def get_context(self):
+    def get_context(self) -> dict:
         context = super(Define_Hardware, self).get_context()
         user = self.repo_get(self.repo.SESSION_USER)
         context['form'] = self.form or HardwareDefinitionForm(user)
         return context
 
-    def update_models(self, data):
+    def update_models(self, data : dict):
         data = data['filter_field']
         models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
         models['resources'] = []  # This will always clear existing data when this step changes
@@ -160,7 +161,7 @@ class Define_Hardware(WorkflowStep):
             confirm['template']['lab'] = models['template'].lab.lab_user.username
         self.repo_put(self.repo.CONFIRMATION, confirm)
 
-    def post(self, post_data, user):
+    def post(self, post_data: QueryDict, user):
         try:
             user = self.repo_get(self.repo.SESSION_USER)
             self.form = HardwareDefinitionForm(user, post_data)
@@ -183,7 +184,7 @@ class Define_Software(WorkflowStep):
     description = "Choose the opnfv and image of your machines"
     short_title = "host config"
 
-    def build_filter_data(self, hosts_data):
+    def build_filter_data(self, hosts_data) -> list:
         """
         Build list of Images to filter out.
 
@@ -206,7 +207,7 @@ class Define_Software(WorkflowStep):
                 filter_data[i].append(image.pk)
         return filter_data
 
-    def create_hostformset(self, hostlist, data=None):
+    def create_hostformset(self, hostlist: list, data=None):
         hosts_initial = []
         configs = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {}).get("resources")
         if configs:
@@ -241,17 +242,17 @@ class Define_Software(WorkflowStep):
             return SpecialHostFormset(data, initial=hosts_initial)
         return SpecialHostFormset(initial=hosts_initial)
 
-    def get_host_list(self, grb=None):
+    def get_host_list(self, grb=None) -> list:
         return self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS).get("resources")
 
-    def get_context(self):
+    def get_context(self) -> dict:
         context = super(Define_Software, self).get_context()
 
         context["formset"] = self.create_hostformset(self.get_host_list())
 
         return context
 
-    def post(self, post_data, user):
+    def post(self, post_data: QueryDict, user):
         hosts = self.get_host_list()
         formset = self.create_hostformset(hosts, data=post_data)
         has_headnode = False
@@ -313,14 +314,14 @@ class Define_Nets(WorkflowStep):
         except Exception:
             return None
 
-    def make_mx_network_dict(self, network):
+    def make_mx_network_dict(self, network: Network) -> dict:
         return {
             'id': network.id,
             'name': network.name,
             'public': network.is_public
         }
 
-    def make_mx_resource_dict(self, resource_config):
+    def make_mx_resource_dict(self, resource_config) -> dict:
         resource_dict = {
             'id': resource_config.id,
             'interfaces': [],
@@ -347,7 +348,7 @@ class Define_Nets(WorkflowStep):
 
         return resource_dict
 
-    def make_mx_host_dict(self, generic_host):
+    def make_mx_host_dict(self, generic_host) -> dict:
         host = {
             'id': generic_host.profile.name,
             'interfaces': [],
@@ -365,7 +366,7 @@ class Define_Nets(WorkflowStep):
 
     # first step guards this one, so can't get here without at least empty
     # models being populated by step one
-    def get_context(self):
+    def get_context(self) -> dict:
         context = super(Define_Nets, self).get_context()
         context.update({
             'form': NetworkDefinitionForm(),
@@ -390,7 +391,7 @@ class Define_Nets(WorkflowStep):
 
         return context
 
-    def post(self, post_data, user):
+    def post(self, post_data: QueryDict, user):
         try:
             xmlData = post_data.get("xml")
             self.updateModels(xmlData)
@@ -406,7 +407,7 @@ class Define_Nets(WorkflowStep):
         for network in networks:
             network.delete()
 
-    def updateModels(self, xmlData):
+    def updateModels(self, xmlData: str):
         models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})
         given_hosts = None
         interfaces = None
@@ -453,7 +454,7 @@ class Define_Nets(WorkflowStep):
                     iface_config.save()
         self.repo_put(self.repo.RESOURCE_TEMPLATE_MODELS, models)
 
-    def decomposeXml(self, xmlString):
+    def decomposeXml(self, xmlString: str) -> tuple[dict, dict, dict, dict, dict]:
         """
         Translate XML into useable data.
 
@@ -495,7 +496,7 @@ class Define_Nets(WorkflowStep):
         return connections, networks, hosts, interfaces, network_ports
 
     # serialize and deserialize xml from mxGraph
-    def parseXml(self, xmlString):
+    def parseXml(self, xmlString: str) -> tuple[dict, dict, dict]:
         networks = {}  # maps net name to network object
         hosts = {}  # cotains id -> hosts, each containing interfaces, referencing networks
         interfaces = {}  # maps id -> interface
@@ -576,7 +577,7 @@ class Resource_Meta_Info(WorkflowStep):
             confirm['template']['name'] = models['template'].name
         self.repo_put(self.repo.CONFIRMATION, confirm)
 
-    def get_context(self):
+    def get_context(self) -> dict:
         context = super(Resource_Meta_Info, self).get_context()
         name = ""
         desc = ""
@@ -588,7 +589,7 @@ class Resource_Meta_Info(WorkflowStep):
         context['form'] = ResourceMetaForm(initial={"bundle_name": name, "bundle_description": desc})
         return context
 
-    def post(self, post_data, user):
+    def post(self, post_data: QueryDict, user):
         form = ResourceMetaForm(post_data)
         if form.is_valid():
             models = self.repo_get(self.repo.RESOURCE_TEMPLATE_MODELS, {})

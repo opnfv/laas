@@ -17,7 +17,7 @@ import pytz
 class StatisticsManager(object):
 
     @staticmethod
-    def getContinuousBookingTimeSeries(span=28):
+    def getContinuousBookingTimeSeries(span=28) -> dict:
         """
         Calculate Booking usage data points.
 

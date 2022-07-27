@@ -83,14 +83,14 @@ class GenerateTokenView(View):
         return redirect('account:settings')
 
 
-def lab_inventory(request, lab_name=""):
+def lab_inventory(request, lab_name="") -> JsonResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return JsonResponse(lab_manager.get_inventory(), safe=False)
 
 
 @csrf_exempt
-def lab_host(request, lab_name="", host_id=""):
+def lab_host(request, lab_name="", host_id="") -> JsonResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     if request.method == "GET":
@@ -101,14 +101,14 @@ def lab_host(request, lab_name="", host_id=""):
 # API extension for Cobbler integration
 
 
-def all_images(request, lab_name=""):
+def all_images(request, lab_name="") -> JsonResponse:
     a = []
     for i in Image.objects.all():
         a.append(i.serialize())
     return JsonResponse(a, safe=False)
 
 
-def all_opsyss(request, lab_name=""):
+def all_opsyss(request, lab_name="") -> JsonResponse:
     a = []
     for opsys in Opsys.objects.all():
         a.append(opsys.serialize())
@@ -176,19 +176,19 @@ def single_opsys(request, lab_name="", opsys_id=""):
 # end API extension
 
 
-def get_pdf(request, lab_name="", booking_id=""):
+def get_pdf(request, lab_name="", booking_id="") -> HttpResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return HttpResponse(lab_manager.get_pdf(booking_id), content_type="text/plain")
 
 
-def get_idf(request, lab_name="", booking_id=""):
+def get_idf(request, lab_name="", booking_id="") -> HttpResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return HttpResponse(lab_manager.get_idf(booking_id), content_type="text/plain")
 
 
-def lab_status(request, lab_name=""):
+def lab_status(request, lab_name="") -> JsonResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     if request.method == "POST":
@@ -196,20 +196,20 @@ def lab_status(request, lab_name=""):
     return JsonResponse(lab_manager.get_status(), safe=False)
 
 
-def lab_users(request, lab_name=""):
+def lab_users(request, lab_name="") -> HttpResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return HttpResponse(lab_manager.get_users(), content_type="text/plain")
 
 
-def lab_user(request, lab_name="", user_id=-1):
+def lab_user(request, lab_name="", user_id=-1) -> HttpResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return HttpResponse(lab_manager.get_user(user_id), content_type="text/plain")
 
 
 @csrf_exempt
-def update_host_bmc(request, lab_name="", host_id=""):
+def update_host_bmc(request, lab_name="", host_id="") -> JsonResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     if request.method == "POST":
@@ -220,14 +220,14 @@ def update_host_bmc(request, lab_name="", host_id=""):
         )
 
 
-def lab_profile(request, lab_name=""):
+def lab_profile(request, lab_name="") -> JsonResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return JsonResponse(lab_manager.get_profile(), safe=False)
 
-
+#
 @csrf_exempt
-def specific_task(request, lab_name="", job_id="", task_id=""):
+def specific_task(request, lab_name="", job_id="", task_id="") -> JsonResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     LabManagerTracker.get(lab_name, lab_token)  # Authorize caller, but we dont need the result
 
@@ -254,7 +254,7 @@ def specific_task(request, lab_name="", job_id="", task_id=""):
 
 
 @csrf_exempt
-def specific_job(request, lab_name="", job_id=""):
+def specific_job(request, lab_name="", job_id="") -> JsonResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     if request.method == "POST":
@@ -299,12 +299,12 @@ def resource_ci_userdata(request, lab_name="", job_id="", resource_id="", file_i
 
 
 @csrf_exempt
-def resource_ci_metadata(request, lab_name="", job_id="", resource_id="", file_id=0):
+def resource_ci_metadata(request, lab_name="", job_id="", resource_id="", file_id=0) -> HttpResponse:
     return HttpResponse("#cloud-config", status=200)
 
 
 @csrf_exempt
-def resource_ci_userdata_directory(request, lab_name="", job_id="", resource_id=""):
+def resource_ci_userdata_directory(request, lab_name="", job_id="", resource_id="") -> HttpResponse:
     # files = [{"id": file.file_id, "priority": file.priority} for file in CloudInitFile.objects.filter(job__id=job_id, resource_id=resource_id).order_by("priority").all()]
     resource = ResourceQuery.get(labid=resource_id, lab=Lab.objects.get(name=lab_name))
     files = resource.config.cloud_init_files
@@ -345,13 +345,13 @@ def resource_ci_userdata_directory(request, lab_name="", job_id="", resource_id=
     return HttpResponse(json.dumps([{"id": file.id, "priority": file.priority}]), status=200)
 
 
-def new_jobs(request, lab_name=""):
+def new_jobs(request, lab_name="") -> JsonResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return JsonResponse(lab_manager.get_new_jobs(), safe=False)
 
 
-def current_jobs(request, lab_name=""):
+def current_jobs(request, lab_name="") -> JsonResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return JsonResponse(lab_manager.get_current_jobs(), safe=False)
@@ -386,7 +386,7 @@ def lab_downtime(request, lab_name=""):
     return HttpResponse(status=405)
 
 
-def post_lab_downtime(request, lab_manager):
+def post_lab_downtime(request, lab_manager) -> JsonResponse:
     current_downtime = lab_manager.get_downtime()
     if current_downtime.exists():
         return JsonResponse({"error": "Lab is already in downtime"}, status=422)
@@ -397,7 +397,7 @@ def post_lab_downtime(request, lab_manager):
         return JsonResponse(form.errors.get_json_data(), status=400)
 
 
-def delete_lab_downtime(lab_manager):
+def delete_lab_downtime(lab_manager) -> JsonResponse:
     current_downtime = lab_manager.get_downtime()
     if current_downtime.exists():
         dt = current_downtime.first()
@@ -408,13 +408,13 @@ def delete_lab_downtime(lab_manager):
         return JsonResponse({"error": "Lab is not in downtime"}, status=422)
 
 
-def done_jobs(request, lab_name=""):
+def done_jobs(request, lab_name="") -> JsonResponse:
     lab_token = request.META.get('HTTP_AUTH_TOKEN')
     lab_manager = LabManagerTracker.get(lab_name, lab_token)
     return JsonResponse(lab_manager.get_done_jobs(), safe=False)
 
 
-def auth_and_log(request, endpoint):
+def auth_and_log(request, endpoint) -> HttpResponse:
     """
     Function to authenticate an API user and log info
     in the API log model. This is to keep record of
@@ -505,7 +505,7 @@ def specific_booking(request, booking_id=""):
 
 
 @csrf_exempt
-def extend_booking(request, booking_id="", days=""):
+def extend_booking(request, booking_id="", days="") -> HttpResponse:
     token = auth_and_log(request, 'booking/{}/extendBooking/{}'.format(booking_id, days))
 
     if isinstance(token, HttpResponse):
@@ -587,7 +587,7 @@ def available_templates(request):
     return JsonResponse(savt, safe=False)
 
 
-def images_for_template(request, template_id=""):
+def images_for_template(request, template_id="") -> JsonResponse:
     _ = auth_and_log(request, 'resource_inventory/{}/images'.format(template_id))
 
     template = get_object_or_404(ResourceTemplate, pk=template_id)
@@ -637,7 +637,7 @@ Lab API Views
 """
 
 
-def list_labs(request):
+def list_labs(request) -> JsonResponse:
     lab_list = []
     for lab in Lab.objects.all():
         lab_info = {

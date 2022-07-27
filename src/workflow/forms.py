@@ -49,7 +49,7 @@ class SearchableSelectMultipleWidget(widgets.SelectMultiple):
         context = self.get_context(attrs)
         return mark_safe(render_to_string(self.template_name, context))
 
-    def get_context(self, attrs):
+    def get_context(self, attrs) -> dict:
         return {
             'items': self.items,
             'name': self.name,
@@ -117,7 +117,7 @@ class SearchableSelectMultipleField(forms.Field):
 
         self.required = required
 
-    def clean(self, data):
+    def clean(self, data) -> list:
         data = data[0]
         if not data:
             if self.required:
@@ -164,7 +164,7 @@ class SearchableSelectAbstractForm(forms.Form):
     def generate_items(self, queryset):
         raise Exception("SearchableSelectAbstractForm does not implement concrete generate_items()")
 
-    def generate_options(self, disabled=False):
+    def generate_options(self, disabled=False) -> dict:
         return {
             'show_from_noentry': True,
             'show_x_results': -1,
@@ -177,7 +177,7 @@ class SearchableSelectAbstractForm(forms.Form):
 
 
 class SWConfigSelectorForm(SearchableSelectAbstractForm):
-    def generate_items(self, queryset):
+    def generate_items(self, queryset) -> dict:
         items = {}
 
         for bundle in queryset:
@@ -192,7 +192,7 @@ class SWConfigSelectorForm(SearchableSelectAbstractForm):
 
 
 class OPNFVSelectForm(SearchableSelectAbstractForm):
-    def generate_items(self, queryset):
+    def generate_items(self, queryset) -> dict:
         items = {}
 
         for config in queryset:
@@ -207,7 +207,7 @@ class OPNFVSelectForm(SearchableSelectAbstractForm):
 
 
 class ResourceSelectorForm(SearchableSelectAbstractForm):
-    def generate_items(self, queryset):
+    def generate_items(self, queryset) -> dict:
         items = {}
 
         for bundle in queryset:
@@ -263,7 +263,7 @@ class MultipleSelectFilterWidget(forms.Widget):
         html = render_to_string(self.template_name, context=context)
         return mark_safe(html)
 
-    def get_context(self, name, value, attrs):
+    def get_context(self, name, value, attrs) -> dict:
         return {
             'display_objects': self.display_objects,
             'neighbors': self.neighbors,
@@ -278,7 +278,7 @@ class MultipleSelectFilterField(forms.Field):
         self.initial = kwargs.get("initial")
         super().__init__(**kwargs)
 
-    def to_python(self, value):
+    def to_python(self, value: str) -> dict:
         try:
             return json.loads(value)
         except json.decoder.JSONDecodeError:
@@ -288,7 +288,7 @@ class MultipleSelectFilterField(forms.Field):
 
 class FormUtils:
     @staticmethod
-    def getLabData(multiple_hosts=False, user=None):
+    def getLabData(multiple_hosts=False, user=None) -> dict:
         """
         Get all labs and thier host profiles, returns a serialized version the form can understand.
 
@@ -451,12 +451,12 @@ class ConfirmationForm(forms.Form):
     )
 
 
-def validate_step(value):
+def validate_step(value: str):
     if value not in ["prev", "next", "current"]:
         raise ValidationError(str(value) + " is not allowed")
 
 
-def validate_step_form(value):
+def validate_step_form(value: str):
     try:
         urllib.parse.unquote_plus(value)
     except Exception:
