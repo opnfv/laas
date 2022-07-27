@@ -197,7 +197,7 @@ def check_invariants(**kwargs):
         raise BookingLengthException("Booking must be between 1 and 21 days long")
 
 
-def create_from_form(form, request):
+def create_from_form(form, request) -> Booking:
     """
     Parse data from QuickBookingForm to create booking
     """
@@ -224,7 +224,7 @@ def create_from_form(form, request):
     return _create_booking(data)
 
 
-def create_from_API(body, user):
+def create_from_API(body, user) -> Booking:
     """
     Parse data from Automation API to create booking
     """
@@ -309,7 +309,7 @@ def _create_booking(data):
     return booking
 
 
-def drop_filter(user):
+def drop_filter(user) -> dict:
     """
     Return a dictionary that contains filters.
 

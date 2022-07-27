@@ -79,7 +79,7 @@ def quick_create(request):
 class BookingView(TemplateView):
     template_name = "booking/booking_detail.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         booking = get_object_or_404(Booking, id=self.kwargs['booking_id'])
         title = 'Booking Details'
         contact = Lab.objects.filter(name="UNH_IOL").first().contact_email
@@ -97,7 +97,7 @@ class BookingView(TemplateView):
 class BookingDeleteView(TemplateView):
     template_name = "booking/booking_delete.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         booking = get_object_or_404(Booking, id=self.kwargs['booking_id'])
         title = 'Delete Booking'
         context = super(BookingDeleteView, self).get_context_data(**kwargs)
@@ -115,7 +115,7 @@ def bookingDelete(request, booking_id):
 class BookingListView(TemplateView):
     template_name = "booking/booking_list.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         bookings = Booking.objects.filter(end__gte=timezone.now())
         title = 'Search Booking'
         context = super(BookingListView, self).get_context_data(**kwargs)
@@ -124,7 +124,7 @@ class BookingListView(TemplateView):
 
 
 class ResourceBookingsJSON(View):
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> JsonResponse:
         resource = get_object_or_404(ResourceBundle, id=self.kwargs['resource_id'])
         bookings = resource.booking_set.get_queryset().values(
             'id',
@@ -136,7 +136,7 @@ class ResourceBookingsJSON(View):
         return JsonResponse({'bookings': list(bookings)})
 
 
-def build_image_mapping(lab, user):
+def build_image_mapping(lab, user) -> dict:
     mapping = {}
     for profile in ResourceProfile.objects.filter(labs=lab):
         images = Image.objects.filter(
@@ -149,7 +149,7 @@ def build_image_mapping(lab, user):
     return mapping
 
 
-def booking_detail_view(request, booking_id):
+def booking_detail_view(request, booking_id) -> HttpResponse:
     user = None
     if request.user.is_authenticated:
         user = request.user
@@ -177,7 +177,7 @@ def booking_detail_view(request, booking_id):
     )
 
 
-def booking_modify_image(request, booking_id):
+def booking_modify_image(request, booking_id) -> HttpResponse:
     form = HostReImageForm(request.POST)
     if form.is_valid():
         booking = Booking.objects.get(id=booking_id)
@@ -194,7 +194,7 @@ def booking_modify_image(request, booking_id):
     return HttpResponse("error")
 
 
-def booking_stats_view(request):
+def booking_stats_view(request) -> HttpResponse:
     return render(
         request,
         "booking/stats.html",
@@ -202,7 +202,7 @@ def booking_stats_view(request):
     )
 
 
-def booking_stats_json(request):
+def booking_stats_json(request) -> JsonResponse:
     try:
         span = int(request.GET.get("days", 14))
     except Exception:

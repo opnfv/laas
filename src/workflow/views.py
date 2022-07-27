@@ -11,7 +11,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from account.models import Lab
-
+from django.core.handlers.wsgi import WSGIRequest
 import uuid
 
 from workflow.workflow_manager import ManagerTracker, SessionManager
@@ -20,17 +20,16 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def attempt_auth(request):
+def attempt_auth(request: WSGIRequest) -> SessionManager:
     try:
         manager = ManagerTracker.managers[request.session['manager_session']]
-
         return manager
 
     except KeyError:
         return None
 
 
-def remove_workflow(request):
+def remove_workflow(request: WSGIRequest):
     manager = attempt_auth(request)
 
     if not manager:
@@ -43,7 +42,7 @@ def remove_workflow(request):
     return manager.render(request)
 
 
-def add_workflow(request):
+def add_workflow(request: WSGIRequest):
     manager = attempt_auth(request)
     if not manager:
         return no_workflow(request)
@@ -56,7 +55,7 @@ def add_workflow(request):
     return manager.render(request)  # do we want this?
 
 
-def manager_view(request):
+def manager_view(request: WSGIRequest):
     manager = attempt_auth(request)
     if not manager:
         return no_workflow(request)
@@ -64,7 +63,7 @@ def manager_view(request):
     return manager.handle_request(request)
 
 
-def viewport_view(request):
+def viewport_view(request: WSGIRequest) -> HttpResponse:
     if not request.user.is_authenticated:
         return login(request)
 
@@ -82,7 +81,7 @@ def viewport_view(request):
     return render(request, 'workflow/viewport-base.html', context)
 
 
-def create_workflow(request):
+def create_workflow(request: WSGIRequest) -> HttpResponse:
     if request.method != 'POST':
         return HttpResponse(status=405)
     workflow_type = request.POST.get('workflow_type')
@@ -95,7 +94,7 @@ def create_workflow(request):
     return HttpResponse()
 
 
-def create_session(wf_type, request):
+def create_session(wf_type: int, request: WSGIRequest) -> str:
     smgr = SessionManager(request=request)
     smgr.add_workflow(workflow_type=wf_type, target_id=request.POST.get("target"))
     manager_uuid = uuid.uuid4().hex
@@ -104,9 +103,9 @@ def create_session(wf_type, request):
     return manager_uuid
 
 
-def no_workflow(request):
+def no_workflow(request: WSGIRequest) -> HttpResponse:
     return render(request, 'workflow/no_workflow.html', {'title': "Not Found"}, status=404)
 
 
-def login(request):
+def login(request: WSGIRequest) -> HttpResponse:
     return render(request, "dashboard/login.html", {'title': 'Authentication Required'})

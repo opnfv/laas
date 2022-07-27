@@ -87,7 +87,7 @@ def make_booking(owner=None, start=timezone.now(),
     )
 
 
-def make_network(name, lab, grb, public):
+def make_network(name, lab, grb, public) -> Network:
     network = Network(name=name, bundle=grb, is_public=public)
     if public:
         public_net = lab.vlan_manager.get_public_vlan()
