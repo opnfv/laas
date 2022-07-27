@@ -13,6 +13,8 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from django.shortcuts import render
 from django.db.models import Q
+from django.http import HttpResponse
+
 from datetime import datetime
 import pytz
 
@@ -25,14 +27,14 @@ from workflow.workflow_manager import ManagerTracker
 from laas_dashboard import settings
 
 
-def lab_list_view(request):
+def lab_list_view(request) -> HttpResponse:
     labs = Lab.objects.all()
     context = {"labs": labs, 'title': 'Labs'}
 
     return render(request, "dashboard/lab_list.html", context)
 
 
-def lab_detail_view(request, lab_name):
+def lab_detail_view(request, lab_name) -> HttpResponse:
     user = None
     if request.user.is_authenticated:
         user = request.user
@@ -58,7 +60,7 @@ def lab_detail_view(request, lab_name):
     )
 
 
-def host_profile_detail_view(request):
+def host_profile_detail_view(request) -> HttpResponse:
 
     return render(
         request,
@@ -69,7 +71,7 @@ def host_profile_detail_view(request):
     )
 
 
-def landing_view(request):
+def landing_view(request) -> HttpResponse:
     manager = ManagerTracker.managers.get(request.session.get('manager_session'))
     user = request.user
     if not user.is_anonymous:
@@ -96,7 +98,7 @@ def landing_view(request):
 class LandingView(TemplateView):
     template_name = "dashboard/landing.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         context = super(LandingView, self).get_context_data(**kwargs)
 
         hosts = []

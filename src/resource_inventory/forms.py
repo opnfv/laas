@@ -18,7 +18,7 @@ class InterfaceConfigurationForm(forms.ModelForm):
         model = InterfaceConfiguration
         fields = ['profile', 'resource_config', 'connections']
 
-    def clean(self):
+    def clean(self) -> dict:
         connections = self.cleaned_data.get('connections')
         resource_config = self.cleaned_data.get('resource_config')
 
