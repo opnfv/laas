@@ -47,7 +47,7 @@ class Abstract_Resource_Select(AbstractSelectOrCreate):
         user = self.repo_get(self.repo.SESSION_USER)
         return ResourceTemplate.objects.filter((Q(owner=user) | Q(public=True)))
 
-    def get_page_context(self):
+    def get_page_context(self) -> dict:
         return {
             'select_type': 'resource',
             'select_type_title': 'Resource template',
@@ -97,7 +97,7 @@ class OPNFV_Select(AbstractSelectOrCreate, OPNFV_EnablePicker):
         confirm_dict[self.confirm_key]["OPNFV Configuration"] = config.name
         self.repo_put(self.repo.CONFIRMATION, confirm_dict)
 
-    def get_page_context(self):
+    def get_page_context(self) -> dict:
         return {
             'select_type': 'opnfv',
             'select_type_title': 'OPNFV Config',
@@ -111,7 +111,7 @@ class Booking_Meta(WorkflowStep):
     description = "Tell us how long you want your booking, what it is for, and who else should have access to it"
     short_title = "booking info"
 
-    def get_context(self):
+    def get_context(self) -> dict:
         context = super(Booking_Meta, self).get_context()
         initial = {}
         default = []

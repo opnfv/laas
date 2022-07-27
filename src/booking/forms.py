@@ -77,7 +77,7 @@ class QuickBookingForm(forms.Form):
             'data-container': 'body'
         })
 
-    def build_user_list(self):
+    def build_user_list(self) -> dict:
         """
         Build list of UserProfiles.
 
@@ -101,7 +101,7 @@ class QuickBookingForm(forms.Form):
         except Exception:
             pass
 
-    def build_search_widget_attrs(self, chosen_users, default_user="you"):
+    def build_search_widget_attrs(self, chosen_users, default_user="you") -> dict:
 
         attrs = {
             'set': self.build_user_list(),

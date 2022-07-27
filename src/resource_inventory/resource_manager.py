@@ -50,7 +50,7 @@ class ResourceManager:
         filter = filter & Q(temporary=False) & Q(lab=lab)
         return ResourceTemplate.objects.filter(filter)
 
-    def templateIsReservable(self, resource_template: ResourceTemplate):
+    def templateIsReservable(self, resource_template: ResourceTemplate) -> bool:
         """
         Check if the required resources to reserve this template is available.
 
@@ -97,7 +97,7 @@ class ResourceManager:
                 networks[network.name] = vlans[0]
         return networks
 
-    def instantiateTemplate(self, resource_template: ResourceTemplate):
+    def instantiateTemplate(self, resource_template: ResourceTemplate) -> ResourceBundle:
         """
         Convert a ResourceTemplate into a ResourceBundle.
 
@@ -193,5 +193,5 @@ class HostNameValidator(object):
     pattern = re.compile(regex)
 
     @classmethod
-    def is_valid_hostname(cls, hostname):
+    def is_valid_hostname(cls, hostname) -> bool:
         return len(hostname) < 65 and cls.pattern.fullmatch(hostname) is not None

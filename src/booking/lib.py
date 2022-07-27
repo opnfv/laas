@@ -10,7 +10,7 @@
 from account.models import UserProfile
 
 
-def get_user_field_opts():
+def get_user_field_opts() -> dict:
     return {
         'show_from_noentry': False,
         'show_x_results': 5,
@@ -22,7 +22,7 @@ def get_user_field_opts():
     }
 
 
-def get_user_items(exclude=None):
+def get_user_items(exclude=None) -> dict:
     qs = UserProfile.objects.filter(public_user=True).select_related('user').exclude(user=exclude)
     items = {}
     for up in qs:

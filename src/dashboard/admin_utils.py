@@ -201,7 +201,7 @@ def get_host(host_labid, lab_username):
     return Server.objects.filter(lab=lab).get(labid=host_labid)
 
 
-def get_info(host_labid, lab_username):
+def get_info(host_labid, lab_username) -> dict:
     """
     Returns various information on the host queried by the given parameters
 
@@ -418,7 +418,7 @@ def free_leaked_public_vlans(safety_buffer_days=2):
                 lab.vlan_manager.release_public_vlan(net.vlan)
 
 
-def get_network_metadata(booking_id: int):
+def get_network_metadata(booking_id: int) -> dict:
     """
     Takes a booking id and prints all (known) networks that are owned by it.
     Returns an object of the form {<network name>: {"vlan_id": int, "netname": str <network name>, "public": bool <whether network is public/routable}}
@@ -798,7 +798,7 @@ def docs(function=None, fulltext=False):
         print(inspect.getsource(fn))
 
 
-def admin_functions():
+def admin_functions() -> list[str]:
     """
     List functions available to call within admin_utils
     """

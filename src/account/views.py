@@ -47,7 +47,7 @@ class AccountSettingsView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.userprofile
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         token, created = Token.objects.get_or_create(user=self.request.user)
         context = super(AccountSettingsView, self).get_context_data(**kwargs)
         context.update({'title': "Settings", 'token': token})
@@ -118,12 +118,12 @@ class UserListView(TemplateView):
         return context
 
 
-def account_detail_view(request):
+def account_detail_view(request) -> HttpResponse:
     template = "account/details.html"
     return render(request, template)
 
 
-def account_resource_view(request):
+def account_resource_view(request) -> HttpResponse:
     """
     Display a user's resources.
 
@@ -147,7 +147,7 @@ def account_resource_view(request):
     return render(request, template, context=context)
 
 
-def account_booking_view(request):
+def account_booking_view(request) -> HttpResponse:
     if not request.user.is_authenticated:
         return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
     template = "account/booking_list.html"
@@ -165,7 +165,7 @@ def account_booking_view(request):
     return render(request, template, context=context)
 
 
-def account_images_view(request):
+def account_images_view(request) -> HttpResponse:
     if not request.user.is_authenticated:
         return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
     template = "account/image_list.html"
@@ -184,7 +184,7 @@ def account_images_view(request):
     return render(request, template, context=context)
 
 
-def template_delete_view(request, resource_id=None):
+def template_delete_view(request, resource_id=None) -> HttpResponse:
     if not request.user.is_authenticated:
         return HttpResponse(status=403)
     template = get_object_or_404(ResourceTemplate, pk=resource_id)
@@ -198,7 +198,7 @@ def template_delete_view(request, resource_id=None):
     return HttpResponse(status=200)
 
 
-def booking_cancel_view(request, booking_id=None):
+def booking_cancel_view(request, booking_id=None) -> HttpResponse:
     if not request.user.is_authenticated:
         return HttpResponse('no')  # 403?
     booking = get_object_or_404(Booking, pk=booking_id)
@@ -213,7 +213,7 @@ def booking_cancel_view(request, booking_id=None):
     return HttpResponse('')
 
 
-def image_delete_view(request, image_id=None):
+def image_delete_view(request, image_id=None) -> HttpResponse:
     if not request.user.is_authenticated:
         return HttpResponse('no')  # 403?
     image = get_object_or_404(Image, pk=image_id)
