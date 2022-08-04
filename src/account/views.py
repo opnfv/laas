@@ -21,7 +21,7 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-from django.views.generic import RedirectView, TemplateView, UpdateView
+from django.views.generic import RedirectView, UpdateView
 from django.shortcuts import render
 from rest_framework.authtoken.models import Token
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
@@ -105,17 +105,6 @@ class LogoutView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         logout(self.request)
         return '/'
-
-
-@method_decorator(login_required, name='dispatch')
-class UserListView(TemplateView):
-    template_name = "account/user_list.html"
-
-    def get_context_data(self, **kwargs):
-        users = UserProfile.objects.filter(public_user=True).select_related('user')
-        context = super(UserListView, self).get_context_data(**kwargs)
-        context.update({'title': "Dashboard Users", 'users': users})
-        return context
 
 
 def account_detail_view(request) -> HttpResponse:
