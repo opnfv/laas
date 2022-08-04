@@ -3,18 +3,15 @@
 {% block bgColor %}
 <link rel="stylesheet" href="{% static "css/lfedge.css" %}">
 
-<nav class="navbar navbar-light LFEdge navbar-fixed-top border-bottom py-0 mb-0" role="navigation">
+<nav class="navbar navbar-light navbar-expand-lg LFEdge navbar-fixed-top border-bottom py-0 mb-0" role="navigation">
 {% endblock bgColor %}
 
 {% block logo %}
-<div class="barClamp col-12 col-sm order-1 order-sm-2 text-center text-lg-left">
+<div class="text-center text-lg-left">
     <a href="https://www.lfedge.org/" class="navbar-brand">
-        <img src="{% static "img/lfedge-logo.png" %}" alt="lfedge logo">
+        <img src="{% static "img/lfedge-logo.png" %}" alt="lfedge logo" style="vertical-align:middle; margin:12px 12px 12px;">
     </a>
 
-    <a class="wtext d-none d-lg-inline" href={% url 'dashboard:index' %}>
-        Dashboard
-    </a>
 </div>
 {% endblock logo %}
 {% block dropDown %}
