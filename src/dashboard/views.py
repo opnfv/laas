@@ -29,7 +29,7 @@ from laas_dashboard import settings
 
 def lab_list_view(request) -> HttpResponse:
     labs = Lab.objects.all()
-    context = {"labs": labs, 'title': 'Labs'}
+    context = {"labs": labs, 'title': ''}
 
     return render(request, "dashboard/lab_list.html", context)
 
