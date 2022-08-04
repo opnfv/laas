@@ -1,29 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row">
-    {% for lab in labs %}
-    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-3">
-        <div class="card h-100">
-            <div class="card-header">
-                <h3 class="mt-2">{{lab.name}}</h3>
+<div class="container-flex m-3">
+    <div class="row">
+        <div class="col-sm-3">
+            <h1 class="text-center border border-dark my-3 py-4">About Us:</h1>
+            <div class="border border-dark my-3 p-4">
+                {% block aboutUs %}
+                {% endblock aboutUs %}
+                    <div class="d-flex justify-content-center mt-3 mx-5">
+                        <a href={% url 'dashboard:index' %} class="btn btn-block btn-info border border-dark py-3">User Dashboard</a>
+                    </div>
             </div>
-            <ul class="list-group list-group-flush h-100">
-                <li class="list-group-item">name: {{lab.name}}</li>
-                <li class="list-group-item">description: {{lab.description}}</li>
-                <li class="list-group-item">location: {{lab.location}}</li>
-                {% if lab.status == 0 %}
-                <li class="list-group-item">status: Up</li>
-                {% elif lab.status == 100 %}
-                <li class="list-group-item">status: Down for Maintenance</li>
-                {% elif lab.status == 200 %}
-                <li class="list-group-item">status: Down</li>
-                {% endif %}
-            </ul>
-            <div class="card-footer">
-                <a class="btn btn-primary w-100" href="/lab/{{lab.name}}/">Details</a>
+        </div>
+        <div class="col-sm-9">
+            <h1 class="text-center border border-dark mt-3 py-4">Labs</h2>
+            <div class="row d-flex justify-content-center border border-dark mx-0">
+            {% for lab in labs %}
+                <div class="card col-4 my-3">
+                    <div class="card-header">
+                        <h3 class="mt-2">{{lab.name}}</h3>
+                    </div>
+                    <ul class="list-group list-group-flush h-100">
+                        <li class="list-group-item">Name: {{lab.name}}</li>
+                        <li class="list-group-item">Description: {{lab.description}}</li>
+                        <li class="list-group-item">Location: {{lab.location}}</li>
+                        {% if lab.status == 0 %}
+                        <li class="list-group-item">Status: Up</li>
+                        {% elif lab.status == 100 %}
+                        <li class="list-group-item">Status: Down for Maintenance</li>
+                        {% elif lab.status == 200 %}
+                        <li class="list-group-item">Status: Down</li>
+                        {% endif %}
+                    </ul>
+                    <div class="card-footer">
+                        <a class="btn btn-primary w-100" href="/lab/{{lab.name}}/">Details</a>
+                    </div>
+                </div>
+            {% endfor %}
             </div>
         </div>
     </div>
-    {% endfor %}
 </div>
-{% endblock %}
+
+{% endblock content %}

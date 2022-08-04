@@ -12,3 +12,7 @@
     color: #FFFFFF;
     text-decoration: none;
 }
+
+.theme-override {
+    color:#FFFFFF !important
+}
