@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap4 %}
+{% block extrahead %}
+<script src="/static/js/design_a_pod.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- TODO: Fix / check for event listener memory leak -->
+<!-- TODO: Convert all raw innerHTML assignments to document.createElement -->
+<!-- TODO: Make consistant naming schemes or remove them altogether by implementing smarter queryselectors-->
+<!-- TODO: Deal with incompatibility between scrolling and using next/prev buttons -->
+<!-- TODO: Implement accessability features -->
+<!-- TODO: Prevent this page from being accessed on LFDEDGE -->
+
+
+
+<!-- Main Content Div -->
+<body>
+  <div class="row w-100 m-0 align-items-center justify-content-center workflow-nav-bar">
+    <button class="col-2 btn btn-primary p-0 mr-1" onclick="work.go_prev()" id="workflow-prev" disabled>Prev</button>
+    <button class="col-2 btn btn-primary p-0 ml-1" onclick="work.go_next()" id="workflow-next">Next</button>
+  </div>
+
+  <div class="scroll-container w-100 h-100 p-0">
+    <div class="scroll-area" id="select_lab">
+      <h2 class="p-3 text-center mx-5">Select a Lab:</h2>
+      <div class="card-deck justify-content-center" id="lab_cards">
+      </div>
+    </div>
+    <div class="scroll-area" id="add_hosts" hidden>
+      <h2 class="p-3 text-center mx-5">Add Hosts:</h2>
+      <div class="row card-deck align-items-center">
+        <div class="col-lg-3 col-sm-12" id="host-plus-card">
+          <div class="card justify-content-center align-items-center border-0">
+            <button class="btn btn-success add-button p-0" onclick="work.add_host_button()">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-area" id="add_networks" hidden>
+      <h2 class="p-3 text-center mx-5">Add Networks:</h2>
+        <div class="row card-deck align-items-center">
+          <div class="col-lg-3 col-sm-12" id="network-plus-card">
+            <div class="card justify-content-center align-items-center border-0">
+              <button class="btn btn-success add-button p-0" onclick="work.add_network_button()">+</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="scroll-area" id="configure_connections" hidden>
+      <h2 class="p-3 text-center mx-5">Configure Connections:</h2>
+      <div class="card-deck justify-content-center" id="connection_cards">
+      </div>
+    </div>
+    <div class="scroll-area" id="pod_summary" hidden>
+      <h2 class="p-3 text-center">Pod Summary</h2>
+      <div class="row">
+        <div class="col-lg-4 col-sm-1"></div>
+        <div class="card col-lg-4 col-sm-10">
+          <div class="text-center">
+            <h3>Pod Details</h3>
+          </div>
+          <ul class="list-group h-100">
+            <li class="list-group-item"><input id="pod-name-input" class="form-control" type="text" placeholder="Pod Name"></li>
+            <li class="list-group-item"><input id="pod-desc-input" class="form-control" type="text" placeholder="Pod Description"></li>
+            <li class="list-group-item text-danger" id="submit-error-msg"></li>
+          </ul>
+          <div class="text-center">
+            <h3>Hosts</h3>
+          </div>
+          <ul class="list-group h-100" id="host_summary">
+          </ul>
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-1"></div>
+              <button class="btn btn-danger w-100 col-4" onclick="work.delete_template()">Discard</button>
+              <div class="col-2"></div>
+              <button class="btn btn-success w-100 col-4" onclick="work.submit()">Finish</button>
+              <div class="col-1"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-sm-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Host Modal -->
+  <div class="modal fade" id="host-modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="host-modal-label">Add Host</h5>
+          <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="flavor-input">Flavor</label>
+            <select id="flavor-input">
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="image-input">Image</label>
+            <select id="image-input">
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="hostname-input">Hostname</label>
+            <input type="text" class="form-control" id="hostname-input" placeholder="Enter Hostname">
+          </div>
+          <p id="add-host-error-msg" class="text-danger"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-success" onclick="work.add_host()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Network Modal -->
+  <div class="modal fade" id="network-modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="network-modal-label">Add Network</h5>
+          <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control" id="network-input" placeholder="Enter Network Name">
+          <p id="add-network-error-msg" class="text-danger mt-2 mb-0"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
+          <button class="btn btn-success" onclick="work.add_network()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Configure Connections modal -->
+<div class="modal fade" id="connection-modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Configure Connections</h5>
+        <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>Select an interface to begin configuration.</p>
+        <table class="table table-bordered">
+          <tr id="connections_interface_list"></tr>
+        </table>
+        <table id="connections_widget" class="table table-bordered">
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" data-dismiss="modal" id="connection-modal-submit" onclick="">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+<script>
+  // Must be executed after html is read and elements are rendered
+  // Execute on page load
+  const new_pod = new PodTemplate();
+  const work = new Design_Workflow(new_pod);
+  work.display_labs();
+  work.initialize_elements();
+</script>
+{% endblock %}
