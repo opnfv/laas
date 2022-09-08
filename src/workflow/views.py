@@ -109,3 +109,14 @@ def no_workflow(request: WSGIRequest) -> HttpResponse:
 
 def login(request: WSGIRequest) -> HttpResponse:
     return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
+
+
+def design_a_pod(request):
+    if not request.user.is_authenticated:
+        return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
+    template = "workflow/design_a_pod.html"
+    context = {
+        "username": request.user
+    }
+
+    return render(request, template, context)
