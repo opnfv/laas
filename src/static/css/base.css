@@ -73,6 +73,12 @@ a[aria-expanded="true"] > i.rotate {
     transition: border-color ease-in-out .1s,box-shadow ease-in-out .1s;
 }
 
+.invalid_field {
+    border-color: #c65040;
+    box-shadow: 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(243, 76, 76, 0.6);
+    transition: border-color ease-in-out .1s,box-shadow ease-in-out .1s;
+}
+
 /* Cursor effects */
 .not-allowed {
     cursor: not-allowed;
@@ -91,3 +97,34 @@ a[aria-expanded="true"] > i.rotate {
     white-space: nowrap;
     overflow: hidden;
 }
+
+/* Design a pod Styles */
+.scroll-container {
+    position: fixed;
+    overflow: auto;
+    scroll-snap-type: y proximity;
+    z-index: 0;
+  }
+
+  .scroll-area {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-height: 100vh;
+  }
+
+  .add-button {
+    font-size: 3em;
+    font-weight: bolder;
+    text-align: center;
+    height: 2em;
+    width: 2em;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .workflow-nav-bar {
+    z-index: 2 !important;
+    position: fixed !important;
+    left: 0;
+    bottom: 0;
+  }

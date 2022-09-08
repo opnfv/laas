@@ -105,6 +105,12 @@ nav ,body{
         transition: border-color ease-in-out .1s,box-shadow ease-in-out .1s;
     }
 
+    .invalid_field {
+        border-color: #c65040;
+        box-shadow: 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(243, 76, 76, 0.6);
+        transition: border-color ease-in-out .1s,box-shadow ease-in-out .1s;
+    }
+
     ::selection {
     background: #BCE194; 
     color:#343a40;
