@@ -120,3 +120,15 @@ def design_a_pod(request):
     }
 
     return render(request, template, context)
+
+
+def book_a_pod(request):
+    if not request.user.is_authenticated:
+        return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
+    template = "workflow/book_a_pod.html"
+    context = {
+        "username": request.user,
+        # "user_list":
+    }
+
+    return render(request, template, context)
