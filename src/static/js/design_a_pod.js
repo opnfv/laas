@@ -46,201 +46,15 @@
     // TODO: Receive JSON from liblaas, recreate cards on screen, user can keep creating template from where it was left off
   }
 
-  // PodTemplate Classes
-  class Connection {
-    constructor(network, tagged) {
-      this.network = network; // String
-      this.tagged = tagged; // Boolean
-    }
-
-    equals(connection) {
-      if (this.network != connection.network) return false;
-      if (this.tagged != connection.tagged) return false;
-      return true;
-    }
-  }
-
-  class HostInterface {
-    constructor(name) {
-      this.name = name; // String
-      this.connections = []; // Array of Connection objects
-    }
-
-    add_connection(connection) {
-      this.connections.push(connection);
-    }
-
-    equals(host_interface) {
-      if (this.name != host_interface.name) return false;
-      if (!this.connections.equals(host_interface.connections)) return false;
-
-      return true;
-    }
-
-    hasUntagged() {
-      for (let i in this.connections) {
-        if (this.connections[i].tagged == false) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    remove_connection(connection) {
-
-      let index = -1;
-
-      for (let i in this.connections) { // Find index of connection to delete
-        if (connection.equals(this.connections[i])) {
-          index = i;
-          break;
-        }
-      }
-
-      if (index == -1) {
-        console.log("Connection not in list. Unable to remove");
-        return;
-      }
-
-      // Create temp array and copy all connection objects except the one to be removed
-      const temp = [];
-      for (let i in this.connections) {
-        if (i != index) {
-          temp.push(this.connections[i])
-        }
-      }
-
-      this.connections = temp;
-
-    }
-  }
-
-
-  class Host {
-    constructor(hostname, flavor, image) {
-      this.hostname = hostname; // String
-      this.flavor = flavor; // String
-      this.image = image; // String
-      this.interfaces = []; // Array of HostInterface objects
-    }
-
-    add_interface(host_interface) {
-      this.interfaces.push(host_interface); // HostInterface object
-    }
-
-  }
-
-  // Class that holds information about the pod being designed
-  class PodTemplate {
-    constructor() {
-      this.username = ""; // String
-      this.lab_name = ""; // String
-      this.pod_name = ""; // String
-      this.pod_desc = ""; // String
-      this.host_list = []; // Array of Host objects
-      this.network_list = []; // Array of strings
-    }
-
-    toString() {
-      let str = "";
-      str += "Template Owner: " + this.username;
-      str += "\nLab: " + this.lab_name;
-      str += "\nPod Name: " + this.pod_name;
-      str += "\nPod Desc: " + this.pod_desc;
-      str += "\nHost List:";
-      for (let i in this.host_list) {
-        str += "\n  " + this.host_list[i].hostname +':'
-        for (let j in this.host_list[i].interfaces) {
-          str += "\n    " + this.host_list[i].interfaces[j].name;
-          for (let k in this.host_list[i].interfaces[j].connections) {
-            str += "\n      " + this.host_list[i].interfaces[j].connections[k].network + "," + this.host_list[i].interfaces[j].connections[k].tagged;
-          }
-        }
-      }
-      str += "\nNetworks: " + this.network_list;
-
-      return str;
-    }
-
-    add_host(host) {
-      this.host_list.push(host); // Host object
-    }
-
-    remove_host(hostname) {
-      let index = -1;
-
-      for (let i in this.host_list) { // Find index of host to delete based off of hostname (string)
-        if (hostname == this.host_list[i].hostname) {
-          index = i;
-          break;
-        }
-      }
-
-      if (index == -1) {
-        console.log("Host not in list. Unable to remove");
-        return;
-      }
-
-      // Create temp array and copy all host objects except the one to be removed
-      const temp = [];
-      for (let i in this.host_list) {
-        if (i != index) {
-          temp.push(this.host_list[i])
-        }
-      }
-
-      this.host_list = temp;
-    }
-
-    add_network(network) {
-      this.network_list.push(network); // String
-    }
-
-    remove_network(network) {
-      let index = -1;
-
-      for (let i in this.network_list) { // Find index of network to delete
-        if (network == this.network_list[i]) {
-          index = i;
-          break;
-        }
-      }
-
-      if (index == -1) {
-        console.log("Network not in list. Unable to remove");
-        return;
-      }
-
-      // Create temp array and copy all networks except the one to be removed
-      const temp = [];
-      for (let i in this.network_list) {
-        if (i != index) {
-          temp.push(this.network_list[i])
-        }
-      }
-
-      // Mutate this.network_list
-      this.network_list = temp;
-    }
-
-    import_template(liblaas_data) {
-      // TODO: Read JSON from liblaas and convert back to js object
-    }
-
-    export_template() {
-      return JSON.stringify(this);
-    }
-
-  }
-
   // Session Class
   class Design_Workflow {
     constructor(PodTemplate) {
       // Takes a PodTemplate object
       this.pod = PodTemplate;
       this.step = 0;
-      this.sections = ["select_lab", "add_hosts", "add_networks", "configure_connections", "pod_summary"];
+      this.adding_network = false;
+      this.has_connection = false;
+      this.sections = ["select_lab", "add_hosts", "add_networks", "configure_connections", "pod_details", "pod_summary"];
       this.selected_interface = "";
     }
 
@@ -248,8 +62,7 @@
       this.step--;
       let section = this.sections[this.step];
 
-
-      if (this.step == 3) {
+      if (this.step == 4) {
         document.getElementById('workflow-next').removeAttribute('disabled');
       }
 
@@ -257,9 +70,7 @@
         document.getElementById('workflow-prev').setAttribute('disabled' , '');
       }
 
-      document.getElementById(section).removeAttribute('hidden');
       document.getElementById(section).scrollIntoView({behavior: 'smooth'});
-
     }
 
 
@@ -267,7 +78,7 @@
       this.step++;
       let section = this.sections[this.step];
 
-      if (this.step == 4) {
+      if (this.step == 5) {
         document.getElementById('workflow-next').setAttribute('disabled' , '');
       } 
 
@@ -275,50 +86,92 @@
         document.getElementById('workflow-prev').removeAttribute('disabled');
       }
 
-      document.getElementById(section).removeAttribute('hidden');
       document.getElementById(section).scrollIntoView({behavior: 'smooth'});
-
     }
 
 
     initialize_elements() {
       document.getElementById('workflow-next').removeAttribute('disabled');
       document.getElementById('workflow-prev').setAttribute('disabled' , '');
-      document.getElementById('select_lab').removeAttribute('hidden');
-      document.getElementById('add_hosts').setAttribute('hidden', '');
-      document.getElementById('add_networks').setAttribute('hidden', '');
-      document.getElementById('configure_connections').setAttribute('hidden', '');
-      document.getElementById('pod_summary').setAttribute('hidden', '');
+      document.getElementById('select_lab').scrollIntoView({behavior: 'auto'});
       document.getElementById('pod-name-input').value = '';
       document.getElementById('pod-desc-input').value = '';
 
       // Add public network by default
       work.pod.add_network('public');
-      const network_input = document.getElementById('network-input');
       const network_plus_card = document.getElementById('network-plus-card');
       const new_card = document.createElement('div');
-      new_card.classList.add("col-lg-3", "col-sm-12", "my-3");
+      new_card.classList.add("col-xl-3","col-md-6","col-12", "my-3");
       new_card.innerHTML = `
       <div class="card">
         <div class="text-center">
-          <h3 class="p-5 m-5">public</h3>
-        </div>
-        <div class="card-footer">
+          <h3 class="py-5 my-5">public</h3>
         </div>
       </div>`;
       network_plus_card.parentNode.insertBefore(new_card, network_plus_card);
 
+      const hostname_input = document.getElementById('hostname-input');
+      const error_message = document.getElementById('add-host-error-msg');
 
+      // Listen for hostname focus to remove red border and error message
+      hostname_input.addEventListener('focusin', (event) => {
+          hostname_input.classList.remove('invalid_field');
+          error_message.innerText = "";
+      })
+
+      // Pod details validators
+      const pod_name_input = document.getElementById('pod-name-input');
+      const pod_desc_input = document.getElementById('pod-desc-input');
+      const details_error_message = document.getElementById('pod_details_error');
+      pod_name_input.addEventListener('focusout', name_e => {
+        if (pod_name_input.value.length > 53) {
+          details_error_message.innerText = 'Pod name cannot exceed 53 characters.';
+          pod_name_input.classList.add('invalid_field');
+          this.pod.pod_name = '';
+          this.update_pod_summary('pod_details');
+          return;
+        } else if (!(pod_name_input.value.match(/^[a-z0-9~@#$^*()_+=[\]{}|,.?': -!]+$/i))) {
+          details_error_message.innerText = 'Pod name contains invalid characters.';
+          pod_name_input.classList.add('invalid_field');
+          this.pod.pod_name = '';
+          this.update_pod_summary('pod_details');
+          return;
+        }
+
+        pod_name_input.classList.remove('invalid_field');
+        details_error_message.innerText = '';
+        this.pod.pod_name = pod_name_input.value;
+        this.update_pod_summary('pod_details');
+      })
+
+      pod_desc_input.addEventListener('focusout', desc_e => {
+        if (pod_desc_input.value.length > 255) {
+          details_error_message.innerText = 'Pod description cannot exceed 255 characters.';
+          pod_desc_input.classList.add('invalid_field');
+          this.pod.pod_desc = '';
+          this.update_pod_summary('pod_details');
+          return;
+        } else if (!(pod_desc_input.value.match(/^[a-z0-9~@#$^*()_+=[\]{}|,.?': -!]+$/i))) {
+          details_error_message.innerText = 'Pod description contains invalid characters.';
+          pod_desc_input.classList.add('invalid_field');
+          this.pod.pod_desc = '';
+          this.update_pod_summary('pod_details');
+          return;
+        }
+
+        pod_desc_input.classList.remove('invalid_field');
+        details_error_message.innerText = '';
+        this.pod.pod_desc = pod_desc_input.value;
+        this.update_pod_summary('pod_details');
+      })
     }
 
-
     display_labs() {
-
       const lab_list = get_labs();
       const card_deck = document.getElementById('lab_cards');
       for (let i in lab_list) {
         const new_col = document.createElement('div');
-        new_col.classList.add('card','col-lg-3', 'col-sm-12');
+        new_col.classList.add('card','col-xl-3',"col-md-6",'col-11');
         new_col.id = lab_list[i].name;
         let status;
         if (lab_list[i].status == 0) {
@@ -342,10 +195,9 @@
           <li class="list-group-item">Status: `+ status + `</li>
         </ul>
         <div class="card-footer">
-            <button class="btn btn-success w-100" href="#" onclick="work.select_lab('` + lab_list[i].name  + `')">Select</a>
+            <button class="btn btn-success w-100" href="#" onclick="work.select_lab('` + lab_list[i].name + `')">Select</a>
         </div>
         `
-
         card_deck.appendChild(new_col);
       }
     }
@@ -353,9 +205,7 @@
     select_lab(lab_name) {
       // Check if any elements have been selected
       if (this.pod.lab_name == "") {
-
         document.getElementById(lab_name).classList.add("selected_node");
-        work.go_next();
         this.pod.lab_name = lab_name;
       } else {
         // a lab is already selected, clear already selected resources
@@ -364,7 +214,23 @@
             return false;
         }
       }
-    return true;
+
+      // Flavor change listener in add host modal
+      const flavor_input = document.getElementById('flavor-input');
+      const image_input = document.getElementById('image-input');
+      flavor_input.addEventListener('change', (event) => {
+        image_input.innerHTML = "";
+        flavor_input.classList.remove('invalid_field');
+        image_input.removeAttribute('disabled');
+
+        let images = get_images(flavor_input.value);
+        for (let i in images) {
+          const new_image = document.createElement('option');
+          new_image.value = images[i];
+          new_image.innerText = images[i];
+          image_input.appendChild(new_image);
+        }
+      })
     }
 
     delete_template() {
@@ -410,28 +276,6 @@
         new_flavor.innerText = flavors[i];
         flavor_input.appendChild(new_flavor);
       }
-
-      // Listen for flavor selection changes
-      flavor_input.addEventListener('change', (event) => {
-        image_input.innerHTML = "";
-        flavor_input.classList.remove('invalid_field');
-        image_input.removeAttribute('disabled');
-
-        let images = get_images(flavor_input.value);
-        for (let i in images) {
-          const new_image = document.createElement('option');
-          new_image.value = images[i];
-          new_image.innerText = images[i];
-          image_input.appendChild(new_image);
-        }
-      })
-
-
-      // Listen for hostname focus to remove red border and error message
-      hostname_input.addEventListener('focusin', (event) => {
-          hostname_input.classList.remove('invalid_field');
-          error_message.innerText = "";
-      })
 
       // Launch modal
       $("#host-modal").modal('toggle');
@@ -507,7 +351,7 @@
 
       // Create Host card
       const new_card = document.createElement("div");
-      new_card.classList.add("col-lg-3", "col-sm-12", "my-3");
+      new_card.classList.add("col-xl-3", "col-md-6","col-12", "my-3");
       new_card.innerHTML = `
         <div class="card">
           <div class="card-header">
@@ -529,7 +373,7 @@
       }
 
       this.new_connection_card(new_host.hostname);
-      this.update_host_summary();
+      this.update_pod_summary('hosts');
     }
 
     delete_host_button(button_id) {
@@ -552,7 +396,7 @@
 
 
       // Update host summary
-      this.update_host_summary();
+      this.update_pod_summary('hosts');
     }
 
     delete_network_button(button_id) {
@@ -560,17 +404,13 @@
       // All network delete buttons are in the form "delete-network-networkname"
 
       // All connections must be cleared if a network is added after a connection already exists
-      for (let i in this.pod.host_list) {
-        for (let j in this.pod.host_list[i].interfaces) {
-          if (this.pod.host_list[i].interfaces[j].connections.length > 0) {
-            if(!confirm('Removing a network will remove ALL connections, are you sure?')) {
-            return;
-            } else {
-              break;
-            }
+      if (this.has_connection) {
+        if(!confirm('Removing a network will remove ALL connections, are you sure?')) {
+          return;
           }
-        }
+          this.has_connection = false;
       }
+
 
       // Delete all connections
       for (let i in this.pod.host_list) {
@@ -602,17 +442,18 @@
         return
       }
 
+      if (this.adding_network) {
+        document.getElementById('new_network_card').classList.add('invalid_field');
+        alert('Please finish adding the existing network.');
+        return;
+      }
+
       // All connections must be cleared if a network is added after a connection already exists
-      for (let i in this.pod.host_list) {
-        for (let j in this.pod.host_list[i].interfaces) {
-          if (this.pod.host_list[i].interfaces[j].connections.length > 0) {
-            if(!confirm('Adding a network will remove ALL connections, are you sure?')) {
-            return;
-            } else {
-              break;
-            }
+      if (this.has_connection) {
+        if(!confirm('Adding a network will remove ALL connections, are you sure?')) {
+          return;
           }
-        }
+          this.has_connection = false;
       }
 
       // Delete all connections
@@ -622,88 +463,116 @@
         }
       }
 
-      const network_input = document.getElementById('network-input');
-
-      // Reset form fields
-      network_input.value = ''
-      network_input.classList.remove('invalid_field');
-      document.getElementById('add-network-error-msg').innerText = '';
-
-      // Remove red border on focus
-      network_input.addEventListener('focusin', (event) => {
-          network_input.classList.remove('invalid_field');
-
-      })
-
-      // Show modal
-      $("#network-modal").modal('toggle');
-    }
-
-    add_network() {
-      // Declare variables
-      const network_input = document.getElementById('network-input');
-      const error_message = document.getElementById('add-network-error-msg')
+      // New empty card
       const network_plus_card = document.getElementById('network-plus-card');
+      const new_card = document.createElement('div');
+      new_card.classList.add("col-xl-3", "col-md-6","col-12");
+      new_card.innerHTML = 
+        `<div class="card pb-0" id="new_network_card">
+          <div class="card-body">
+            <div class="row justify-content-center my-5">
+              <input type="text" class="form-control col-12 mb-2" id="network_input" placeholder="Enter Network Name">
+              <span class="text-danger mt-n2" id="adding_network_error"></span>
+            </div>
+            <div class="row">
+              <button class="btn btn-danger col-6" onclick="work.delete_new_network()">Delete</button>
+              <button class="btn btn-success col-6" id="adding_network_confirm" onclick="work.confirm_new_network()" disabled>Confirm</button>
+            </div>
+          </div>
+        </div>`;
+      network_plus_card.parentNode.insertBefore(new_card, network_plus_card);
 
-      // Input validation
-      if (network_input.value == '' ) {
-        network_input.classList.add('invalid_field');
-        error_message.innerText = 'Please enter a valid network name';
-        return;
-      }
-
-
-      if (network_input.value.length > 63) {
-        error_message.innerText = 'Network names cannot exceed 63 characters';
-        network_input.classList.add('invalid_field');
-        return
-      }
-
-      if (!(network_input.value.match(/^[0-9a-z-]+$/i))) {
-        error_message.innerText = 'Network names must only contain alphanumeric characters and dashes';
-        network_input.classList.add('invalid_field');
-        return
-      }
-
-      if ((network_input.value.charAt(0).match(/^[0-9-]+$/)) || (network_input.value.charAt(network_input.value.length - 1) == '-')) {
-        error_message.innerText = 'Network names must start with a letter and end with a letter or digit.';
-        network_input.classList.add('invalid_field');
-        return
-      }
-
-      for (let i in this.pod.network_list) {
-        if (network_input.value == this.pod.network_list[i]) {
+      // Network input event listeners
+      const network_input = document.getElementById('network_input');
+      const error_message = document.getElementById('adding_network_error');
+      const confirm_button = document.getElementById('adding_network_confirm');
+      network_input.addEventListener('focusout', network_e => {
+        if (network_input.value == '') {
           network_input.classList.add('invalid_field');
-          error_message.innerText = 'Networks must have unique names';
+          confirm_button.setAttribute('disabled', '');
           return;
         }
+
+        if (network_input.value.length > 63) {
+          error_message.innerText = 'Network names cannot exceed 63 characters';
+          network_input.classList.add('invalid_field');
+          confirm_button.setAttribute('disabled', '');
+          return
+        }
+
+        if (!(network_input.value.match(/^[0-9a-z-]+$/i))) {
+          error_message.innerText = 'Network names must only contain alphanumeric characters and dashes';
+          network_input.classList.add('invalid_field');
+          confirm_button.setAttribute('disabled', '');
+          return
+        }
+
+        if ((network_input.value.charAt(0).match(/^[0-9-]+$/)) || (network_input.value.charAt(network_input.value.length - 1) == '-')) {
+          error_message.innerText = 'Network names must start with a letter and end with a letter or digit.';
+          network_input.classList.add('invalid_field');
+          confirm_button.setAttribute('disabled', '');
+          return
+        }
+
+        for (let i in this.pod.network_list) {
+          if (network_input.value == this.pod.network_list[i]) {
+            network_input.classList.add('invalid_field');
+            error_message.innerText = 'Networks must have unique names';
+            confirm_button.setAttribute('disabled', '');
+            return;
+          }
+        }
+
+      });
+
+      network_input.addEventListener('focusin', network_e => {
+        network_input.classList.remove('invalid_field');
+        document.getElementById('new_network_card').classList.remove('invalid_field');
+        error_message.innerText = '';
+        confirm_button.removeAttribute('disabled');
+      });
+
+      this.adding_network = true;
+      if (this.pod.network_list.length == 8 || (this.pod.network_list.length == 7 && this.adding_network)) {
+        network_plus_card.hidden = true;
       }
 
-      // Dismiss modal 
-      $('#network-modal').modal('hide');
+    }
 
-      // Add network to PodTemplate
-      this.pod.add_network(network_input.value);
+    confirm_new_network() {
+      const network_name = document.getElementById('network_input').value;
+      const network_plus_card = document.getElementById('network-plus-card');
 
-      // Create network card
+      this.pod.add_network(network_name);
+      this.delete_new_network();
+
       const new_card = document.createElement('div');
-      new_card.classList.add("col-lg-3", "col-sm-12", "my-3");
+      new_card.classList.add("col-xl-3", "col-md-6","col-12", "my-3");
       new_card.innerHTML = `<div class="card">
             <div class="text-center">
-              <h3 class="p-5 m-5">` + document.getElementById('network-input').value + `</h3>
+              <h3 class="py-5 my-5">` + network_name + `</h3>
             </div>
-            <div class="card-footer">
-                <button class="btn btn-danger w-100" id="delete-network-` + network_input.value + `" onclick="work.delete_network_button(id)">Delete</button>
+            <div class="">
+                <button class="btn btn-danger w-100 mt-n3" id="delete-network-` + network_name + `" onclick="work.delete_network_button(id)">Delete</button>
             </div>
           </div>`;
-      network_plus_card.parentNode.insertBefore(new_card, network_plus_card);
 
       if (this.pod.network_list.length == 8) {
         network_plus_card.hidden = true;
       }
+      network_plus_card.parentNode.insertBefore(new_card, network_plus_card);
+    }
+
+    delete_new_network() {
+      // Remove the new network card
+      document.getElementById('new_network_card').parentElement.remove();
+      document.getElementById('network-plus-card').hidden = false;
+      this.adding_network = false;
+      
     }
 
     initialize_connections(hostname) {
+      this.has_connection = true;
       const interface_buttons_tr = document.getElementById('connections_interface_list');
       interface_buttons_tr.innerHTML = '';
       const table = document.getElementById('connections_widget');
@@ -836,7 +705,7 @@
           if (selected_interface.connections[i].network == network && selected_interface.connections[i].tagged == false) {
             button.classList.remove('btn-success')
             selected_interface.connections[i].tagged = null
-            for (let i in untagged_buttons) {
+            for (let i = 0; i < untagged_buttons.length; i++) {
               untagged_buttons.item(i).removeAttribute('disabled');
             }
             return
@@ -863,7 +732,7 @@
 
       // Disable all untagged buttons if one is already selected
       if (option == 'untagged') {
-        for (let i in untagged_buttons) {
+        for (let i = 0; i < untagged_buttons.length; i++) {
           untagged_buttons.item(i).setAttribute('disabled', '');
         }
       } else {
@@ -871,7 +740,7 @@
         for (let i in selected_interface.connections) {
           if (selected_interface.connections[i].tagged == false) return;
         }
-        for (let i in untagged_buttons) {
+        for (let i = 0; i < untagged_buttons.length; i++) {
           untagged_buttons.item(i).removeAttribute('disabled');
         }
       }
@@ -881,11 +750,11 @@
       const card_deck = document.getElementById('connection_cards');
 
       const new_card = document.createElement('div');
-      new_card.classList.add("col-lg-3", "col-sm-12", "my-3");
+      new_card.classList.add("col-xl-3", "col-md-6","col-11", "my-3");
       new_card.id = 'connection-' + hostname;
       new_card.innerHTML = `<div class="card">
             <div class="text-center">
-              <h3 class="p-5 m-5">` + hostname + `</h3>
+              <h3 class="py-5 my-5">` + hostname + `</h3>
             </div>
             <div class="card-footer">
                 <button class="btn btn-info w-100" id="configure-connection-` + hostname + `" onclick="work.configure_connection_button(id)">Configure</button>
@@ -901,6 +770,13 @@
       alert("Please add a network before configuring connections.");
       work.go_prev();
       return;
+      }
+
+      if (this.adding_network) {
+        alert('Please finish adding a network before configuring connections.');
+        document.getElementById('new_network_card').classList.add('invalid_field');
+        work.go_prev();
+        return;
       }
 
       work.initialize_connections(id.substring(21)); //passes hostname as a parameter
@@ -966,22 +842,57 @@
       // Property disable / re-enable untagged buttons
       const untagged_buttons = document.querySelectorAll('button.untagged:not(.btn-success)');
       if (untagged_buttons.length != this.pod.network_list.length) {
-        for (let index in untagged_buttons) {
-        untagged_buttons.item(index).setAttribute('disabled', '');
+        for (let i = 0; i < untagged_buttons.length; i++) {
+          untagged_buttons.item(i).setAttribute('disabled', '');
         }
       }
 
     }
 
-    update_host_summary() {
-      const host_summary = document.getElementById('host_summary');
-      host_summary.innerHTML = '';
-      for(let i in this.pod.host_list) {
-        const new_li = document.createElement('li');
-        const host = this.pod.host_list[i];
-        new_li.classList.add('list-group-item');
-        new_li.innerText = host.hostname + ': ' + host.flavor + ' (' + host.image + ')';
-        host_summary.appendChild(new_li);
+    update_pod_summary(section) {
+      // Takes a section (string) and updates the appropriate element's innertext
+
+      if (section == 'pod_details') {
+        const list = document.getElementById('pod_summary_pod_details');
+        list.innerHTML = '';
+        const name_li = document.createElement('li');
+        name_li.innerText = 'Pod name: ' + this.pod.pod_name;
+        list.appendChild(name_li);
+
+        const desc_li = document.createElement('li')
+        desc_li.innerText = 'Description: ' + this.pod.pod_desc;
+        list.appendChild(desc_li);
+
+      } else if (section == 'hosts') {
+        const list = document.getElementById('pod_summary_hosts');
+        list.innerHTML = '';
+        const hosts = this.pod.host_list;
+        for (let i = 0; i < this.pod.host_list.length; i++) {
+          const new_li = document.createElement('li');
+          new_li.innerText = hosts[i].hostname + ': ' + hosts[i].flavor + ' (' + hosts[i].image + ')';
+          list.appendChild(new_li);
+        }
+      } else {
+        console.log(section + ' is not a valid section.');
+      }
+
+
+    }
+
+    has_minimum_connections() {
+      for (let i = 0; i < this.pod.host_list.length; i++) {
+        var flag = false;
+        for (let j = 0; j < this.pod.host_list[i].interfaces.length; j++) {
+          for (let k = 0; k < this.pod.host_list[i].interfaces[j].connections.length; k++) {
+            if (this.pod.host_list[i].interfaces[j].connections[k].tagged != null) {
+              flag = true;
+              break;
+            }
+          }
+        }
+        if (!flag) {
+          return [false, this.pod.host_list[i].hostname];
+        }
       }
     }
 
@@ -990,7 +901,7 @@
       // Prerequisite step check
       if (this.pod.lab_name == "") {
         alert("Please Select a lab.");
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
           work.go_prev();
         }
         return;
@@ -998,7 +909,7 @@
 
       if (this.pod.host_list.length == 0) {
         alert("Please add a host.");
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 4; i++) {
           work.go_prev();
         }
         return;
@@ -1006,94 +917,35 @@
 
       if (this.pod.network_list.length == 0) {
         alert("Please add a network.");
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 3; i++) {
           work.go_prev();
         }
         return;
       }
 
-      // TODO: Validate for connection minimums
-      if(false) {
-        alert("Please configure connections.");
-        work.go_prev();
+      const result = this.has_minimum_connections();
+      if(result && !result[0]) {
+        alert('Please add at least one tagged or untagged connection for ' + result[1]);
+        for (let count = 0; count < 2; count++) {
+          this.go_prev();
+        }
         return;
       }
 
-      const error_message = document.getElementById('submit-error-msg');
-      const pod_name_input = document.getElementById('pod-name-input');
-      const pod_desc_input = document.getElementById('pod-desc-input');
-
-      // Input validation
-      if (pod_name_input.value == "") {
-        error_message.innerText = "Please enter a pod name";
-        pod_name_input.classList.add('invalid_field');
-
-        document.getElementById('pod-name-input').addEventListener('focusin', (event) => {
-        pod_name_input.classList.remove('invalid_field');
-        error_message.innerText = "";
-        })
+      if (this.pod.pod_name == '') {
+        alert('Please enter a valid pod name.')
+        this.go_prev();
         return;
       }
 
-      if (pod_name_input.value.length > 53) {
-        error_message.innerText = "Pod name cannot exceed 53 characters";
-        pod_name_input.classList.add('invalid_field');
-
-        document.getElementById('pod-name-input').addEventListener('focusin', (event) => {
-        pod_name_input.classList.remove('invalid_field');
-        error_message.innerText = "";
-        })
+      if (this.pod.pod_desc== '') {
+        alert('Please enter a valid pod description.')
+        this.go_prev();
         return;
       }
-
-      if (!(pod_name_input.value.match(/^[a-z0-9~@#$^*()_+=[\]{}|,.?': -]+$/i))) {
-        error_message.innerText = "Pod name contains invalid characters";
-        pod_name_input.classList.add('invalid_field');
-
-        document.getElementById('pod-name-input').addEventListener('focusin', (event) => {
-        pod_name_input.classList.remove('invalid_field');
-        error_message.innerText = "";
-        })
-        return;
-      }
-
-      if (pod_desc_input.value == "") {
-        error_message.innerText = "Please enter a pod description";
-        pod_desc_input.classList.add('invalid_field');
-
-        document.getElementById('pod-desc-input').addEventListener('focusin', (event) => {
-        pod_desc_input.classList.remove('invalid_field');
-        error_message.innerText = "";
-        })
-        return;
-      }
-
-      if (pod_desc_input.value.length > 255) {
-        error_message.innerText = "Pod description cannot exceed 255 characters";
-        pod_desc_input.classList.add('invalid_field');
-
-        document.getElementById('pod-desc-input').addEventListener('focusin', (event) => {
-        pod_desc_input.classList.remove('invalid_field');
-        error_message.innerText = "";
-        })
-        return;
-      }
-
-      if (!(pod_desc_input.value.match(/^[a-z0-9~@#$^*()_+=[\]{}|,.?': -]+$/i))) {
-        error_message.innerText = "Pod description contains invalid characters";
-        pod_desc_input.classList.add('invalid_field');
-
-        document.getElementById('pod-desc-input').addEventListener('focusin', (event) => {
-          pod_desc_input.classList.remove('invalid_field');
-          error_message.innerText = "";
-        })
-        return;
-      }
-
-      this.pod.pod_name = pod_name_input.value;
-      this.pod.pod_desc = pod_desc_input.value;
 
       console.log(this.pod.toString());
+      console.log('\n\n\n\n' + this.pod.export_template());
       alert('Success');
     }
   }
