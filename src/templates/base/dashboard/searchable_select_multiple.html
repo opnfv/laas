@@ -10,17 +10,21 @@
         <span id="addable_limit">/ {% if selectable_limit > -1 %} {{ selectable_limit }} {% else %} &infin; {% endif %}added</span>
     </div>
 
-    <div id="added_list" class="pb-2">
+    <div id="added_list">
 
     </div>
 
-    <input id="user_field" name="ignore_this" class="form-control" autocomplete="off" type="text" placeholder="{{placeholder}}" value="" oninput="searchable_select_multiple_widget.search(this.value)"
-    {% if disabled %} disabled {% endif %}>
+    <div class="d-flex align-items-center border">
+        <i class="fas fa-search m-1 p-1"></i>
+        <input id="user_field" name="ignore_this" class="form-control border-0 input-search" autocomplete="off" type="text" placeholder="{{placeholder}}" value="" oninput="searchable_select_multiple_widget.search(this.value)"
+        {% if disabled %} disabled {% endif %}>
+    </div>
+
 
     <input type="hidden" id="selector" name="{{ name }}" class="form-control d-none"
     {% if disabled %} disabled {% endif %}>
 
-    <div id="scroll_restrictor" class="d-flex pb-4 position-relative">
+    <div id="scroll_restrictor" class="d-flex position-relative">
         <div id="drop_results" class="list-group w-100 z-2 overflow-auto position-absolute mh-30vh"></div>
     </div>
 </div>
