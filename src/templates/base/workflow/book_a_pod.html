@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap4 %}
+{% block extrahead %}
+<script src="/static/js/workflow_classes.js"></script>
+<script src="/static/js/book_a_pod.js"></script>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Main Content Div -->
+<body>
+  <div class="row w-100 m-0 align-items-center justify-content-center workflow-nav-bar">
+    <button class="col-lg-2 col-5 btn btn-primary p-0 mr-1" onclick="work.go_prev()" id="workflow-prev" disabled>Prev</button>
+    <button class="col-lg-2 col-5 btn btn-primary p-0 ml-1" onclick="work.go_next()" id="workflow-next">Next</button>
+  </div>
+
+  <div class="scroll-container w-100 h-100 p-0">
+    <div class="scroll-area" id="add_collabs">
+      <h2 class="p-3 text-center mx-5">Add Collaborators:</h2>
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-10 border border-dark">
+          {% bootstrap_field form.users label="Collaborators" %}
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-area" id="select_template">
+      <h2 class="p-3 text-center mx-5">Select Host Or Template:</h2>
+      <div class="row card-deck align-items-center justify-content-center">
+
+        <div class="col-lg-4 col-12" id="template_list">
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item"><a class="nav-link active" id="default_templates_tab" href="#default_templates" role="tab" data-toggle="tab">Default Templates</a></li>
+            {% if dashboard == 'laas' %}<li class="nav-item"><a class="nav-link" id="my_pods_tab" href="#my_pods" role="tab" data-toggle="tab">My Pods</a></li>{% endif %}
+          </ul>
+
+          <div class="tab-content my-5" id="select_template_tab_content">
+            <div class="tab-pane show active" id="default_templates" role="tabpanel">
+              <ul id="default_templates_list" class="p-0 m-0">
+              </ul>
+            </div>
+            <div class="tab-pane" id="my_pods" role="tabpanel">
+              <ul id="my_pods_list" class="p-0 m-0">
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <div class="card col-lg-4 col-10" id="template_card" hidden>
+          <div class="card-header">
+            <h3 class="mt-2">Selected Pod</h3>
+          </div>
+          <ul class="list-group list-group-flush h-100 mb-4">
+          </ul>
+          <div class="card-footer">
+            <button class="btn btn-primary w-100" onclick="work.select_template_change()">Change</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-area" id="cloud_init">
+      <h2 class="p-3 text-center mx-5">Cloud Init</h2>
+      <div id="cloud_init_deck" class="row card-deck align-items-center justify-content-center">
+      </div>
+    </div>
+    <div class="scroll-area" id="booking_details">
+      <h2 class="p-3 text-center mx-5">Booking Details</h2>
+      <div class="form-group">
+        <div class="row justify-content-center align-items-center my-4">
+          <input id="input_project" class="form-control form-control-lg col-lg-6 col-10 border border-dark p-5" type="text" placeholder="Project">
+        </div>
+        <div class="row justify-content-center align-items-center my-4">
+          <input id="input_purpose" class="form-control form-control-lg col-lg-6 col-10 border border-dark p-5" type="text" placeholder = "Purpose">
+        </div>
+        <div class="row justify-content-center align-items-center my-4">
+          <span id="booking_details_error" class="text-danger col-6"></span>
+        </div>
+        <div class="row justify-content-center align-items-center my-4">
+          <span id="booking_details_day_counter" class="col-1 p-0">Days: 1</span>
+          <input id="input_length" type="range" min="1" max="21" value="1" class="form-control form-control-lg col-lg-5 col-8 p-0" placeholder="Length" oninput="work.booking_details_update_days()">
+        </div>
+      </div>
+    </div>
+    <div class="scroll-area" id="booking_summary">
+      <h2 class="p-3 text-center mx-5">Booking Summary</h2>
+      <div class="row justify-content-center align-items-center">
+        <div class="card col-lg-6 col-10 border-0">
+          <ul class="list-group">
+            <li class="list-group-item">Booking Details
+              <ul id="booking_summary_booking_details">
+              </ul>
+            </li>
+            <li class="list-group-item">Collaborators
+              <ul id="booking_summary_collaborators">
+              </ul>
+            </li>
+            <li class="list-group-item">Hosts
+              <ul id="booking_summary_hosts">
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row justify-content-center align-items-center mt-5">
+        <button class="btn btn-danger cancel-book-button p-0 mr-2 col-lg-1 col-md-2 col-5" onclick="work.cancel_booking()">Cancel</button>
+        <button class="btn btn-success cancel-book-button p-0 ml-2 col-lg-1 col-md-2 col-5" onclick = work.submit_booking()>Book</button>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  const work = new Booking_Workflow("{{username}}");
+  work.initialize_elements();
+</script>
+{% endblock %}
