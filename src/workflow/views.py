@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from account.models import Lab
 from django.core.handlers.wsgi import WSGIRequest
+from workflow.forms import BookingMetaForm
 import uuid
 
 from workflow.workflow_manager import ManagerTracker, SessionManager
@@ -117,6 +118,18 @@ def design_a_pod(request):
     template = "workflow/design_a_pod.html"
     context = {
         "username": request.user
+    }
+
+    return render(request, template, context)
+
+
+def book_a_pod(request):
+    if not request.user.is_authenticated:
+        return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
+    template = "workflow/book_a_pod.html"
+    context = {
+        "username": request.user,
+        "form": BookingMetaForm(initial={}, user_initial=[], owner=request.user)
     }
 
     return render(request, template, context)
