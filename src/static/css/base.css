@@ -128,3 +128,11 @@ a[aria-expanded="true"] > i.rotate {
     left: 0;
     bottom: 0;
   }
+
+  .cancel-book-button {
+    font-size: 1em;
+    font-weight: bolder;
+    text-align: center;
+    height: 2em;
+    width: 10em;
+  }
