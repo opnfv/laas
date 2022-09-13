@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap4 %}
+{% block extrahead %}
+<script src="/static/js/book_a_pod.js"></script>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Main Content Div -->
+<body>
+  <div class="row w-100 m-0 align-items-center justify-content-center workflow-nav-bar">
+    <button class="col-2 btn btn-primary p-0 mr-1" onclick="work.go_prev()" id="workflow-prev" disabled>Prev</button>
+    <button class="col-2 btn btn-primary p-0 ml-1" onclick="work.go_next()" id="workflow-next">Next</button>
+  </div>
+
+  <div class="scroll-container w-100 h-100 p-0">
+    <div class="scroll-area" id="add_collabs">
+      <h2 class="p-3 text-center mx-5">Add Collaborators:</h2>
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-sm-12 border border-dark">
+          <div class="m-1"><input id="collabs_search" oninput="work.update_search_results()" class="form-control" type="text" placeholder="Search"></div>
+          <!-- Search popup -->
+          <div id="search_results" class="card d-none">
+            <ul>
+              <li>Person 1</li>
+              <li>Person 2</li>
+              <li>Person 3</li>
+            </ul>
+          </div>
+          <div class="card-body h-100">
+            <p>Test content</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="scroll-area" id="select_template">
+      <h2 class="p-3 text-center mx-5">Select Host Or Template:</h2>
+    </div>
+    <div class="scroll-area" id="cloud_init">
+      <h2 class="p-3 text-center mx-5">Cloud Init</h2>
+    </div>
+    <div class="scroll-area" id="booking_details">
+      <h2 class="p-3 text-center mx-5">Booking Details</h2>
+    </div>
+    <div class="scroll-area" id="booking_summary">
+      <h2 class="p-3 text-center mx-5">Booking Summary</h2>
+    </div>
+  </div>
+</body>
+
+
+
+<script>
+  const work = new Booking_Workflow("{{username}}");
+  work.initialize_elements();
+</script>
+{% endblock %}
