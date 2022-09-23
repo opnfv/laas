@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "240f672f_14e3ac5d",
+        "filename": "src/templates/base/resource/steps/pod_definition.html",
+        "patchSetId": 18
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2022-09-23T19:30:14Z",
+      "side": 1,
+      "message": "fix indent to match new block",
+      "revId": "2ad2d76d6caa4d44ac199dc960be853721a49a5e",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5",
+      "unresolved": true
+    }
+  ]
+}
