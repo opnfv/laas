@@ -34,23 +34,18 @@ import pydoc
 import csv
 
 from django.contrib.auth.models import User
-
 from account.models import (
     Lab,
-    PublicNetwork
+    PublicNetwork,
 )
-
 from resource_inventory.resource_manager import ResourceManager
 from resource_inventory.pdf_templater import PDFTemplater
-
 from booking.quick_deployer import update_template
-
 from datetime import timedelta, date, datetime, timezone
-
+from django.db.models import Q
 from booking.models import Booking
 from notifier.manager import NotificationHandler
 from api.models import JobFactory
-
 from api.models import JobStatus, Job, GeneratedCloudConfig
 
 
@@ -245,25 +240,19 @@ class CumulativeData:
         self.file_writer.writerow([self.use_days, self.count_bookings, (self.count_bookings * 2) - self.count_extensions])
 
 
-def get_years_booking_data(start_year=None, end_year=None):
+def get_years_booking_data(start_date, end_date):
     """
-    Outputs yearly booking information from the past 'start_year' years (default: current year)
-    until the last day of the end year (default current year) as a csv file.
+    Outputs yearly booking information from the start date (in the format YYYY-M-D)
+    until the last day of the end date as a csv file.
     """
-    if start_year is None and end_year is None:
-        start = datetime.combine(date(datetime.now().year, 1, 1), datetime.min.time()).replace(tzinfo=timezone.utc)
-        end = datetime.combine(date(start.year + 1, 1, 1), datetime.min.time()).replace(tzinfo=timezone.utc)
-    elif end_year is None:
-        start = datetime.combine(date(start_year, 1, 1), datetime.min.time()).replace(tzinfo=timezone.utc)
-        end = datetime.combine(date(datetime.now().year, 1, 1), datetime.min.time()).replace(tzinfo=timezone.utc)
-    else:
-        start = datetime.combine(date(start_year, 1, 1), datetime.min.time()).replace(tzinfo=timezone.utc)
-        end = datetime.combine(date(end_year + 1, 1, 1), datetime.min.time()).replace(tzinfo=timezone.utc)
 
-    if (start.year == end.year - 1):
-        file_name = "yearly_booking_data_" + str(start.year) + ".csv"
-    else:
-        file_name = "yearly_booking_data_" + str(start.year) + "-" + str(end.year - 1) + ".csv"
+    start_date_list = start_date.split("-")
+    end_date_list = end_date.split("-")
+
+    start = datetime.combine(date(int(start_date_list[0]), int(start_date_list[1]), int(start_date_list[2])), datetime.min.time()).replace(tzinfo=timezone.utc)
+    end = datetime.combine(date(int(end_date_list[0]), int(end_date_list[1]), int(end_date_list[2])), datetime.min.time()).replace(tzinfo=timezone.utc)
+
+    file_name = str(start_date) + "_to_" + str(end_date) + "_booking_data.csv"
 
     with open(file_name, "w", newline="") as file:
         file_writer = csv.writer(file)
@@ -278,14 +267,15 @@ def get_years_booking_data(start_year=None, end_year=None):
                 'Extensions Left',
                 'Usage Days',
                 'Start',
-                'End'
+                'End',
+                'Hosts'
             ]
         )
 
-        for booking in Booking.objects.filter(start__gte=start, start__lte=end):
+        for booking in Booking.objects.filter(~Q(start__gte=end) & ~Q(end__lte=start)):
             filtered = False
             booking_filter = [279]
-            user_filter = ["ParkerBerberian", "ssmith", "ahassick", "sbergeron", "jhodgdon", "rhodgdon", "aburch", "jspewock"]
+            user_filter = ["lylavoie", "jchoquetteiol", "ParkerBerberian", "ssmith", "ahassick", "sbergeron", "jhodgdon", "rhodgdon", "aburch", "jspewock"]
             user = booking.owner.username if booking.owner.username is not None else "None"
 
             for b in booking_filter:
@@ -302,6 +292,12 @@ def get_years_booking_data(start_year=None, end_year=None):
             for c in booking.collaborators.all():
                 collaborators.append(c.username)
 
+            if booking.resource:
+                booking_res = str(booking.resource.get_resources())
+            else:
+                booking_res = str("")
+
+            print(str(booking.id) + ": " + booking_res)
             if (not filtered):
                 cumulative_data.account(booking, usage_days)
                 file_writer.writerow([
@@ -313,7 +309,8 @@ def get_years_booking_data(start_year=None, end_year=None):
                     str(booking.ext_count),
                     str(usage_days),
                     str(booking.start),
-                    str(booking.end)
+                    str(booking.end),
+                    str(booking_res)
                 ])
         cumulative_data.write_cumulative()
 
