@@ -29,6 +29,7 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -43,6 +44,8 @@ urlpatterns = [
     url(r'^api/', include('api.urls')),
     url(r'^messages/', include('notifier.urls', namespace='notifier')),
     url(r'^oidc/', include('mozilla_django_oidc.urls')),
+    url(r'^login/$', auth_views.LoginView.as_view(template_name="account/simple_login.html", extra_context={'AUTH_SETTING': settings.AUTH_SETTING}), name='login'),
+    url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
 ]
 
 if settings.DEBUG is True:

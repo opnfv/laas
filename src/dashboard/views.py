@@ -80,7 +80,7 @@ def landing_view(request):
     else:
         bookings = None
 
-    LFID = True if settings.AUTH_SETTING == 'LFID' else False
+    AUTH_SETTING = settings.AUTH_SETTING
     return render(
         request,
         'dashboard/landing.html',
@@ -88,7 +88,7 @@ def landing_view(request):
             'manager': manager is not None,
             'title': "Welcome to the Lab as a Service Dashboard",
             'bookings': bookings,
-            'LFID': LFID
+            'AUTH_SETTING': AUTH_SETTING
         }
     )
 
