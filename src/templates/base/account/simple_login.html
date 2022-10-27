@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap4 %}
+
+{% block content %}
+{% if AUTH_SETTING == 'SIMPLE' %}
+<h2>Login</h2>
+<form method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<button type="submit">Login</button>
+</form>
+{% endif %}
+{% endblock %}

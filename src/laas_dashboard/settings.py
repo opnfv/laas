@@ -64,18 +64,19 @@ if AUTH_SETTING == 'LFID':
     AUTHENTICATION_BACKENDS.append('account.views.MyOIDCAB')
     OIDC_RP_CLIENT_ID = os.environ.get('OIDC_CLIENT_ID')
     OIDC_RP_CLIENT_SECRET = os.environ.get('OIDC_CLIENT_SECRET')
-
     OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ.get('OIDC_AUTHORIZATION_ENDPOINT')
     OIDC_OP_TOKEN_ENDPOINT = os.environ.get('OIDC_TOKEN_ENDPOINT')
     OIDC_OP_USER_ENDPOINT = os.environ.get('OIDC_USER_ENDPOINT')
 
     LOGIN_REDIRECT_URL = os.environ.get('DASHBOARD_URL')
     LOGOUT_REDIRECT_URL = os.environ.get('DASHBOARD_URL')
-
     OIDC_RP_SIGN_ALGO = os.environ.get("OIDC_RP_SIGN_ALGO")
 
     if OIDC_RP_SIGN_ALGO == "RS256":
         OIDC_OP_JWKS_ENDPOINT = os.environ.get("OIDC_OP_JWKS_ENDPOINT")
+elif AUTH_SETTING == 'SIMPLE':
+    LOGIN_REDIRECT_URL = os.environ.get('DASHBOARD_URL')
+    LOGOUT_REDIRECT_URL = os.environ.get('DASHBOARD_URL')
 else:
     raise Exception('AUTH_SETTING set to invalid value')
 

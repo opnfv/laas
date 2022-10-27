@@ -47,7 +47,7 @@
                         </a>
 			{% endblock userDropDownText %}
                         <div class="dropdown-menu dropdown-menu-right">
-                            {% if LFID %}
+                            {% if AUTH_SETTING == 'LFID' %}
                                 {% if user.is_authenticated %}
                                 <a href="{% url 'account:settings' %}" class="dropdown-item Anuket-Text">
                                     <i class="fas fa-cog"></i>
@@ -85,10 +85,17 @@
                                         Logout
                                     </a>
                                 {% else %}
+                                    {% if AUTH_SETTING != 'SIMPLE' %}
                                     <a href="{% url 'account:login' %}" class="dropdown-item Anuket-Text">
                                         <i class="fas fa-sign-in-alt"></i>
                                         Login
                                     </a>
+                                    {% else %}
+                                    <a href="/login" class="dropdown-item Anuket-Text">
+                                        <i class="fas fa-sign-in-alt"></i>
+                                        Simple Login
+                                    </a>
+                                {% endif %}
                                 {% endif %}
                             {% endif %}
                         </div>
