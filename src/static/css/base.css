@@ -85,8 +85,23 @@ a[aria-expanded="true"] > i.rotate {
     cursor: not-allowed;
 }
 
+.z-n1 {
+    z-index: -1 !important;
+}
+
+.z-0 {
+    z-index: 0 !important;
+}
+
+.z-1 {
+z-index: 1 !important;
+}
+
 .z-2 {
-    z-index: 2;
+    z-index: 2 !important;
+}
+.z-3 {
+    z-index: 3 !important;
 }
 
 .mh-30vh {
@@ -101,10 +116,9 @@ a[aria-expanded="true"] > i.rotate {
 
 /* Design a pod Styles */
 .scroll-container {
-    position: fixed;
+    position: absolute !important; /* Needed for proper functionality*/
     overflow: auto;
     scroll-snap-type: y proximity;
-    z-index: 0;
 }
 
 .scroll-area {

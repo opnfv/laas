@@ -23,14 +23,14 @@ def get_user_field_opts() -> dict:
 
 
 def get_user_items(exclude=None) -> dict:
-    qs = UserProfile.objects.filter(public_user=True).select_related('user').exclude(user=exclude)
+    queryset = UserProfile.objects.filter(public_user=True).select_related('user').exclude(user=exclude)
     items = {}
-    for up in qs:
+    for userprofile in queryset:
         item = {
-            'id': up.id,
-            'expanded_name': up.full_name if up.full_name else up.user.username,
-            'small_name': up.user.username,
-            'string': up.email_addr if up.email_addr else up.user.username,
+            'id': userprofile.id,
+            'expanded_name': userprofile.full_name if userprofile.full_name else userprofile.user.username,
+            'small_name': userprofile.user.username,
+            'string': userprofile.email_addr if userprofile.email_addr else userprofile.user.username,
         }
-        items[up.id] = item
+        items[userprofile.id] = item
     return items

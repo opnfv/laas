@@ -62,6 +62,7 @@ from api.views import (
     single_image,
     single_opsys,
     create_ci_file,
+    get_ssh_key,
 )
 
 urlpatterns = [
@@ -101,6 +102,7 @@ urlpatterns = [
 
     path('users', all_users),
     path('labs', list_labs),
+    path('get_ssh_key', get_ssh_key),
 
     url(r'^token$', GenerateTokenView.as_view(), name='generate_token'),
 ]
