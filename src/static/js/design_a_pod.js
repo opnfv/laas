@@ -1,7 +1,7 @@
+// TODO Talk to LibLaas to get lab list
+  
   // LibLaas bridges
   function get_labs() {
-    // TODO Talk to LibLaas to get lab list
-
     const lab = {'name': 'UNH_IOL', 'description': 'University of New Hampshire InterOperability Lab',
     'location': 'University of New Hampshire InterOperability Lab', 'status': 0 };
 
@@ -360,12 +360,14 @@
 
       const hostname_input = document.getElementById('hostname-input');
       const error_message = document.getElementById('add-host-error-msg');
+      const cloud_init_input = document.getElementById('ci-textarea');
       let flavors = get_flavors(this.pod.lab_name);
 
       // Reset form fields
       hostname_input.value = "";
       hostname_input.classList.remove('invalid_field');
       error_message.innerText = "";
+      cloud_init_input.value = "";
 
       // Launch modal
       if (this.selected_flavor != '') {
@@ -381,6 +383,7 @@
       const hostname_input = document.getElementById('hostname-input');
       const error_message = document.getElementById('add-host-error-msg');
       const plus_card = document.getElementById('host-plus-card');
+      const cloud_init_input = document.getElementById('ci-textarea');
 
 
       // Input validation
@@ -429,7 +432,7 @@
       $('#host-modal').modal('hide')
 
       // Create host object
-      const new_host = new Host(hostname_input.value, this.selected_flavor, this.selected_image);
+      const new_host = new Host(hostname_input.value, this.selected_flavor, this.selected_image, cloud_init_input.value);
 
       // Add default interfaces and connections
       for (let i = 0; i < get_interface_count(this.selected_flavor); i++) {

@@ -47,6 +47,9 @@ from resource_inventory.models import (
 import yaml
 import uuid
 from deepmerge import Merger
+from account.models import UserProfile
+from resource_inventory.models import User
+from django.contrib.auth.models import User
 
 """
 API views.
@@ -754,3 +757,30 @@ def booking_details(request, booking_id=""):
         'pdf': booking.pdf
     }
     return JsonResponse(str(details), safe=False)
+
+def get_ssh_key(request) -> JsonResponse:
+    # query format: ?users=username1,username2,username3,etc...
+    users = []
+    userlist = request.GET.get('users')
+    userlist = userlist.split(",")
+
+    for user in userlist:
+        users.append(user)
+
+    key_list = []
+
+    for index in users:
+        user = User.objects.filter(username=index)[0]
+        profile = get_object_or_404(UserProfile, user=user)
+        username = user.username
+        try:
+            key = profile.ssh_public_key.open().read().decode(encoding='UTF-8')
+        except:
+            key = None
+
+        key_list.append({
+            'name': username,
+            'key' : key
+        })
+
+    return JsonResponse(key_list, safe=False)

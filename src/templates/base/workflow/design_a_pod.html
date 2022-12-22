@@ -15,103 +15,105 @@
 <!-- Main Content -->
 <body>
   
-  <div id="prev" class="row w-100 m-0">
-    <button class="btn btn-workflow-nav stretched-link m-0 p-0 mt-3" onclick="work.go_prev()" id="workflow-prev">
-      <div class="arrow arrow-up"></div>
-    </button>
-  </div>
-
-  <div id="next" class="row w-100 m-0">
-    <button class="btn btn-workflow-nav stretched-link m-0 p-0 mb-3" onclick="work.go_next()" id="workflow-next">
-      <div class="arrow arrow-down"></div>
-    </button>
-  </div>
-
-  <div class="scroll-container w-100 h-100 p-0">
-    <div class="scroll-area pt-5 mx-5" id="select_lab">
-      <h2 class="p-3 text-center mx-5 mt-3">Select a Lab:</h2>
-      <div class="row card-deck justify-content-center" id="lab_cards">
-      </div>
+  <div class="workflow-container">
+    <div id="prev" class="row w-100 m-0">
+      <button class="btn btn-workflow-nav stretched-link m-0 p-0 mt-3" onclick="work.go_prev()" id="workflow-prev">
+        <div class="arrow arrow-up"></div>
+      </button>
     </div>
-
-    <div class="scroll-area pt-5 mx-5" id="add_hosts">
-      <h2 class="p-3 text-center mx-5 mt-3">Add Hosts:</h2>
-      <div class="row card-deck align-items-center">
-        <div class="col-xl-3 col-md-6 col-12" id="host-plus-card">
-          <div class="card justify-content-center align-items-center border-0">
-            <button class="btn btn-success add-button p-0" onclick="work.add_host_button()">+</button>
-          </div>
+  
+    <div id="next" class="row w-100 m-0">
+      <button class="btn btn-workflow-nav stretched-link m-0 p-0 mb-3" onclick="work.go_next()" id="workflow-next">
+        <div class="arrow arrow-down"></div>
+      </button>
+    </div>
+  
+    <div class="scroll-container w-100 h-100 p-0">
+      <div class="scroll-area pt-5 mx-5" id="select_lab">
+        <h2 class="mt-4 mb-3">Select a Lab:</h2>
+        <div class="row card-deck" id="lab_cards">
         </div>
       </div>
-    </div>
-
-    <div class="scroll-area pt-5 mx-5" id="add_networks">
-      <h2 class="p-3 text-center mx-5 mt-3">Add Networks:</h2>
+  
+      <div class="scroll-area pt-5 mx-5" id="add_hosts">
+        <h2 class="mt-4 mb-3">Add Hosts:</h2>
         <div class="row card-deck align-items-center">
-          <div class="col-xl-3 col-md-6 col-12" id="network-plus-card">
-            <div class="card justify-content-center align-items-center border-0">
-              <button class="btn btn-success add-button p-0" onclick="work.add_network_button()">+</button>
+          <div class="col-xl-3 col-md-6 col-12" id="host-plus-card">
+            <div class="card align-items-center border-0">
+              <button class="btn btn-success add-button p-0" onclick="work.add_host_button()">+</button>
             </div>
           </div>
         </div>
-    </div>
-
-    <div class="scroll-area pt-5 mx-5" id="configure_connections">
-      <h2 class="p-3 text-center mx-5 mt-3">Configure Connections:</h2>
-      <div class="row card-deck align-items-center justify-content-center" id="connection_cards">
       </div>
-    </div>
-
-    <div class="scroll-area pt-5 mx-5" id="pod_details">
-      <h2 class="p-3 text-center mt-3">Pod Details</h2>
-      <div class="form-group">
-        <div class="row justify-content-center align-items-center my-4">
-          <div class="col-xl-6 col-md-8 col-11">
-            <input id="pod-name-input" class="form-control form-control-lg border border-dark p-3" type="text" placeholder="Pod Name">
+  
+      <div class="scroll-area pt-5 mx-5" id="add_networks">
+        <h2 class="mt-4 mb-3">Add Networks:</h2>
+          <div class="row card-deck align-items-center">
+            <div class="col-xl-3 col-md-6 col-12" id="network-plus-card">
+              <div class="card align-items-center border-0">
+                <button class="btn btn-success add-button p-0" onclick="work.add_network_button()">+</button>
+              </div>
+            </div>
           </div>
+      </div>
+  
+      <div class="scroll-area pt-5 mx-5" id="configure_connections">
+        <h2 class="mt-4 mb-3">Configure Connections:</h2>
+        <div class="row card-deck align-items-center" id="connection_cards">
         </div>
-        <div class="row justify-content-center align-items-center my-4">
-          <div class="col-xl-6 col-md-8 col-11">
-            <textarea id="pod-desc-input" class="form-control form-control-lg border border-dark pt-3 pl-3" rows="5" placeholder="Pod Description"></textarea>
+      </div>
+  
+      <div class="scroll-area pt-5 mx-5" id="pod_details">
+        <h2 class="mt-4 mb-3">Pod Details</h2>
+        <div class="form-group">
+          <div class="row align-items-center my-4">
+            <div class="col-xl-6 col-md-8 col-11">
+              <input id="pod-name-input" class="form-control form-control-lg border border-dark p-3" type="text" placeholder="Pod Name">
+            </div>
           </div>
-        </div>
-        <div class="row align-items-center justify-content-center my-4">
-          <div class="col-xl-6 col-md-8 col-11">
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="public_switch">
-              <label class="custom-control-label" for="public_switch">Make pod template public?</label>
+          <div class="row align-items-center my-4">
+            <div class="col-xl-6 col-md-8 col-11">
+              <textarea id="pod-desc-input" class="form-control form-control-lg border border-dark pt-3 pl-3" rows="5" placeholder="Pod Description"></textarea>
+            </div>
+          </div>
+          <div class="row align-items-center my-4">
+            <div class="col-xl-6 col-md-8 col-11">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="public_switch">
+                <label class="custom-control-label" for="public_switch">Make pod template public?</label>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center my-4">
+            <div class="col-xl-6 col-md-8 col-11">
+              <span id="pod_details_error" class="text-danger"></span>
             </div>
           </div>
         </div>
-        <div class="row justify-content-center align-items-center my-4">
+      </div>
+  
+      <div class="scroll-area pt-5 mx-5" id="pod_summary">
+        <h2 class="mt-4 mb-3">Pod Summary:</h2>
+        <div class="row align-items-center">
           <div class="col-xl-6 col-md-8 col-11">
-            <span id="pod_details_error" class="text-danger"></span>
+            <div class="card border-0">
+              <ul class="list-group">
+                <li class="list-group-item">Pod Details
+                  <ul id="pod_summary_pod_details">
+                  </ul>
+                </li>
+                <li class="list-group-item">Hosts
+                  <ul id="pod_summary_hosts">
+                  </ul>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="scroll-area pt-5 mx-5" id="pod_summary">
-      <h2 class="p-3 text-center mx-5 mt-3">Pod Summary:</h2>
-      <div class="row justify-content-center align-items-center">
-        <div class="col-xl-6 col-md-8 col-11">
-          <div class="card border-0">
-            <ul class="list-group">
-              <li class="list-group-item">Pod Details
-                <ul id="pod_summary_pod_details">
-                </ul>
-              </li>
-              <li class="list-group-item">Hosts
-                <ul id="pod_summary_hosts">
-                </ul>
-              </li>
-            </ul>
-          </div>
+        <div class="row align-items-center mt-5">
+          <div class="col-xl-2 col-md-3 col-5"><button class="btn btn-danger cancel-book-button p-0 w-100" onclick="work.delete_template()">Discard</button></div>
+          <div class="col-xl-2 col-md-3 col-5"><button class="btn btn-success cancel-book-button p-0 w-100" onclick = work.submit()>Create</button></div>
         </div>
-      </div>
-      <div class="row justify-content-center align-items-center mt-5">
-        <div class="col-xl-2 col-md-3 col-5"><button class="btn btn-danger cancel-book-button p-0 w-100" onclick="work.delete_template()">Discard</button></div>
-        <div class="col-xl-2 col-md-3 col-5"><button class="btn btn-success cancel-book-button p-0 w-100" onclick = work.submit()>Create</button></div>
       </div>
     </div>
   </div>
@@ -134,6 +136,10 @@
           <div class="form-group">
             <h2>Hostname</h2>
             <input type="text" class="form-control" id="hostname-input" placeholder="Enter Hostname">
+            <h2>Cloud Init</h2>
+            <div class="d-flex justify-content-center align-items-center">
+              <textarea name="ci-textarea" id="ci-textarea" rows="5" class="w-100"></textarea>
+            </div>
           </div>
           <p id="add-host-error-msg" class="text-danger"></p>
         </div>
@@ -172,7 +178,7 @@
   // Initializes objects for the workflow, adds event listeners to workflow elements, and resets the page to the default state
   const new_pod = new PodTemplate();
   const work = new Design_Workflow(new_pod);
-  work.pod.username = "{{username}}";
+  work.pod.owner = "{{request.user.id}}";
   work.display_labs();
   work.initialize_elements();
 </script>

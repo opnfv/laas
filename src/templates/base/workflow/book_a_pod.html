@@ -4,6 +4,7 @@
 {% block extrahead %}
 <script src="/static/js/workflow_classes.js"></script>
 <script src="/static/js/book_a_pod.js"></script>
+<script src="{% static "node_modules/js-yaml/dist/js-yaml.min.js" %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -24,18 +25,9 @@
   </div>
 
   <div class="scroll-container w-100 h-100 p-0">
-    <div class="scroll-area pt-5 mx-5" id="add_collabs">
-      <h2 class="p-3 text-center mx-5 mt-3">Add Collaborators:</h2>
-      <div class="row justify-content-center">
-        <div class="col-xl-6 col-md-8 col-11 p-0 border border-dark">
-          {% bootstrap_field form.users label="Collaborators" %}
-        </div>
-      </div>
-    </div>
-
     <div class="scroll-area pt-5 mx-5" id="select_template">
-      <h2 class="p-3 text-center mx-5 mt-3">Select Host Or Template:</h2>
-      <div class="row card-deck align-items-center justify-content-center">
+      <h2 class="mt-4 mb-3">Select Host Or Template:</h2>
+      <div class="row card-deck align-items-center">
 
         <div class="col-xl-6 col-md-8 col-11" id="template_list">
           <ul class="nav nav-tabs" role="tablist">
@@ -58,7 +50,7 @@
         <div id="template_card" class="col-xl-3 col-md-6 col-11" hidden>
           <div class="card">
             <div class="card-header">
-              <h3 class="mt-2">Selected Pod</h3>
+              <h3 class="mt-4 mb-3">Selected Pod</h3>
             </div>
             <ul class="list-group list-group-flush h-100 mb-4">
             </ul>
@@ -71,35 +63,44 @@
     </div>
 
     <div class="scroll-area pt-5 mx-5" id="cloud_init">
-      <h2 class="p-3 text-center mx-5 mt-3">Cloud Init</h2>
-      <div id="cloud_init_deck" class="row card-deck align-items-center justify-content-center">
+      <h2 class="mt-4 mb-3">Global Cloud Init Override</h2>
+      <div class="d-flex align-items-center">
+        <textarea name="ci-textarea" id="ci-textarea" rows="15" class="w-50"></textarea>
       </div>
     </div>
     <div class="scroll-area pt-5 mx-5" id="booking_details">
-      <h2 class="p-3 text-center mx-5 mt-3">Booking Details</h2>
+      <h2 class="mt-4 mb-3">Booking Details</h2>
       <div class="form-group mb-0">
-        <div class="row justify-content-center align-items-center my-4">
+        <div class="row align-items-center my-4">
           <div class="col-xl-6 col-md-8 col-11">
             <input id="input_project" class="form-control form-control-lg border border-dark p-5" type="text" placeholder="Project">
           </div>
         </div>
-        <div class="row justify-content-center align-items-center my-4">
+        <div class="row align-items-center my-4">
           <div class="col-xl-6 col-md-8 col-11">
             <input id="input_purpose" class="form-control form-control-lg border border-dark p-5" type="text" placeholder = "Purpose">
           </div>
         </div>
-        <div class="row justify-content-center align-items-center my-4">
+        <div class="row align-items-center my-4">
           <span id="booking_details_error" class="text-danger col-xl-6 col-md-8 col-11"></span>
         </div>
-        <div class="row justify-content-center align-items-center my-4">
+        <div class="row align-items-center my-4">
           <span id="booking_details_day_counter" class="col-md-1 col-2 p-0">Days: 1</span>
           <input id="input_length" type="range" min="1" max="21" value="1" class="form-control form-control-lg col-xl-5 col-9 p-0" placeholder="Length" oninput="work.booking_details_update_days()">
         </div>
       </div>
     </div>
+    <div class="scroll-area pt-5 mx-5" id="add_collabs">
+      <h2 class="mt-4 mb-3">Add Collaborators:</h2>
+      <div class="row">
+        <div class="col-xl-6 col-md-8 col-11 p-0 border border-dark">
+          {% bootstrap_field form.users label="Collaborators" %}
+        </div>
+      </div>
+    </div>
     <div class="scroll-area pt-5 mx-5" id="booking_summary">
-      <h2 class="p-3 text-center mx-5 mt-3">Booking Summary</h2>
-      <div class="row justify-content-center align-items-center">
+      <h2 class="mt-4 mb-3">Booking Summary</h2>
+      <div class="row align-items-center">
         <div class="card col-xl-6 col-md-8 col-11 border-0">
           <ul class="list-group">
             <li class="list-group-item">Booking Details
@@ -117,7 +118,7 @@
           </ul>
         </div>
       </div>
-      <div class="row justify-content-center align-items-center mt-5">
+      <div class="row align-items-center mt-5">
         <button class="btn btn-danger cancel-book-button p-0 mr-2 col-xl-2 col-md-3 col-5" onclick="work.cancel_booking()">Cancel</button>
         <button class="btn btn-success cancel-book-button p-0 ml-2 col-xl-2 col-md-3 col-5" onclick = work.submit_booking()>Book</button>
       </div>
@@ -125,7 +126,10 @@
   </div>
 </body>
 <script>
-  const work = new Booking_Workflow("{{username}}");
+  const work = new Booking_Workflow();
+  work.owner_id = "{{request.user.id}}"
+  work.username = "{{request.user}}"
+  work.dashboard_url = "{{request.META.DASHBOARD_URL}}"
   work.initialize_elements();
 </script>
 {% endblock %}

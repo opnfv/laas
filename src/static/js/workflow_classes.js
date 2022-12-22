@@ -83,11 +83,12 @@ class Connection {
 
 
   class Host {
-    constructor(hostname, flavor, image) {
+    constructor(hostname, flavor, image, ci) {
       this.hostname = hostname; // String
       this.flavor = flavor; // String
       this.image = image; // String
       this.interfaces = []; // Array of HostInterface objects
+      this.cloud_init = ci; // String of Yaml
     }
 
     add_interface(host_interface) {
@@ -99,7 +100,8 @@ class Connection {
   // Class that holds information about the pod being designed
   class PodTemplate {
     constructor() {
-      this.username = ""; // String
+      this.owner = ""; // User id
+      this.uuid = null;
       this.lab_name = ""; // String
       this.pod_name = ""; // String
       this.pod_desc = ""; // String
@@ -110,7 +112,7 @@ class Connection {
 
     toString() {
       let str = "";
-      str += "Template Owner: " + this.username;
+      str += "Template Owner: " + this.owner;
       str += "\nLab: " + this.lab_name;
       str += "\nPod Name: " + this.pod_name;
       str += "\nPod Desc: " + this.pod_desc;
@@ -196,9 +198,73 @@ class Connection {
     }
 
     export_template() {
-      return JSON.stringify(this);
-    }
+      let llTemplate = {
+        owner: this.owner, // todo: needs to be a Uuid
+        template_id: this.uuid,
+        lab_name: this.lab_name,
+        pod_name: this.pod_name,
+        pod_desc: this.pod_desc,
+        public: this.is_public,
+        host_list: [],
+        networks: []
+      };
 
+      // Build network list
+      for (let i in this.network_list) {
+        let network = {
+          name: this.network_list[i],
+          bondGroup: {
+            connections: [
+              {
+                ifaces: [],
+                tagged: true
+              },
+              {
+                ifaces: [],
+                tagged: false
+              }
+            ]
+          }
+        };
+        
+        // Go through all connections and find the ones on the relevent network (This is necessary due to different data structures between pod design workflow and liblaas)
+        for (let host in this.host_list) {
+          for (let hinterface in this.host_list[host].interfaces) {
+            for (let connectionIndex in this.host_list[host].interfaces[hinterface].connections) {
+              if (this.host_list[host].interfaces[hinterface].connections[connectionIndex].network == this.network_list[i]) {
+
+                let iface = {
+                  hostname: this.host_list[host].hostname,
+                  name: this.host_list[host].interfaces[hinterface].name
+                };
+
+                if (this.host_list[host].interfaces[hinterface].connections[connectionIndex].tagged == true) {
+                  network.bondGroup.connections[0].ifaces.push(iface);
+                } else if (this.host_list[host].interfaces[hinterface].connections[connectionIndex].tagged == false) {
+                  network.bondGroup.connections[1].ifaces.push(iface);
+                }
+              }
+            }
+          }
+        }
+
+        llTemplate.networks.push(network)
+      }
+
+      for (let i in this.host_list) {
+        let host = {
+          _id: null,
+          hostname: this.host_list[i].hostname,
+          flavor: this.host_list[i].flavor, // todo: needs to be a Uuid
+          image: this.host_list[i].image,
+          cifile: [this.host_list[i].cloud_init]
+        }
+        llTemplate.host_list.push(host);
+      }
+
+      console.log(JSON.stringify(llTemplate));
+      // TODO Actually send to liblaas
+    }
   }
 
   // Search widget for django forms (taken from dashboard.js and slightly modified)
@@ -458,12 +524,19 @@ class Connection {
         document.getElementById("user_field").value = "";
         document.getElementById("user_field").focus();
         this.search("");
+
+        const item = this.items[item_id];
+        const element_entry_text = this.generate_element_text(item);
+        const username = item.small_name;
+        work.add_collaborator(username, element_entry_text);
     }
 
     remove_item(item_id)
     {
         this.added_items.delete(item_id); // delete from set
-        work.remove_collaborator(document.getElementById(`coldel-${item_id}`).innerText); // delete from workflow object
+
+        const item = this.items[item_id];
+        work.remove_collaborator(item.small_name); // delete from workflow object
 
         this.update_selected_list();
         document.getElementById("user_field").focus();
