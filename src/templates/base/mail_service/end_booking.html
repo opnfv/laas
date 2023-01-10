@@ -1,0 +1,15 @@
+{% extends 'mail_service/base_notification.html'%}
+
+{% block message %}
+<div id="message_content_wrapper" class="textFormatting content">
+    {% if owner %}
+    <h2>Your Booking Has Expired.</h2>
+    <p>Your booking has ended and the machines have been cleaned up.</p>
+    <p>Thank you for working on {{booking.lab.project}}, and feel free to book more machines if you need them.</p>
+    {% else %}
+    <h2>A Booking That You Collaborated on Has Expired.</h2>
+    <p>The booking owned by {{booking.owner.username}} that you worked on has ended.</p>
+    <p>Thank you for contributing to {{booking.lab.project}}.</p>
+    {% endif %}
+</div>
+{% endblock %}

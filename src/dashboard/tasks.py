@@ -25,7 +25,8 @@ from api.models import (
 
 from resource_inventory.resource_manager import ResourceManager
 from resource_inventory.models import ConfigState
-
+from mail_service.tasks import create_emails_for_booking
+from mail_service.models import EmailQueue
 
 @shared_task
 def booking_poll():
@@ -65,6 +66,9 @@ def booking_poll():
             job.complete = True
             job.save()
             NotificationHandler.notify_booking_end(booking)
+            emails = create_emails_for_booking(booking.id, "end_booking")
+            for email in emails:
+                EmailQueue.objects.create(email=email)
 
 
 @shared_task

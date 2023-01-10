@@ -7,8 +7,10 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
 
-from django.contrib import admin
 
-from notifier.models import Notification
+from django.conf.urls import url
 
-admin.site.register(Notification)
+app_name = 'mail_service'
+urlpatterns = [
+    # url(r'^mail', index, name='messages'),
+]

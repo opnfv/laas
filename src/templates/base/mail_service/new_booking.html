@@ -1,0 +1,13 @@
+{% extends 'mail_service/base_notification.html'%}
+
+{% block message %}
+<div id="message_content_wrapper" class="textFormatting content">
+    {% if owner %}
+    <h2>You Have Created a New Booking.</h2>
+    <p>We have recieved your booking request and will start working on it right away.</p>
+    {% else %}
+    <h2>You Have Been Added as a Collaborator to a Booking.</h2>
+    <p>{{booking.owner.username}} has given you access to their booking.</p>
+    {% endif %}
+</div>
+{% endblock %}

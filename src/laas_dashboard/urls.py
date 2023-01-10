@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^api/', include('api.urls')),
     url(r'^messages/', include('notifier.urls', namespace='notifier')),
     url(r'^oidc/', include('mozilla_django_oidc.urls')),
+    url(r'^mail/', include('mail_service.urls')),
 ]
 
 if settings.DEBUG is True:

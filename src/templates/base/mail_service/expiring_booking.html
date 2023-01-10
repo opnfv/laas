@@ -1,0 +1,14 @@
+{% extends 'mail_service/base_notification.html'%}
+
+{% block message %}
+<div id="message_content_wrapper" class="textFormatting content">
+    {% if owner %}
+    <h2>Your Booking Is About to Expire.</h2>
+    <p>Your booking will expire within 48 hours ({{booking.end}}).</p>
+    {% else %}
+    <h2>A Booking That You Collaborate on Is About to Expire.</h2>
+    <p>The booking owned by {{booking.owner.username}} that you work on is about to expire.</p>
+    {% endif %}
+    <p>Please take the time to backup all data or extend the booking if needed.</p>
+</div>
+{% endblock %}

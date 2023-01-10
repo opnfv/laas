@@ -16,6 +16,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from account.models import Lab, UserProfile
+from mail_service.models import EmailQueue
 
 from resource_inventory.models import (
     ResourceTemplate,
@@ -35,6 +36,7 @@ from notifier.manager import NotificationHandler
 from booking.models import Booking
 from dashboard.exceptions import BookingLengthException
 from api.models import JobFactory
+from mail_service.tasks import create_emails_for_booking
 
 
 def parse_resource_field(resource_json):
@@ -292,7 +294,8 @@ def _create_booking(data):
         start=timezone.now(),
         end=timezone.now() + timedelta(days=int(data['length'])),
         resource=resource_bundle,
-        opnfv_config=None
+        opnfv_config=None,
+        emailed_expiring=False
     )
 
     booking.pdf = PDFTemplater.makePDF(booking)
@@ -305,6 +308,9 @@ def _create_booking(data):
     # generate job
     JobFactory.makeCompleteJob(booking)
     NotificationHandler.notify_new_booking(booking)
+    emails = create_emails_for_booking(booking.id, "new_booking")
+    for email in emails:
+        EmailQueue.objects.create(email=email)
 
     return booking
 

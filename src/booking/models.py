@@ -38,7 +38,7 @@ class Booking(models.Model):
     lab = models.ForeignKey(Lab, null=True, on_delete=models.SET_NULL)
     pdf = models.TextField(blank=True, default="")
     idf = models.TextField(blank=True, default="")
-
+    emailed_expiring = models.BooleanField(blank=True, default=True)
     complete = models.BooleanField(default=False)
 
     class Meta:

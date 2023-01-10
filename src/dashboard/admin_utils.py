@@ -52,7 +52,7 @@ from notifier.manager import NotificationHandler
 from api.models import JobFactory
 
 from api.models import JobStatus, Job, GeneratedCloudConfig
-
+from mail_service.tasks import create_emails_for_booking
 
 def print_div():
     """
@@ -151,6 +151,7 @@ def book_host(owner_username, host_labid, lab_username, hostname, image_id, temp
 
     JobFactory.makeCompleteJob(booking)
     NotificationHandler.notify_new_booking(booking)
+    create_emails_for_booking(booking.id, "new_booking")
 
 
 def mark_working(host_labid, lab_username, working=True):

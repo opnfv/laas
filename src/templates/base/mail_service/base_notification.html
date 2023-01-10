@@ -1,0 +1,104 @@
+<html>
+    <head>
+        <style>
+            h2{
+                font-family: 'Source Sans Pro';
+            }
+            p{
+                font-family: Montserrat;
+            }
+            li{
+                font-family: Montserrat;
+            }
+            .textFormatting{
+                text-align: center;
+                color:#343a40;
+                margin: auto;
+
+            }
+            .content{
+                position: center;
+            }
+            table{
+                margin-left: auto;
+                margin-right: auto;
+                border: 1px solid #343a40;
+                border-collapse: collapse;
+            }
+            tr{
+                border-bottom: 1px solid #343a40;
+            }
+            td{
+                color:#343a40;
+                padding: 3px;
+                font-family: Montserrat
+            }
+            .row1{
+                background-color: #7598b6;
+                font-weight: bolder;
+            }
+            .row2{
+                background-color: #d2e5f3;
+            }
+            .row3{
+                background-color: #FFFFFF;
+            }
+        </style>
+    </head>
+    <body>
+        {% block message %}
+        <h1>Lab as a Service</h1>
+        {% endblock%}
+        <table>
+            <tr class="row1">
+                <td style="text-align: center; font-size: larger;" colspan="2">Booking Information:</td>
+            </tr>
+            <tr class="row2">
+                <td>Owner:</td>
+                <td>{{booking.owner.username}}</td>
+            </tr>
+            <tr class="row3">
+                <td>id:</td>
+                <td>{{booking.id}}</td>
+            </tr>
+            <tr class="row2">
+                <td>lab:</td>
+                <td>{{booking.resource.template.lab.lab_user.username}}</td>
+            </tr>
+            <tr class="row3">
+                <td>resource:</td>
+                <td>{{booking.resource.template.name}}</td>
+            </tr>
+            <tr class="row2">
+                <td>start:</td>
+                <td>{{booking.start}}</td>
+            </tr>
+            <tr class="row3">
+                <td>end:</td>
+                <td>{{booking.end}}</td>
+            </tr>
+            <tr class="row2">
+                <td>purpose:</td>
+                <td>{{booking.purpose}}</td>
+            </tr>
+            <tr class="row3">
+                <td>collaborators:</td>
+                <td></td>
+            </tr>
+            {% for user in booking.collaborators.all %}
+            <tr class="{% cycle 'row2' 'row3' %}">
+                <td></td>
+                <td>{{user.username}}</td>
+            </tr>
+            {% empty %}
+            <tr class="row2">
+                <td></td>
+                <td>No collaborators</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% if is_email == True %}
+        <p class="textFormatting">You can find more detailed information <a href="{{dashboard_url}}/booking/detail/{{booking.id}}">here</a>.</p>
+        {% endif %}
+    </body>
+</html>
