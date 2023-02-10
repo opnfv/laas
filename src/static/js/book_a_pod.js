@@ -420,7 +420,7 @@ class Booking_Workflow {
         // Prequisite steps
         if (this.selected_template == null) {
             alert('Please select a host or template.');
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 4; i++) {
                 this.go_prev();
             }
             return;
@@ -429,12 +429,14 @@ class Booking_Workflow {
         if (!this.booking_project) {
             alert('Please enter a valid project name.');
             this.go_prev();
+            this.go_prev();
             document.getElementById('input_project').classList.add('invalid_field');
             return;
         }
 
         if (!this.booking_purpose) {
             alert('Please enter a valid booking purpose.');
+            this.go_prev();
             this.go_prev();
             document.getElementById('input_purpose').classList.add('invalid_field');
             return;
@@ -443,16 +445,18 @@ class Booking_Workflow {
         if (!this.booking_length) {
             alert('Please enter a booking length.');
             this.go_prev();
+            this.go_prev();
             return;
         }
 
-        if (!this.is_valid_yaml(this.global_ci)) {
-            alert('Please enter valid YAML for the global Cloud Init override.')
-            for (let i = 0; i < 2; i++) {
-                this.go_prev();
-            }
-            return;
-        }
+        // todo - fix this
+        // if (!this.is_valid_yaml(this.global_ci)) {
+        //     alert('Please enter valid YAML for the global Cloud Init override.')
+        //     for (let i = 0; i < 2; i++) {
+        //         this.go_prev();
+        //     }
+        //     return;
+        // }
 
         if(confirm('Are you sure you want to create this booking?')) {
             this.send_booking_to_liblaas();
