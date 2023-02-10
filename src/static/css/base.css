@@ -208,3 +208,8 @@ z-index: 1 !important;
     height: 25vh;
     overflow-y: auto;
 }
+
+.overflow-control {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
