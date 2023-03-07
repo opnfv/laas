@@ -8,6 +8,7 @@
 ##############################################################################
 
 
+import json
 from django.http import HttpResponse
 from django.shortcuts import render
 from account.models import Lab
@@ -15,8 +16,10 @@ from django.core.handlers.wsgi import WSGIRequest
 from laas_dashboard.settings import TEMPLATE_OVERRIDE
 from workflow.forms import BookingMetaForm
 import uuid
-
+import os
+from api.views import talk_to_liblaas, get_ssh_key
 from workflow.workflow_manager import ManagerTracker, SessionManager
+from django.views.decorators.csrf import csrf_exempt
 
 import logging
 logger = logging.getLogger(__name__)
@@ -112,26 +115,45 @@ def no_workflow(request: WSGIRequest) -> HttpResponse:
 def login(request: WSGIRequest) -> HttpResponse:
     return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
 
-
+@csrf_exempt
 def design_a_pod(request):
-    if not request.user.is_authenticated:
-        return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
-    template = "workflow/design_a_pod.html"
-    context = {
-        "dashboard": str(TEMPLATE_OVERRIDE)
-    }
+    if request.method == 'GET':
+        if not request.user.is_authenticated:
+            return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
+        template = "workflow/design_a_pod.html"
+        context = {
+            "dashboard": str(TEMPLATE_OVERRIDE),
+            "liblaas_base_url": str(os.environ.get("LIBLAAS_BASE_URL"))
+        }
 
-    return render(request, template, context)
+        return render(request, template, context)
+    if request.method == 'POST':
+        return talk_to_liblaas(request)
+
+    return HttpResponse(status=405)
 
 
+@csrf_exempt
 def book_a_pod(request):
-    if not request.user.is_authenticated:
-        return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
-    template = "workflow/book_a_pod.html"
-    context = {
-        "username": request.user,
-        "form": BookingMetaForm(initial={}, user_initial=[], owner=request.user),
-        "dashboard": str(TEMPLATE_OVERRIDE)
-    }
+    if request.method == 'GET':
+        if not request.user.is_authenticated:
+            return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
+        template = "workflow/book_a_pod.html"
+        context = {
+            "username": request.user,
+            "form": BookingMetaForm(initial={}, user_initial=[], owner=request.user),
+            "dashboard": str(TEMPLATE_OVERRIDE)
+        }
+        return render(request, template, context)
+    if request.method == 'POST':
+        post_data = json.loads(request.body)
 
-    return render(request, template, context)
+        # post to dashboard instead of post_data contains the "destination" key
+        if "destination" in post_data:
+            print("posting to dashboard")
+            return get_ssh_key(request) # this is the only use case for posting with destination at the moment.
+
+        print("posting to liblaas")
+        return talk_to_liblaas(request)
+    
+    return HttpResponse(status=405)

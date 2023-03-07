@@ -64,6 +64,7 @@ from api.views import (
     create_ci_file,
     booking_details,
     get_ssh_key,
+    talk_to_liblaas
 )
 
 urlpatterns = [
@@ -105,6 +106,7 @@ urlpatterns = [
     path('users', all_users),
     path('labs', list_labs),
     path('get_ssh_key', get_ssh_key),
+    path('talk_to_liblaas', talk_to_liblaas),
 
     url(r'^token$', GenerateTokenView.as_view(), name='generate_token'),
 ]

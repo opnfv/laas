@@ -178,9 +178,20 @@
   // Initializes objects for the workflow, adds event listeners to workflow elements, and resets the page to the default state
   const new_pod = new PodTemplate();
   const work = new Design_Workflow(new_pod);
-  work.pod.owner = "{{request.user.id}}";
+  work.pod.owner = Number("{{request.user.id}}");
   work.display_labs();
   work.initialize_elements();
+  window.onbeforeunload = function (e) {
+  var message = "Are you sure you want to leave? All progress will be lost.",
+  e = e || window.event;
+  // For IE and Firefox
+  if (e) {
+    e.returnValue = message;
+  }
+
+  // For Safari
+  return message;
+};
 </script>
 {% endif %}
 {% endblock %}

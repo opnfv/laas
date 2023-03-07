@@ -12,6 +12,8 @@ import json
 import math
 import traceback
 import sys
+import os
+import requests
 from datetime import timedelta
 
 from django.contrib.auth.decorators import login_required
@@ -758,29 +760,68 @@ def booking_details(request, booking_id=""):
     }
     return JsonResponse(str(details), safe=False)
 
-def get_ssh_key(request) -> JsonResponse:
-    # query format: ?users=username1,username2,username3,etc...
-    users = []
-    userlist = request.GET.get('users')
-    userlist = userlist.split(",")
-
-    for user in userlist:
-        users.append(user)
+def get_ssh_key(request) -> JsonResponse:    
+    post_data = json.loads(request.body)
+    users = post_data["collaborators"]
 
     key_list = []
 
-    for index in users:
-        user = User.objects.filter(username=index)[0]
-        profile = get_object_or_404(UserProfile, user=user)
-        username = user.username
+    for user in users:
+        user_object = User.objects.filter(username=user["username"])[0]
+        user_profile = get_object_or_404(UserProfile, user=user_object)
         try:
-            key = profile.ssh_public_key.open().read().decode(encoding='UTF-8')
+            key = user_profile.ssh_public_key.open().read().decode(encoding='UTF-8')
         except:
             key = None
-
         key_list.append({
-            'name': username,
-            'key' : key
+            'user': user["username"],
+            'user_id': user_object.id,
+            'key': key 
         })
 
     return JsonResponse(key_list, safe=False)
+
+def talk_to_liblaas(request) -> JsonResponse:
+    # liblaas endpoint
+    # request method
+    # payload
+
+    liblaas_base_url = os.environ.get("LIBLAAS_BASE_URL")
+
+    if request.method == "POST":
+        post_data = json.loads(request.body)
+
+        liblaas_endpoint = post_data["liblaas_endpoint"]
+        http_method = post_data["request_method"]
+
+        metadata = {
+            "user_id" : int(request.user.id),
+        }
+
+        payload = {
+            "metadata" : metadata,
+            "payload" : post_data["payload"]
+        }
+
+        if (http_method == "GET"):
+            print("Method is get!")
+            response = requests.get(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+            print(response)
+            print(response.content)
+        elif (http_method == "POST"):
+            print("Method is post! To url: ", liblaas_base_url + liblaas_endpoint)
+            print("sending:\n" + json.dumps(payload, indent=4))
+            response = requests.post(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload), headers={'Content-Type': 'application/json'})
+            print(response.content)
+        elif (http_method == "DELETE"):
+            response = requests.delete(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+        elif (http_method == "PUT"):
+            response = requests.put(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+        else:
+            return JsonResponse({"error": "405 Unsupported method"})
+        try:
+            return JsonResponse(json.loads(response.content.decode('utf8')), safe=False)
+        except:
+            return JsonResponse({}) # todo - handle JSONDecode error
+    else:
+        return JsonResponse({"error" : "405 Method not allowed"})

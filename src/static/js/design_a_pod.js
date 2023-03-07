@@ -1,7 +1,6 @@
-// TODO Talk to LibLaas to get lab list
-  
   // LibLaas bridges
   function get_labs() {
+    // Todo - get labs from liblaas
     const lab = {'name': 'UNH_IOL', 'description': 'University of New Hampshire InterOperability Lab',
     'location': 'University of New Hampshire InterOperability Lab', 'status': 0 };
 
@@ -10,49 +9,17 @@
     return lab_list;
   }
 
-  function get_flavors(lab) {
-    // TODO Talk to LibLaas to get flavor list
-    if (lab == 'UNH_IOL') {
-      return ["Gigabyte Arm", "HPE x86 25G", "HPE x86 10G", "HPE gen 10"];
-    }
-    console.log("No lab: " + lab);
-    console.log("Lab not found error");
-  }
 
-  function get_images(flavor) {
-    // TODO Talk to LibLaas to get image list for specific flavor
-    if (flavor == "Gigabyte Arm") {
-      return ["Ubuntu 20.04 LTS (aarch 64)"];
-    }
-
-    if (flavor == "HPE x86 25G") {
-      return ['Ubuntu 20.04 LTS (x86_64)', 'Fedora 33 (x86_64)'];
-    }
-
-    if (flavor == "HPE x86 10G") {
-      return ['Ubuntu 20.04 LTS (x86_64)', 'Fedora 33 (x86_64)'];
-    }
-
-    if (flavor == "HPE gen 10") {
-      return ['Ubuntu 20.04 LTS (x86_64)', 'Fedora 33 (x86_64)'];
-    }
-
-    console.log("Flavor not found error");
-  }
-
-  function get_interface_count(flavor) {
-    // TODO Talk to liblaas to get amount of interfaces depending on flavor
-    return 4;
-  }
-
-  function get_interface_name(flavor) {
-    // TODO Talk to liblaas to get name of interface depending on flavor
-    return "ENS";
+  // Gets flavors from liblaas and saves to the workflow object
+  async function get_flavors(lab) {
+    let response = talk_to_liblaas("GET", "flavor", {});
+    return response;
   }
 
   function resume_session(template_json) {
     // TODO: Receive JSON from liblaas, recreate cards on screen, user can keep creating template from where it was left off
   }
+
 
   // Session Class
   class Design_Workflow {
@@ -66,6 +33,7 @@
       this.selected_flavor = "";
       this.selected_interface = "";
       this.selected_image= "";
+      this.lab_flavors = [];
     }
 
     go_prev() {
@@ -157,6 +125,7 @@
         details_error_message.innerText = '';
         this.pod.pod_name = pod_name_input.value;
         this.update_pod_summary('pod_details');
+        this.save();
       })
 
       pod_desc_input.addEventListener('focusout', desc_e => {
@@ -182,6 +151,7 @@
         details_error_message.innerText = '';
         this.pod.pod_desc = pod_desc_input.value;
         this.update_pod_summary('pod_details');
+        this.save();
       })
 
       public_switch.addEventListener('focusout', public_e => {
@@ -191,6 +161,7 @@
 
         this.pod.is_public = public_switch.checked;
         this.update_pod_summary('pod_details');
+        this.save();
       })
     }
 
@@ -232,7 +203,7 @@
       }
     }
 
-    select_lab(lab_name) {
+    async select_lab(lab_name) {
       this.step = 0;
       document.getElementById('workflow-prev').setAttribute('disabled' , '');
 
@@ -240,6 +211,11 @@
       if (this.pod.lab_name == "") {
         document.querySelector('#' + lab_name + ' .card').classList.add("selected_node");
         this.pod.lab_name = lab_name;
+        const liblaas_flavors = await get_flavors(this.pod.lab_name);
+        for (let i in liblaas_flavors) {
+          this.lab_flavors.push(new Flavor(liblaas_flavors[i]["id"], liblaas_flavors[i]["name"], liblaas_flavors[i]["description"], liblaas_flavors[i]["interface_names"]));
+          this.lab_flavors[i].set_images();
+        }
         this.display_flavors();
       } else {
         // a lab is already selected, clear already selected resources
@@ -248,31 +224,27 @@
             return false;
         }
       }
+      this.save();
     }
 
     delete_template() {
       // TODO: Remove template from LibLaas
-      this.step = 5;
-      document.getElementById('workflow-prev').removeAttribute('disabled');
-      document.getElementById('workflow-next').setAttribute('disabled', '');
-
       location.reload();
     }
 
     display_flavors() {
       const flavor_cards = document.getElementById('flavor-cards');
-      const flavors = get_flavors(this.pod.lab_name);
 
-      for (let i = 0; i < flavors.length; i++) {
+      for (let i = 0; i < this.lab_flavors.length; i++) {
       const col = document.createElement('div');
       col.classList.add('col-12', 'col-md-6', 'col-xl-3', 'my-3');
       col.innerHTML=  `
         <div class="card">
           <div class="card-header">
-              <p class="h5 font-weight-bold mt-2">` + flavors[i] + `</p>
+              <p class="h5 font-weight-bold mt-2">` + this.lab_flavors[i].name + `</p>
           </div>
           <div class="card-body">
-              <p id="testing123" class="grid-item-description">Flavor Description Goes Here</p>
+              <p id="testing123" class="grid-item-description">` + this.lab_flavors[i].description +`</p>
           </div>
           <div class="card-footer">
               <button id="select-flavor-` + i + `" type="button" class="btn btn-success grid-item-select-btn w-100 stretched-link" 
@@ -286,12 +258,12 @@
 
     display_images() {
       const image_cards = document.getElementById('image-cards');
-      const images = get_images(this.selected_flavor);
+      const images = this.selected_flavor.images;
       for (let i = 0; i < images.length; i++) {
         const col = document.createElement('div');
         col.classList.add('col-12', 'col-md-6', 'col-xl-3', 'my-3');
         col.innerHTML = `
-        <div id=select-image-` + i +` class="btn border w-100" onclick="work.select_image(this.id)">` + images[i] +`</div>
+        <div id=select-image-` + i +` class="btn border w-100" onclick="work.select_image(this.id)">` + images[i][1] +`</div>
         `
         image_cards.appendChild(col);
       }
@@ -299,7 +271,7 @@
 
     select_flavor(param) {
       // param: select-flavor-#
-      const flavors = get_flavors(this.pod.lab_name);
+      const flavors = this.lab_flavors;
       const index = param.substring(14);
       const card = document.querySelectorAll('#flavor-cards .card').item(index);
       const flavor = flavors[index];
@@ -325,7 +297,7 @@
 
     select_image(param) {
       // param: select-image-#
-      const images = get_images(this.selected_flavor);
+      const images = this.selected_flavor.images;
       const index = param.substring(13);
       const card = document.querySelectorAll('#image-cards .btn').item(index);
       const image = images[index];
@@ -361,7 +333,6 @@
       const hostname_input = document.getElementById('hostname-input');
       const error_message = document.getElementById('add-host-error-msg');
       const cloud_init_input = document.getElementById('ci-textarea');
-      let flavors = get_flavors(this.pod.lab_name);
 
       // Reset form fields
       hostname_input.value = "";
@@ -432,12 +403,11 @@
       $('#host-modal').modal('hide')
 
       // Create host object
-      const new_host = new Host(hostname_input.value, this.selected_flavor, this.selected_image, cloud_init_input.value);
+      const new_host = new Host(hostname_input.value, this.selected_flavor, this.selected_image[1], cloud_init_input.value);
 
       // Add default interfaces and connections
-      for (let i = 0; i < get_interface_count(this.selected_flavor); i++) {
-        let interface_name = get_interface_name(this.selected_flavor) + i;
-        const new_interface = new HostInterface(interface_name);
+      for (let i = 0; i < this.selected_flavor.interfaces.length; i++) {
+        const new_interface = new HostInterface(this.selected_flavor.interfaces[i]);
         new_host.add_interface(new_interface);  
       }
 
@@ -450,13 +420,13 @@
       new_card.innerHTML = `
         <div class="card">
           <div class="card-header">
-            <h3 class="mt-2">` + new_host.flavor + `</h3>
+            <h3 class="mt-2">` + new_host.flavor.name + `</h3>
           </div>
-          <ul class="list-group list-group-flush h-100 mb-4">
+          <ul class="list-group list-group-flush h-100">
             <li class="list-group-item">Hostname: ` + new_host.hostname + `</li>
             <li class="list-group-item">Image: ` + new_host.image + `</li>
           </ul>
-          <div class="card-footer">
+          <div class="card-footer border-top-0">
             <button class="btn btn-danger w-100" id="delete-host-` + new_host.hostname + `" onclick="work.delete_host_button(id)">Delete</button>
           </div>
         </div>
@@ -468,6 +438,7 @@
       }
       this.new_connection_card(new_host.hostname);
       this.update_pod_summary('hosts');
+      this.save();
     }
 
     delete_host_button(button_id) {
@@ -496,6 +467,7 @@
 
       // Update host summary
       this.update_pod_summary('hosts');
+      this.save();
     }
 
     delete_network_button(button_id) {
@@ -527,7 +499,7 @@
       if (this.pod.network_list.length == 7) {
         document.getElementById('network-plus-card').hidden = false;
       }
-
+      this.save();
     }
 
     add_network_button() {
@@ -659,6 +631,7 @@
         network_plus_card.hidden = true;
       }
       network_plus_card.parentNode.insertBefore(new_card, network_plus_card);
+      this.save();
     }
 
     delete_new_network() {
@@ -924,6 +897,7 @@
         li.innerHTML = li_html;
         list.appendChild(li);
       }
+      this.save();
     }
 
 
@@ -1016,7 +990,7 @@
         const hosts = this.pod.host_list;
         for (let i = 0; i < this.pod.host_list.length; i++) {
           const new_li = document.createElement('li');
-          new_li.innerText = hosts[i].hostname + ': ' + hosts[i].flavor + ' (' + hosts[i].image + ')';
+          new_li.innerText = hosts[i].hostname + ': ' + hosts[i].flavor.name + ' (' + hosts[i].image + ')';
           list.appendChild(new_li);
         }
       } else {
@@ -1043,7 +1017,7 @@
       }
     }
 
-    submit() {
+    async submit() {
       this.step = 5;
       document.getElementById('workflow-prev').removeAttribute('disabled');
       document.getElementById('workflow-next').setAttribute('disabled', '');
@@ -1094,8 +1068,29 @@
         return;
       }
 
-      console.log(this.pod.toString());
-      console.log(this.pod.export_template());
-      alert('Success');
+      this.pod.id = await this.create_template_blob();
+      this.commit_template();
+      alert('The pod was created successfully!');
+      window.onbeforeunload = null;
+      window.location.href = "../../";
     }
+
+    save() {
+      // Keep as a stub until save / resume feature is ready to be deployed
+    }
+
+    // creates a new template blob in liblaas from an lltemplate
+    async create_template_blob() {
+      return talk_to_liblaas("POST", "template/", this.pod.convert_to_lltemplate())
+    }
+
+    async update_template_blob() {
+      // todo
+    }
+
+    // Tells liblaas to commit the templateblob into a finished template
+    async commit_template() {
+      return talk_to_liblaas("POST", "template/" + this.pod.id + "/commit", {})
+    }
+    
   }

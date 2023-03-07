@@ -1,4 +1,22 @@
 // PodTemplate Classes
+class Flavor {
+  constructor(id, name, description, interfaces) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.images = [];
+    this.interfaces = interfaces;
+  }
+
+  async get_images() {
+    let response = talk_to_liblaas("GET", "flavor/" + this.id + "/0" + "/images/", {});
+    return response;
+  }
+
+  async set_images() {
+    this.images = await this.get_images();
+  }
+}
 class Connection {
     constructor(network, tagged) {
       this.network = network; // String
@@ -85,7 +103,7 @@ class Connection {
   class Host {
     constructor(hostname, flavor, image, ci) {
       this.hostname = hostname; // String
-      this.flavor = flavor; // String
+      this.flavor = flavor; // Flavor
       this.image = image; // String
       this.interfaces = []; // Array of HostInterface objects
       this.cloud_init = ci; // String of Yaml
@@ -100,7 +118,7 @@ class Connection {
   // Class that holds information about the pod being designed
   class PodTemplate {
     constructor() {
-      this.owner = ""; // User id
+      this.owner = -1; // User id
       this.uuid = null;
       this.lab_name = ""; // String
       this.pod_name = ""; // String
@@ -197,10 +215,10 @@ class Connection {
       // TODO: Read JSON from liblaas and convert back to js object
     }
 
-    export_template() {
+    convert_to_lltemplate() {
       let llTemplate = {
-        owner: this.owner, // todo: needs to be a Uuid
-        template_id: this.uuid,
+        owner: this.owner,
+        _id: this.uuid,
         lab_name: this.lab_name,
         pod_name: this.pod_name,
         pod_desc: this.pod_desc,
@@ -213,7 +231,7 @@ class Connection {
       for (let i in this.network_list) {
         let network = {
           name: this.network_list[i],
-          bondGroup: {
+          bondgroup: {
             connections: [
               {
                 ifaces: [],
@@ -239,9 +257,9 @@ class Connection {
                 };
 
                 if (this.host_list[host].interfaces[hinterface].connections[connectionIndex].tagged == true) {
-                  network.bondGroup.connections[0].ifaces.push(iface);
+                  network.bondgroup.connections[0].ifaces.push(iface);
                 } else if (this.host_list[host].interfaces[hinterface].connections[connectionIndex].tagged == false) {
-                  network.bondGroup.connections[1].ifaces.push(iface);
+                  network.bondgroup.connections[1].ifaces.push(iface);
                 }
               }
             }
@@ -255,16 +273,53 @@ class Connection {
         let host = {
           _id: null,
           hostname: this.host_list[i].hostname,
-          flavor: this.host_list[i].flavor, // todo: needs to be a Uuid
+          flavor: this.host_list[i].flavor.id,
           image: this.host_list[i].image,
           cifile: [this.host_list[i].cloud_init]
         }
         llTemplate.host_list.push(host);
       }
 
-      console.log(JSON.stringify(llTemplate));
-      // TODO Actually send to liblaas
+      return llTemplate;
     }
+  }
+
+  function talk_to_liblaas(request_method, endpoint, payload) {
+    // Params:
+    //     request_method: String ("GET" or "POST")
+    //     endpoint: String (ie "template")
+    //     payload: Object - use {} if none
+
+    if (endpoint == null) {
+      throw new Error("Missing liblaas endpoint")
+    }
+
+    // Always POST to dashboard, even if using a different http request method on LibLaaS
+    return new Promise((resolve, reject) => {
+      $.ajax(
+        {
+        crossDomain: true,
+        method: "POST",
+        contentType: "application/json; charset=utf-8",
+        dataType : 'json',
+        data: JSON.stringify(
+          {
+            "liblaas_endpoint": endpoint,
+            "payload": payload,
+            "request_method": request_method
+          }
+        ),
+        timeout: 30000,
+        success: (response) => {
+          resolve(response);
+        },
+        error: (response) => {
+          alert("Oops, something went wrong!");
+          reject(response);
+        }
+      }
+      )
+    })
   }
 
   // Search widget for django forms (taken from dashboard.js and slightly modified)
