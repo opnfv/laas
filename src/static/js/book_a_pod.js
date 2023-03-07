@@ -12,6 +12,8 @@ class Booking_Workflow {
         this.booking_project =  ''; // String
         this.booking_purpose = ''; // String
         this.booking_length = 1; // int
+        this.default_templates =  []; // List of templates
+        this.user_templates = []; // List of templates
     }
 
     go_prev() {
@@ -46,18 +48,24 @@ class Booking_Workflow {
         document.getElementById(section).scrollIntoView({behavior: 'smooth'});
     }
 
+    async get_templates() {
+        let available_templates = await talk_to_liblaas("GET", 'template/list/' + this.owner_id, {});
+        this.default_templates = available_templates[0];
+        this.user_templates = available_templates[1];
+    }
+
     display_templates_list() {
         const default_list_ul = document.getElementById('default_templates_list');
         const my_pod_list_ul = document.getElementById('my_pods_list');
-        const default_templates_list = this.get_default_templates();
-        const my_pods_list = this.get_user_templates();
+        const default_templates_list = this.default_templates;
+        const my_pods_list = this.user_templates;
 
         for (let i in default_templates_list) {
             const btn = document.createElement('btn');
             btn.classList.add('btn', 'w-100', 'text-left');
             const list_li = document.createElement('li');
             list_li.classList.add('list-group-item', 'list-group-item-action');
-            list_li.innerText = default_templates_list[i].pod_name + ' (' + default_templates_list[i].pod_desc + ')';
+            list_li.innerText = default_templates_list[i][0].name + ' (' + default_templates_list[i][0].description + ')';
             list_li.id = "default_template_li_" + i;
             list_li.setAttribute('onclick', 'work.select_template(id)');
             btn.appendChild(list_li);
@@ -67,14 +75,14 @@ class Booking_Workflow {
         for (let i in my_pods_list) {
             const list_li = document.createElement('li');
             list_li.classList.add('list-group-item', 'list-group-item-action');
-            list_li.innerText = my_pods_list[i].pod_name + ' (' + my_pods_list[i].pod_desc + ')';
+            list_li.innerText = my_pods_list[i][0].name + ' (' + my_pods_list[i][0].description + ')';
             list_li.id = "my_pod_li_" + i;
             list_li.setAttribute('onclick', 'work.select_template(id)');
             my_pod_list_ul.appendChild(list_li);
         }
     }
 
-    initialize_elements() {
+    async initialize_elements() {
         // Scroll sections
         document.getElementById('workflow-next').removeAttribute('disabled');
         document.getElementById('workflow-prev').setAttribute('disabled' , '');
@@ -160,7 +168,7 @@ class Booking_Workflow {
         input_ci.addEventListener('focusout', ci_e2 => {
             this.global_ci = input_ci.value;
         });
-
+        await this.get_templates();
         this.display_templates_list();
     }
 
@@ -217,113 +225,50 @@ class Booking_Workflow {
         this.booking_summary_update_text('add_collabs');
     }
 
-    get_default_templates() {
-        // TODO poke liblaas for list of default hosts
-        // returns podtemplate object
-        // for i in templates if username == 'root': list.push(i)?
-
-        // For demo purposes only - delete when integrated with liblaas
-        const list = []
-        const default1 = new PodTemplate();
-        default1._id = '0';
-        default1.lab_name = 'UNH_IOL';
-        default1.pod_name = 'Gigabyte Arm';
-        default1.pod_desc = 'Default template that contains a single Gigabyte Arm host attached to port enP2p1s0f1';
-        default1.host_list = [new Host('laas-node', 'Gigabyte Arm', 'Ubuntu', 'ci here')];
-        default1.network_list = ['public'];
-
-        const default2 = new PodTemplate();
-        default2.owner_id = '0';
-        default2.lab_name = 'UNH_IOL';
-        default2.pod_name = 'HPE x86 25G';
-        default2.pod_desc = 'Default template that contains a single HPEx86 host attached to port eno49';
-        default2.host_list = [new Host('laas-node', 'HPE x86 25G', 'Ubuntu', 'ci here')];
-        default2.network_list = ['public'];
-
-        list.push(default1, default2);
-        list.push(default1, default2);
-        list.push(default1, default2);
-
-        return list;
-    }
-
-    get_user_templates() {
-        // TODO poke liblaas to get user created templates
-        // returns podtemplate object
-        // for i in templates if username == this.username: list.push(i)?
-
-        const list = []
-
-        // For demo purposes only -  delete when integrated with liblaas
-        const genOb = JSON.parse(`{"owner_id":"209","lab_name":"UNH_IOL","pod_name":"Justin's Pod",
-        "pod_desc":"For demo purposes","host_list":[{"hostname":"custom-node","flavor":"Gigabyte Arm","image":"Ubuntu 20.04 LTS (aarch 64)",
-        "interfaces":[{"name":"ENS0","connections":[{"network":"public","tagged":true},
-        {"network":"private","tagged":false}]},{"name":"ENS1","connections":
-        [{"network":"public","tagged":false},{"network":"private","tagged":true}]},
-        {"name":"ENS2","connections":[{"network":"public","tagged":true},
-        {"network":"private","tagged":false}]},{"name":"ENS3","connections":
-        [{"network":"public","tagged":true},{"network":"private","tagged":true}]}]},
-        {"hostname":"custom-node-2","flavor":"Gigabyte Arm","image":"Ubuntu 20.04 LTS (aarch 64)","interfaces":
-        [{"name":"ENS0","connections":[{"network":"public","tagged":true},{"network":"private","tagged":true}]},
-        {"name":"ENS1","connections":[{"network":"public","tagged":true},{"network":"private","tagged":true}]},
-        {"name":"ENS2","connections":[{"network":"public","tagged":true},{"network":"private","tagged":true}]},
-        {"name":"ENS3","connections":[{"network":"public","tagged":true},{"network":"private","tagged":true}]}]}],
-        "network_list":["public","private"]}`);
-
-        const custom = Object.assign(new PodTemplate, genOb);
-
-        list.push(custom);
-
-        // const demoOb = JSON.parse(``);
-        // const demoPod = Object.assign(new PodTemplate, demoOb);
-        // list.push(demoPod);
-
-        return list;
-    }
 
     select_template(id) {
         this.step = 0;
         document.getElementById('workflow-next').removeAttribute('disabled');
 
         // Finds the template object by index number
-        let tab;
         let index;
 
         if (id.substring(0, 7) == 'default') {
-            tab = this.get_default_templates();
             index = id.substring(20)
+            this.selected_template = this.default_templates[index][0];
         } else {
-            tab = this.get_user_templates();
             index = id.substring(10);
+            this.selected_template = this.user_templates[index][0];
         }
 
-        this.selected_template = tab[index];
-
-
         // Update card text
-        document.querySelector('#template_card h3').innerText = this.selected_template.pod_name;
+        document.querySelector('#template_card h3').innerText = this.selected_template.name;
         const host_ul = document.querySelector('#template_card ul');
-        host_ul.innerHTML = '<li class="list-group-item">Description: ' + this.selected_template.pod_desc + '</li>';
+        host_ul.innerHTML = '<li class="list-group-item">Description: ' + this.selected_template.description + '</li>';
 
-        if (this.selected_template.host_list.length == 1) {
-            const host = this.selected_template.host_list[0];
+        if (this.selected_template.hosts.length == 1) {
+            const host = this.selected_template.hosts[0];
             const hostname_li = document.createElement('li');
             hostname_li.classList.add('list-group-item');
-            hostname_li.innerText = 'Hostname: ' + host.hostname;
+            hostname_li.innerText = 'Hostname: ' + host[0];
+
+            const flavor_li = document.createElement('li');
+            flavor_li.classList.add('list-group-item');
+            flavor_li.innerText = 'Flavor: ' + host[2];
 
             const image_li = document.createElement('li');
             image_li.classList.add('list-group-item');
-            image_li.innerText = 'Image: ' + host.image;
+            image_li.innerText = 'Image: ' + host[1];
 
             host_ul.appendChild(hostname_li);
             host_ul.appendChild(image_li);
 
         } else {
-            for (let i in this.selected_template.host_list) {
+            for (let i in this.selected_template.hosts) {
                 const new_li = document.createElement('li');
-                const host = this.selected_template.host_list[i];
+                const host = this.selected_template.hosts[i];
                 new_li.classList.add('list-group-item');
-                new_li.innerText = host.flavor + ': ' + host.hostname + ' (' + host.image + ')';
+                new_li.innerText = host[2] + ': ' + host[0] + ' (' + host[1] + ')';
                 host_ul.appendChild(new_li);
             }
         }
@@ -367,9 +312,9 @@ class Booking_Workflow {
                 const hosts_ul = document.getElementById('booking_summary_hosts');
                 hosts_ul.innerHTML = '';
                 if (!this.selected_template) break;
-                for (let i in this.selected_template.host_list) {
+                for (let i in this.selected_template.hosts) {
                     const hosts_li = document.createElement('li');
-                    hosts_li.innerText = this.selected_template.host_list[i].hostname;
+                    hosts_li.innerText = this.selected_template.hosts[i][0];
                     hosts_ul.appendChild(hosts_li);
                 }
                 break;
@@ -412,7 +357,7 @@ class Booking_Workflow {
         }
     }
 
-    submit_booking() {
+    async submit_booking() {
         this.step = 4;
         document.getElementById('workflow-prev').removeAttribute('disabled');
         document.getElementById('workflow-next').setAttribute('disabled', '');
@@ -459,79 +404,77 @@ class Booking_Workflow {
         // }
 
         if(confirm('Are you sure you want to create this booking?')) {
-            this.send_booking_to_liblaas();
+            this.booking_id = await this.create_booking_blob();
+            this.commit_booking();
+            if (this.booking_id != null) {
+                alert("The booking has been successfully created.")
+                window.location.href = "../../";
+            }
         } else {
             return;
         }
     }
 
+    async get_ssh_keys() {
 
-    async httpRequest(address, reqType) {
-        console.log("Sending http request.")
-        let result;
-        try {
-            result = await $.ajax({
-                url: address,
-                type: reqType,
-            });
-            return result;
-        } catch (error) {
-            console.error(error);
+        let userlist = [];
+        userlist.push({
+            username: this.username,
+            full_string: null
+        });
+
+        for (let user in this.collaborators) {
+            userlist.push(this.collaborators[user]);
         }
-      }
-      
+        return new Promise((resolve, reject) => {
+            $.ajax(
+              {
+              crossDomain: true,
+              method: "POST",
+              contentType: "application/json; charset=utf-8",
+              dataType : 'json',
+              data: JSON.stringify(
+                {
+                  "destination": "dashboard",
+                  "collaborators": userlist
+                }
+              ),
+              timeout: 30000,
+              success: (response) => {
+                resolve(response);
+              },
+              error: (response) => {
+                alert("Oops, something went wrong!");
+                reject(response);
+              }
+            }
+            )
+          });
+    }
 
-    async send_booking_to_liblaas() {
-        let booking = {
-            id: null, //booking id
-            owner: 209,
-            template_id: this.selected_template.uuid, //todo get template uuid from liblaas
+    async commit_booking() {
+        return talk_to_liblaas("POST", "booking/" + this.booking_id + "/create", {})
+    }
+
+    async create_booking_blob() {
+
+        let bookingblob = {
+            _id: null,
+            owner: Number(this.owner_id),
+            template_id: this.selected_template._id,
             credentials: [/* Array of access data objects */],
             cifile: this.global_ci // YAML String
         };
 
-        // Grab keys
-        let s = this.username;
-        for (let i = 0; i < this.collaborators.length; i++) {
-            s += "," + this.collaborators[i].username;
-        }
-
-        // todo: change from localhost
-        const url='http://localhost:8000/api/get_ssh_key?users=' + s;
-
-        let key_list = await this.httpRequest(url, "GET");
-
+        let key_list = await this.get_ssh_keys(); // contains keys for the booking creator followed by the collaborators
         // Build user credentials
         if (key_list[0].key == null) {
             alert("You have no SSH keys uploaded. Please add an SSH key before continuing.");
             return;
         }
 
-        {
-            let key = {
-                key: key_list[0].key,
-                key_type: null
-            }
-    
-            if (key.key.includes("ssh-rsa")) {
-                key.key_type = "Rsa";
-            } else if (key.key.includes("ssh-ed25519")) {
-                key.key_type = "Ed25519";
-            } else {
-                key.key_type = "INVALID";
-            }
-
-            let access_data = {
-                username: this.username,
-                keys: [key],
-                password: null
-            }
-    
-            booking.credentials.push(access_data);
-        }
-
-        // Build collaborator credentials
-        for (let i = 1; i <= this.collaborators.length; i++) {
+        // Build credentials
+        for (let i = 0; i < key_list.length; i++) {
             if (key_list[i].key == null) {
                 alert(this.collaborators[i - 1].username + " has no SSH keys uploaded. All collaborators must have uploaded SSH keys to create the booking.");
                 return;
@@ -549,21 +492,28 @@ class Booking_Workflow {
             } else {
                 key.key_type = "INVALID";
             }
-    
+
+            if (key.key_type == "INVALID") {
+                if (i == 0) {
+                    alert("You have an invalid SSH key uploaded. Supported key types are 'ed25519' and 'rsa'.");
+                } else {
+                    alert(this.collaborators[i - 1].username + " has an invalid SSH key uploaded. Supported key types are 'ed25519' and 'rsa'.");
+                }
+                return;
+            }
     
             let access_data = {
-                username: this.collaborators[i - 1].username,
+                 // tuesday: we need a WorkflowAccessData struct in liblaas, and then an impl which is to_AccessData
+                user_id: key_list[i].user_id,
+                username: key_list[i].user,
                 keys: [key],
-                password: null
             }
 
-            booking.credentials.push(access_data);
+            bookingblob.credentials.push(access_data);
         }
 
         // todo send json to liblaas instead of logging
-        console.log(JSON.stringify(booking));
-        alert("The booking has been successfully created.")
-        window.location.href = "../../";
+        return talk_to_liblaas("POST", "booking/", bookingblob);
     }
 
     is_valid_yaml(string) {
