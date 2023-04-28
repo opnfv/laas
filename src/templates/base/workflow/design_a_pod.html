@@ -30,13 +30,15 @@
   
     <div class="scroll-container w-100 h-100 p-0">
       <div class="scroll-area pt-5 mx-5" id="select_lab">
+        <!-- Ideally the 'Design a Pod' header would be anchored to the top of the page below the arrow -->
+        <h1 class="mt-4"><u>Design a Pod</u></h1> 
         <h2 class="mt-4 mb-3">Select a Lab:</h2>
         <div class="row card-deck" id="lab_cards">
         </div>
       </div>
   
       <div class="scroll-area pt-5 mx-5" id="add_hosts">
-        <h2 class="mt-4 mb-3">Add Hosts:</h2>
+        <h2 class="mt-4 mb-3">Add Resources:</h2>
         <div class="row card-deck align-items-center">
           <div class="col-xl-3 col-md-6 col-12" id="host-plus-card">
             <div class="card align-items-center border-0">
@@ -102,7 +104,7 @@
                   <ul id="pod_summary_pod_details">
                   </ul>
                 </li>
-                <li class="list-group-item">Hosts
+                <li class="list-group-item">Resources
                   <ul id="pod_summary_hosts">
                   </ul>
                 </li>
@@ -123,29 +125,38 @@
     <div class="modal-dialog modal-xl">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="host-modal-label">Add Host</h5>
+          <h5 class="modal-title" id="host-modal-label">Add Resource</h5>
           <button class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
-          <h2>Flavor</h2>
+          <h2>Resource</h2>
           <div id="flavor-cards" class="row align-items-center justify-content-start">
           </div>
-          <h2>Image</h2>
-          <div id="image-cards" class="row justify-content-start align-items-center">
-          </div>
-          <div class="form-group">
-            <h2>Hostname</h2>
-            <input type="text" class="form-control" id="hostname-input" placeholder="Enter Hostname">
-            <h2>Cloud Init</h2>
-            <div class="d-flex justify-content-center align-items-center">
-              <textarea name="ci-textarea" id="ci-textarea" rows="5" class="w-100"></textarea>
+
+          <div id="template-config-section">
+            <ul class="nav nav-tabs" role="tablist" id="add-host-tablist" hidden="true">
+              <!-- add a tab per host in template -->
+            </ul>
+            <!-- tabs -->
+            <div id="host-config-section" hidden="true">
+              <h2>Image</h2>
+              <div id="image-cards" class="row justify-content-start align-items-center">
+              </div>
+              <div class="form-group">
+                <h2>Hostname</h2>
+                <input type="text" class="form-control" id="hostname-input" placeholder="Enter Hostname">
+                <h2>Cloud Init</h2>
+                <div class="d-flex justify-content-center align-items-center">
+                  <textarea name="ci-textarea" id="ci-textarea" rows="5" class="w-100"></textarea>
+                </div>
+              </div>
             </div>
           </div>
           <p id="add-host-error-msg" class="text-danger"></p>
         </div>
         <div class="modal-footer">
           <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
-          <button class="btn btn-success" onclick="work.add_host()">Submit</button>
+          <button class="btn btn-success" onclick="work.add_hosts()">Submit</button>
         </div>
       </div>
     </div>

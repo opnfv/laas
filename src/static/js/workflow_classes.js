@@ -59,44 +59,7 @@ class Connection {
 
       return true;
     }
-
-    hasUntagged() {
-      for (let i in this.connections) {
-        if (this.connections[i].tagged == false) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    remove_connection(connection) {
-
-      let index = -1;
-
-      for (let i in this.connections) { // Find index of connection to delete
-        if (connection.equals(this.connections[i])) {
-          index = i;
-          break;
-        }
-      }
-
-      if (index == -1) {
-        console.log("Connection not in list. Unable to remove");
-        return;
-      }
-
-      // Create temp array and copy all connection objects except the one to be removed
-      const temp = [];
-      for (let i in this.connections) {
-        if (i != index) {
-          temp.push(this.connections[i])
-        }
-      }
-
-      this.connections = temp;
-
-    }
+s
   }
 
 
@@ -140,9 +103,6 @@ class Connection {
         str += "\n  " + this.host_list[i].hostname +':'
         for (let j in this.host_list[i].interfaces) {
           str += "\n    " + this.host_list[i].interfaces[j].name;
-          for (let k in this.host_list[i].interfaces[j].connections) {
-            str += "\n      " + this.host_list[i].interfaces[j].connections[k].network + "," + this.host_list[i].interfaces[j].connections[k].tagged;
-          }
         }
       }
       str += "\nNetworks: " + this.network_list;
@@ -248,17 +208,17 @@ class Connection {
         // Go through all connections and find the ones on the relevent network (This is necessary due to different data structures between pod design workflow and liblaas)
         for (let host in this.host_list) {
           for (let hinterface in this.host_list[host].interfaces) {
-            for (let connectionIndex in this.host_list[host].interfaces[hinterface].connections) {
-              if (this.host_list[host].interfaces[hinterface].connections[connectionIndex].network == this.network_list[i]) {
+            for (const [key, value] of this.host_list[host].interfaces[hinterface].connections) {
+              if (key == this.network_list[i]) {
 
                 let iface = {
                   hostname: this.host_list[host].hostname,
                   name: this.host_list[host].interfaces[hinterface].name
                 };
 
-                if (this.host_list[host].interfaces[hinterface].connections[connectionIndex].tagged == true) {
+                if (value == true) {
                   network.bondgroup.connections[0].ifaces.push(iface);
-                } else if (this.host_list[host].interfaces[hinterface].connections[connectionIndex].tagged == false) {
+                } else if (value == false) {
                   network.bondgroup.connections[1].ifaces.push(iface);
                 }
               }
@@ -273,7 +233,7 @@ class Connection {
         let host = {
           _id: null,
           hostname: this.host_list[i].hostname,
-          flavor: this.host_list[i].flavor.id,
+          flavor: this.host_list[i].flavor,
           image: this.host_list[i].image,
           cifile: [this.host_list[i].cloud_init]
         }

@@ -51,8 +51,16 @@ class Booking_Workflow {
 
     async get_templates() {
         let available_templates = await talk_to_liblaas("GET", 'template/list/' + this.owner_id, {});
-        this.default_templates = available_templates[0];
-        this.user_templates = available_templates[1];
+        this.default_templates = [];
+        this.user_templates = [];
+        console.log(available_templates);
+        for (let i = 0; i < available_templates.length; i++) {
+            if (available_templates[i].owner == Number(this.owner_id)) {
+                this.user_templates.push(available_templates[i]);
+            } else {
+                this.default_templates.push(available_templates[i]);
+            }
+        }
     }
 
     display_templates_list() {
@@ -66,7 +74,7 @@ class Booking_Workflow {
             btn.classList.add('btn', 'w-100', 'text-left');
             const list_li = document.createElement('li');
             list_li.classList.add('list-group-item', 'list-group-item-action');
-            list_li.innerText = default_templates_list[i][0].name + ' (' + default_templates_list[i][0].description + ')';
+            list_li.innerText = default_templates_list[i].name + ' (' + default_templates_list[i].description + ')';
             list_li.id = "default_template_li_" + i;
             list_li.setAttribute('onclick', 'work.select_template(id)');
             btn.appendChild(list_li);
@@ -76,7 +84,7 @@ class Booking_Workflow {
         for (let i in my_pods_list) {
             const list_li = document.createElement('li');
             list_li.classList.add('list-group-item', 'list-group-item-action');
-            list_li.innerText = my_pods_list[i][0].name + ' (' + my_pods_list[i][0].description + ')';
+            list_li.innerText = my_pods_list[i].name + ' (' + my_pods_list[i].description + ')';
             list_li.id = "my_pod_li_" + i;
             list_li.setAttribute('onclick', 'work.select_template(id)');
             my_pod_list_ul.appendChild(list_li);
@@ -236,10 +244,10 @@ class Booking_Workflow {
 
         if (id.substring(0, 7) == 'default') {
             index = id.substring(20)
-            this.selected_template = this.default_templates[index][0];
+            this.selected_template = this.default_templates[index];
         } else {
             index = id.substring(10);
-            this.selected_template = this.user_templates[index][0];
+            this.selected_template = this.user_templates[index];
         }
 
         // Update card text
@@ -315,7 +323,7 @@ class Booking_Workflow {
                 if (!this.selected_template) break;
                 for (let i in this.selected_template.hosts) {
                     const hosts_li = document.createElement('li');
-                    hosts_li.innerText = this.selected_template.hosts[i][0];
+                    hosts_li.innerText = this.selected_template.hosts[i];
                     hosts_ul.appendChild(hosts_li);
                 }
                 break;
