@@ -60,13 +60,13 @@
         </div>
         <div class="card my-3">
             <div class="card-header d-flex">
-                <h4 class="d-inline-block">Host Profiles</h4>
+                <h4 class="d-inline-block">Host Flavors</h4>
                 <button data-toggle="collapse" data-target="#profile_panel" class="btn btn-outline-secondary ml-auto">Expand</button>
             </div>
             <div class="collapse show" id="profile_panel">
                 <div class="overflow-auto">
                     <table class="table m-0">
-                        {% for profile in hostprofiles %}
+                        {% for profile in flavors %}
                             <tr>
                                 <td>{{profile.name}}</td>
                                 <td>{{profile.description}}</td>
@@ -96,7 +96,7 @@
                 </table>
             </div>
         </div>
-        <div class="card my-3">
+        <!-- <div class="card my-3">
             <div class="card-header d-flex">
                 <h4>Images</h4>
                 <button data-toggle="collapse" data-target="#image_panel" class="btn btn-outline-secondary ml-auto">Expand</button>
@@ -121,7 +121,7 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div> -->
 
     </div>
     <div class="col-lg-8">
@@ -135,22 +135,20 @@
                 <table class="table m-0">
                     <tr>
                         <th>Name</th>
-                        <th>Profile</th>
+                        <th>Flavor</th>
                         <th>Booked</th>
                         <th>Working</th>
-                        <th>Vendor</th>
                     </tr>
                     {% for host in hosts %}
                         <tr>
-                            <td>{{host.name}}</td>
-                            <td>{{host.profile}}</td>
+                            <td>{{host.server_name}}</td>
+                            <td>{{host.flavor.name}}</td>
                             <td>{{host.booked|yesno:"Yes,No"}}</td>
                             {% if host.working %}
                                 <td class="bg-success text-white">Yes</td>
                             {% else %}
                                 <td class="bg-danger text-white">No</td>
                             {% endif %}
-                            <td>{{host.vendor}}</td>
                         </tr>
                     {% endfor %}
                 </table>

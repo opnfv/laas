@@ -23,15 +23,16 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic import RedirectView, UpdateView
 from django.shortcuts import render
+import requests
 from rest_framework.authtoken.models import Token
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
-
-
+import json
 from account.forms import AccountSettingsForm
 from account.models import UserProfile
 from booking.models import Booking
 from resource_inventory.models import ResourceTemplate, Image
-
+from api.views import talk_to_liblaas
+from django.views.decorators.csrf import csrf_exempt
 
 @method_decorator(login_required, name='dispatch')
 class AccountSettingsView(UpdateView):
@@ -111,7 +112,7 @@ def account_detail_view(request) -> HttpResponse:
     template = "account/details.html"
     return render(request, template)
 
-
+@csrf_exempt
 def account_resource_view(request) -> HttpResponse:
     """
     Display a user's resources.
@@ -119,22 +120,27 @@ def account_resource_view(request) -> HttpResponse:
     gathers a users genericResoureBundles and
     turns them into displayable objects
     """
-    if not request.user.is_authenticated:
-        return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
-    template = "account/resource_list.html"
+    if request.method == 'GET':
+        if not request.user.is_authenticated:
+            return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
+        template = "account/resource_list.html"
+        liblaas_base_url = os.environ.get("LIBLAAS_BASE_URL")
 
-    active_bundles = [book.resource for book in Booking.objects.filter(
-        owner=request.user, end__gte=timezone.now(), resource__template__temporary=False)]
-    active_resources = [bundle.template.id for bundle in active_bundles]
-    resource_list = list(ResourceTemplate.objects.filter(owner=request.user, temporary=False))
-
-    context = {
-        "resources": resource_list,
-        "active_resources": active_resources,
-        "title": "My Resources"
-    }
-    return render(request, template, context=context)
-
+        resource_list = json.loads(requests.get(liblaas_base_url + "template/list/" + str(request.user.id)).content) # the dashboard API needs a serious overhaul to make interacting with liblaas much less painful
+        print("the resource list is " + str(resource_list))
+        for resource in resource_list: # needed because jinja can't handle underscores in variables fields
+            resource['buttonid'] = resource['_id']
+            print(resource)
+        
+        context = {
+            "resources": resource_list,
+            "title": "My Resources"
+        }
+        return render(request, template, context=context)
+    elif request.method == 'POST':
+        return talk_to_liblaas(request) # this is throwing a 500 but it removes it from the database successfully. This is a liblaas issue that needs to be addressed
+    else:
+        return HttpResponse(status=405)
 
 def account_booking_view(request) -> HttpResponse:
     if not request.user.is_authenticated:
@@ -152,7 +158,6 @@ def account_booking_view(request) -> HttpResponse:
         "expired_bookings": expired_bookings
     }
     return render(request, template, context=context)
-
 
 def account_images_view(request) -> HttpResponse:
     if not request.user.is_authenticated:

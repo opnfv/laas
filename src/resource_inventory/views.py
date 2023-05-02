@@ -8,9 +8,12 @@
 ##############################################################################
 
 
+import json
+import os
 from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
+import requests
 
 from resource_inventory.models import ResourceProfile, ResourceQuery
 
@@ -20,19 +23,22 @@ class HostView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HostView, self).get_context_data(**kwargs)
-        hosts = ResourceQuery.filter(working=True)
+        liblaas_base_url = os.environ.get("LIBLAAS_BASE_URL")
+        hosts = json.loads(requests.get(liblaas_base_url + "booking/hosts/all").text)
         context.update({'hosts': hosts, 'title': "Hardware Resources"})
         return context
 
 
-def hostprofile_detail_view(request, hostprofile_id):
-    hostprofile = get_object_or_404(ResourceProfile, id=hostprofile_id)
+def hostprofile_detail_view(request, flavor_id):
 
+    liblaas_base_url = os.environ.get("LIBLAAS_BASE_URL")
+    flavor = json.loads(requests.get(liblaas_base_url + "flavor/name/" + flavor_id + "/").text)
+    print(flavor)
     return render(
         request,
         "resource/hostprofile_detail.html",
         {
-            'title': "Host Type: " + str(hostprofile.name),
-            'hostprofile': hostprofile
+            'title': "Host Type: " + str(flavor["name"]),
+            'flavor': flavor
         }
     )

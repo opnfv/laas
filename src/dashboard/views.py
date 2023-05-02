@@ -9,6 +9,8 @@
 ##############################################################################
 
 
+import json
+import os
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from django.shortcuts import render
@@ -17,6 +19,7 @@ from django.http import HttpResponse
 
 from datetime import datetime
 import pytz
+import requests
 
 from account.models import Lab
 from booking.models import Booking
@@ -35,17 +38,22 @@ def lab_list_view(request) -> HttpResponse:
 
 
 def lab_detail_view(request, lab_name) -> HttpResponse:
-    user = None
-    if request.user.is_authenticated:
-        user = request.user
+    liblaas_base_url = os.environ.get("LIBLAAS_BASE_URL")
 
-    lab = get_object_or_404(Lab, name=lab_name)
+    # Hard coded until liblaas supports the concept of a lab
+    lab = {
+        "name": "UNH IOL",
+        "location" : "University of New Hampshire, Durham NH, 03824 USA",
+        "contact_email" : "nfv-lab@iol.unh.edu",
+        "status": 0
+    }
 
-    images = Image.objects.filter(from_lab=lab).filter(public=True)
-    if user:
-        images = images | Image.objects.filter(from_lab=lab).filter(owner=user)
+    # image list removed until endpoint for liblaas is created
+    # images = Image.objects.filter(from_lab=lab).filter(public=True)
 
-    hosts = ResourceQuery.filter(lab=lab)
+    hosts = json.loads(requests.get(liblaas_base_url + "booking/hosts/all").text)
+    flavors = json.loads(requests.get(liblaas_base_url + "flavor/").text)
+    print(flavors)
 
     return render(
         request,
@@ -53,8 +61,8 @@ def lab_detail_view(request, lab_name) -> HttpResponse:
         {
             'title': "Lab Overview",
             'lab': lab,
-            'hostprofiles': ResourceProfile.objects.filter(labs=lab),
-            'images': images,
+            'flavors': flavors,
+            # 'images': images,
             'hosts': hosts
         }
     )

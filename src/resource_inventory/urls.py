@@ -32,5 +32,5 @@ from resource_inventory.views import HostView, hostprofile_detail_view
 app_name = 'resource'
 urlpatterns = [
     url(r'^hosts$', HostView.as_view(), name='hosts'),
-    url(r'^profiles/(?P<hostprofile_id>.+)/$', hostprofile_detail_view, name='host_detail'),
+    url(r'^profiles/(?P<flavor_id>.+)/$', hostprofile_detail_view, name='host_detail'),
 ]
