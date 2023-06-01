@@ -445,6 +445,7 @@ class Booking_Workflow {
               data: JSON.stringify(
                 {
                   "destination": "dashboard",
+                  "purpose": "ssh-key",
                   "collaborators": userlist
                 }
               ),
@@ -462,7 +463,41 @@ class Booking_Workflow {
     }
 
     async commit_booking() {
-        return talk_to_liblaas("POST", "booking/" + this.booking_id + "/create", {})
+        talk_to_liblaas("POST", "booking/" + this.booking_id + "/create", {}).then(() => {
+            // post to dashboard to create booking in django db
+            return new Promise((resolve, reject) => {
+                $.ajax(
+                  {
+                  crossDomain: true,
+                  method: "POST",
+                  contentType: "application/json; charset=utf-8",
+                  dataType : 'json',
+                  data: JSON.stringify(
+                    {
+                      "destination": "dashboard",
+                      "purpose": "create-booking",
+                      "booking_info": {
+                        "aggregate_id": this.booking_id,
+                        "user_id": this.user_id,
+                        "booking_length": this.booking_length
+                      }
+                    }
+                  ),
+                  timeout: 15000,
+                  success: (response) => {
+                    resolve(response);
+                  },
+                  error: (response) => {
+                    alert("Could not create booking!");
+                    reject(response);
+                  }
+                }
+                )
+              });
+        })
+        .catch(() => {
+            console.log("Unable to commit booking!");
+        });
     }
 
     async create_booking_blob() {

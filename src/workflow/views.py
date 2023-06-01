@@ -20,6 +20,9 @@ import os
 from api.views import talk_to_liblaas, get_ssh_key
 from workflow.workflow_manager import ManagerTracker, SessionManager
 from django.views.decorators.csrf import csrf_exempt
+from booking.models import Booking
+from datetime import timedelta
+from django.utils import timezone
 
 import logging
 logger = logging.getLogger(__name__)
@@ -115,6 +118,18 @@ def no_workflow(request: WSGIRequest) -> HttpResponse:
 def login(request: WSGIRequest) -> HttpResponse:
     return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
 
+def create_booking(aggregate_id, user_id, booking_length):
+    print("creating booking with params:")
+    print(aggregate_id)
+    print(user_id)
+    print(booking_length)
+    Booking.objects.create(
+    id=aggregate_id,
+    owner=user_id,
+    start=timezone.now(),
+    end=timezone.now() + timedelta(days=int(booking_length)),
+    )
+
 @csrf_exempt
 def design_a_pod(request):
     if request.method == 'GET':
@@ -151,7 +166,14 @@ def book_a_pod(request):
         # post to dashboard instead of post_data contains the "destination" key
         if "destination" in post_data:
             print("posting to dashboard")
-            return get_ssh_key(request) # this is the only use case for posting with destination at the moment.
+            print(post_data)
+            if post_data["purpose"] == "ssh-key":
+                return get_ssh_key(request)
+            if post_data["purpose"] == "create-booking":
+                booking_info = post_data["booking_info"]
+                create_booking(booking_info["aggregate_id"], request.user, booking_info["booking_length"])
+                return HttpResponse(status=200)
+            return HttpResponse(status=404)
 
         print("posting to liblaas")
         return talk_to_liblaas(request)

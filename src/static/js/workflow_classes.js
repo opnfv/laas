@@ -269,7 +269,7 @@ s
             "request_method": request_method
           }
         ),
-        timeout: 30000,
+        timeout: 15000,
         success: (response) => {
           resolve(response);
         },
