@@ -22,13 +22,11 @@ TESTING = os.environ.get('TEST') == 'True'
 
 INSTALLED_APPS = [
     'dashboard',
-    'resource_inventory',
     'booking',
     'account',
     'notifier',
     'workflow',
     'api',
-    'analytics',
     'django.contrib.admin',
     'django.contrib.auth',
     'mozilla_django_oidc',  # needs to be defined after auth
@@ -220,35 +218,4 @@ RABBITMQ_DEFAULT_PASS = os.environ['RABBITMQ_DEFAULT_PASS']
 CELERY_BROKER_URL = 'amqp://' + RABBITMQ_DEFAULT_USER + ':' + RABBITMQ_DEFAULT_PASS + '@rabbitmq:5672//'
 
 CELERY_BEAT_SCHEDULE = {
-    'booking_poll': {
-        'task': 'dashboard.tasks.booking_poll',
-        'schedule': timedelta(minutes=1)
-    },
-    'free_hosts': {
-        'task': 'dashboard.tasks.free_hosts',
-        'schedule': timedelta(minutes=1)
-    },
-    'notify_expiring': {
-        'task': 'notifier.tasks.notify_expiring',
-        'schedule': timedelta(hours=1)
-    },
-    'query_vpn_users': {
-        'task': 'dashboard.tasks.query_vpn_users',
-        'schedule': timedelta(hours=1)
-    },
-    'dispatch_emails': {
-        'task': 'notifier.tasks.dispatch_emails',
-        'schedule': timedelta(minutes=10)
-    }
 }
-
-# Notifier Settings
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = True
-DEFAULT_EMAIL_FROM = os.environ.get('DEFAULT_EMAIL_FROM', 'webmaster@localhost')
-SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
-EXPIRE_LIFETIME = 12  # Minimum lifetime of booking to send notification
-EXPIRE_HOURS = 48  # Notify when booking is expiring within this many hours

@@ -24,9 +24,6 @@ import requests
 from account.models import Lab
 from booking.models import Booking
 
-from resource_inventory.models import Image, ResourceProfile, ResourceQuery
-from workflow.workflow_manager import ManagerTracker
-
 from laas_dashboard import settings
 
 
@@ -80,7 +77,6 @@ def host_profile_detail_view(request) -> HttpResponse:
 
 
 def landing_view(request) -> HttpResponse:
-    manager = ManagerTracker.managers.get(request.session.get('manager_session'))
     user = request.user
     if not user.is_anonymous:
         bookings = Booking.objects.filter(
@@ -95,7 +91,6 @@ def landing_view(request) -> HttpResponse:
         request,
         'dashboard/landing.html',
         {
-            'manager': manager is not None,
             'title': "Welcome to the Lab as a Service Dashboard",
             'bookings': bookings,
             'LFID': LFID
@@ -108,22 +103,4 @@ class LandingView(TemplateView):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super(LandingView, self).get_context_data(**kwargs)
-
-        hosts = []
-
-        for host_profile in ResourceProfile.objects.all():
-            name = host_profile.name
-            description = host_profile.description
-            in_labs = host_profile.labs
-
-            interfaces = host_profile.interfaceprofile
-            storage = host_profile.storageprofile
-            cpu = host_profile.cpuprofile
-            ram = host_profile.ramprofile
-
-            host = (name, description, in_labs, interfaces, storage, cpu, ram)
-            hosts.append(host)
-
-        context.update({'hosts': hosts})
-
         return context

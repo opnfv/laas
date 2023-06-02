@@ -30,7 +30,6 @@ import json
 from account.forms import AccountSettingsForm
 from account.models import UserProfile
 from booking.models import Booking
-from resource_inventory.models import ResourceTemplate, Image
 from api.views import talk_to_liblaas
 from django.views.decorators.csrf import csrf_exempt
 
@@ -159,38 +158,6 @@ def account_booking_view(request) -> HttpResponse:
     }
     return render(request, template, context=context)
 
-def account_images_view(request) -> HttpResponse:
-    if not request.user.is_authenticated:
-        return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
-    template = "account/image_list.html"
-    my_images = Image.objects.filter(owner=request.user)
-    public_images = Image.objects.filter(public=True)
-    used_images = {}
-    for image in my_images:
-        if image.in_use():
-            used_images[image.id] = "true"
-    context = {
-        "title": "Images",
-        "images": my_images,
-        "public_images": public_images,
-        "used_images": used_images
-    }
-    return render(request, template, context=context)
-
-
-def template_delete_view(request, resource_id=None) -> HttpResponse:
-    if not request.user.is_authenticated:
-        return HttpResponse(status=403)
-    template = get_object_or_404(ResourceTemplate, pk=resource_id)
-    if not request.user.id == template.owner.id:
-        return HttpResponse(status=403)
-    if Booking.objects.filter(resource__template=template, end__gt=timezone.now()).exists():
-        return HttpResponse(status=403)
-    template.public = False
-    template.temporary = True
-    template.save()
-    return HttpResponse(status=200)
-
 
 def booking_cancel_view(request, booking_id=None) -> HttpResponse:
     if not request.user.is_authenticated:
@@ -206,15 +173,3 @@ def booking_cancel_view(request, booking_id=None) -> HttpResponse:
     booking.save()
     return HttpResponse('')
 
-
-def image_delete_view(request, image_id=None) -> HttpResponse:
-    if not request.user.is_authenticated:
-        return HttpResponse('no')  # 403?
-    image = get_object_or_404(Image, pk=image_id)
-    if image.public or image.owner.id != request.user.id:
-        return HttpResponse('no')  # 403?
-    # check if used in booking
-    if image.in_use():
-        return HttpResponse('no')  # 403?
-    image.delete()
-    return HttpResponse('')

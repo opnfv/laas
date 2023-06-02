@@ -9,7 +9,6 @@
 
 from django.db import models
 from account.models import UserProfile
-from booking.models import Booking
 
 
 class Notification(models.Model):
@@ -24,33 +23,3 @@ class Notification(models.Model):
 
     def to_preview_html(self):
         return "<h3>" + self.title + "</h3>"  # TODO - template?
-
-
-class Emailed(models.Model):
-    """A simple record to remember who has already gotten an email to avoid resending."""
-
-    begin_booking = models.OneToOneField(
-        Booking,
-        null=True,
-        on_delete=models.CASCADE,
-        related_name="begin_mail"
-    )
-    almost_end_booking = models.OneToOneField(
-        Booking,
-        null=True,
-        on_delete=models.CASCADE,
-        related_name="warning_mail"
-    )
-    end_booking = models.OneToOneField(
-        Booking,
-        null=True,
-        on_delete=models.CASCADE,
-        related_name="over_mail"
-    )
-
-
-class Email(models.Model):
-    sent = models.BooleanField(default=False)
-    title = models.CharField(max_length=150)
-    message = models.TextField()
-    recipient = models.CharField(max_length=150)
