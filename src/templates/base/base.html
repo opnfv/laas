@@ -6,7 +6,6 @@
 
 <!-- Custom CSS -->
 <link href="{% static "css/base.css" %}" rel="stylesheet">
-<script src="/static/js/dashboard.js"></script>
 
 {% endblock %}
 {% block basecontent %}
@@ -114,59 +113,41 @@
                                 Create <i class="fas fa-angle-down rotate"></i>
                             </a>
                             <div class="collapse" id="createList">
-                                <a href="/booking/quick/" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
-                                    Express Booking
-                                </a>
-                                <a href="#" onclick="create_workflow(0)" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
+                                <a href="#" onclick="" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
                                     Book a Pod
                                 </a>
-                                <a href="#" onclick="create_workflow(1)" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
+                                <a href="#" onclick="" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
                                     Design a Pod
-                                </a>
-                                <a href="#" onclick="create_workflow(2)" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
-                                    Create a Snapshot
-                                </a>
-                                <a href="#" onclick="create_workflow(3)" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
-                                    Configure Anuket
                                 </a>
                             </div>
                             {% endblock dropDown %}
-                            <a href="{% url 'resource:hosts' %}" class="list-group-item list-group-item-action nav-bg">
+                            <a class="list-group-item list-group-item-action nav-bg" data-toggle="collapse"
+                            href="#accountList" role="button">
+                            Account <i class="fas fa-angle-down rotate"></i>
+                            </a>
+                        <div class="collapse" id="accountList">
+                            <a href="{% url 'account:my-resources' %}" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
+                                My Resources
+                            </a>
+                            <a href="{% url 'account:my-bookings' %}" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
+                                My Bookings
+                            </a>
+                        </div>
+                        <a class="list-group-item list-group-item-action nav-bg" data-toggle="collapse"
+                        href="#labInfo" role="button">
+                        Lab Info <i class="fas fa-angle-down rotate"></i>
+                        </a>
+                        <div class="collapse" id="labInfo">
+                            <a href="" class="list-group-item list-group-item-action nav-bg">
                                 Hosts
                             </a>
-                            {% if user.is_authenticated %}
-                                <a href="{% url 'account:users' %}" class="list-group-item list-group-item-action nav-bg">
-                                    User List
-                                </a>
-                            {% endif %}
                             <a href="{% url 'booking:list' %}" class="list-group-item list-group-item-action nav-bg">
                                 Booking List
                             </a>
-                            <a href="{% url 'booking:stats' %}" class="list-group-item list-group-item-action nav-bg">
-                                Booking Statistics
-                            </a>
-                            <a class="list-group-item list-group-item-action nav-bg" data-toggle="collapse"
-                                href="#accountList" role="button">
-                                Account <i class="fas fa-angle-down rotate"></i>
-                            </a>
-                            <div class="collapse" id="accountList">
-                                <a href="{% url 'account:my-resources' %}" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
-                                    My Resources
-                                </a>
-                                <a href="{% url 'account:my-bookings' %}" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
-                                    My Bookings
-                                </a>
-                                <a href="{% url 'account:my-images' %}" class="list-group-item list-group-item-action list-group-item-secondary dropDown-bg">
-                                    My Snapshots
-                                </a>
-                            </div>
-                            <a href="{% url 'dashboard:all_labs' %}" class="list-group-item list-group-item-action nav-bg">
-                                Lab Info
-                            </a>
-                            <a href="{% url 'notifier:messages' %}" class="list-group-item list-group-item-action nav-bg">
-                                Inbox
-                            </a>
                         </div>
+                        <a href="{% url 'dashboard:all_labs' %}" class="list-group-item list-group-item-action nav-bg">
+                            About Us
+                        </a>
                     </div>
                 </nav>
             </div>
