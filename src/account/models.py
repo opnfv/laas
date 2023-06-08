@@ -89,12 +89,6 @@ class Lab(models.Model):
             key += random.choice(alphabet)
         return key
 
-    def get_available_resources(self):
-        # Cannot import model normally due to ciruclar import
-        Server = apps.get_model('resource_inventory', 'Server')  # TODO: Find way to import ResourceQuery
-        resources = [str(resource.profile) for resource in Server.objects.filter(lab=self, working=True, booked=False)]
-        return dict(Counter(resources))
-
     def __str__(self):
         return self.name
 

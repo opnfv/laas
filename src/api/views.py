@@ -27,22 +27,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
-from api.serializers.booking_serializer import BookingSerializer
-from api.serializers.old_serializers import UserSerializer
 from api.forms import DowntimeForm
 from account.models import UserProfile, Lab
 from booking.models import Booking
-from booking.quick_deployer import create_from_API
-from api.models import LabManagerTracker, get_task, Job, AutomationAPIManager, APILog, GeneratedCloudConfig
-from notifier.manager import NotificationHandler
-from analytics.models import ActiveVPNUser
-from resource_inventory.models import (
-    Image,
-    Opsys,
-    CloudInitFile,
-    ResourceQuery,
-    ResourceTemplate,
-)
+from api.models import LabManagerTracker,AutomationAPIManager, APILog
 
 import yaml
 import uuid
@@ -59,17 +47,6 @@ requires the Lab auth token.
 Most functions let you GET or POST to the same endpoint, and
 the correct thing will happen
 """
-
-
-class BookingViewSet(viewsets.ModelViewSet):
-    queryset = Booking.objects.all()
-    serializer_class = BookingSerializer
-    filter_fields = ('resource', 'id')
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserSerializer
 
 
 @method_decorator(login_required, name='dispatch')

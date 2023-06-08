@@ -9,7 +9,6 @@
 ##############################################################################
 
 
-from resource_inventory.models import
 from account.models import Lab
 from django.contrib.auth.models import User
 from django.db import models

@@ -176,3 +176,7 @@ class AutomationAPIManager:
         sup['id'] = up.pk
         sup['username'] = up.user.username
         return sup
+
+# Needs to exist for migrations
+def get_task_uuid():
+    pass
