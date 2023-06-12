@@ -62,36 +62,61 @@ class IfaceBlob {
 
 // BookingClasses
 class BookingBlob {
-    constructor() {
+    constructor({template_id, allowed_users, global_cifile}) {
         this.template_id; // UUID (String)
         this.allowed_users = []; // List<String>,
         this.global_cifile; // String,
+
+        if (template_id || allowed_users || global_cifile) {
+            this.template_id = template_id;
+            this.allowed_users = allowed_users;
+            this.global_cifile = global_cifile;
+        }
     }
 }
 
 // Utility Classes
 class ImageBlob {
-    constructor() {
-        this.name; // String
-        this.description // String,
+    constructor({image_id, name}) {
+        this.image_id; // UUID (String)
+        this.name // String,
+
+        if (image_id || name) {
+            this.image_id = image_id;
+            this.name = name;
+        }
     }
 }
 
-// Not yet implemented on LibLaaS
+class FlavorBlob {
+    constructor({flavor_id, name, description}) {
+        this.flavor_id; // UUID (String)
+        this.name; // String
+        this.description; // String
+
+        // Object destructuring
+        if (flavor_id || name || description) {
+            this.flavor_id = flavor_id;
+            this.name = name;
+            this.description = description;
+        }
+    }
+
+}
+
 class LabBlob {
-    constructor(jsonBlob) {
+    constructor({name, description, location, status}) {
         this.name; // String
         this.description; // String
         this.location; //String
         this.status; // Number
 
-        if (jsonBlob) this.fromJSON;
-    }
-
-    fromJSON(jsonBlob) {
-        this.name = jsonBlob.name;
-        this.description = jsonBlob.description;
-        this.location = jsonBlob.location;
-        this.status = jsonBlob.status
+        // Object destructuring
+        if (name || description || location || status) {
+            this.name = name;
+            this.description = description;
+            this.location = location;
+            this.status = status;
+        }
     }
 }

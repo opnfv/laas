@@ -62,16 +62,20 @@ class LibLaaSAPI {
 
     static getLabs() { // -> List<LabBlob>
         // return this.makeRequest(HTTP.GET, endpoint.LABS, {});
-        let jsonString = '{"name": "UNH_IOL","description": "University of New Hampshire InterOperability Lab","location": "University of New Hampshire InterOperability Lab","status": 0}';
-        return [new LabBlob(jsonString)];
+        let jsonObject = JSON.parse('{"name": "UNH_IOL","description": "University of New Hampshire InterOperability Lab","location": "NH","status": 0}');
+        return [new LabBlob(jsonObject)];
     }
 
     static getLabFlavors(lab_name) { // -> List<FlavorBlob>
-        return this.makeRequest(HTTP.GET, endpoint.FLAVORS, {"lab_name": lab_name});
+        // return this.makeRequest(HTTP.GET, endpoint.FLAVORS, {"lab_name": lab_name});
+        let jsonObject = JSON.parse('{"flavor_id": "1234-56-1234", "name": "HPE Gen 9", "description": "placeholder"}')
+        return [new FlavorBlob(jsonObject)];
     }
 
     static getLabImages(lab_name) { // -> List<ImageBlob>
-        return this.makeRequest(HTTP.GET, endpoint.IMAGES, {"lab_name": lab_name});
+        // return this.makeRequest(HTTP.GET, endpoint.IMAGES, {"lab_name": lab_name});
+        let jsonObject = JSON.parse('{"image_id": "5566-32-1111", "name": "Arch Linux"}')
+        return [new ImageBlob(jsonObject)];
     }
 
     static getTemplatesForUser(username) { // -> List<TemplateBlob>
@@ -96,7 +100,16 @@ class LibLaaSAPI {
 
 }
 
-/** Controller class that handles button inputs to navigate through the workflow and generate HTML dynamically */
+// class Section {
+//     constructor(elementId, number) {
+//         this.elementId = elementId;
+//         this.number = number;
+//     }
+// }
+
+/** Controller class that handles button inputs to navigate through the workflow and generate HTML dynamically 
+ * Treat this as an abstract class and extend it in the appropriate workflow module.
+*/
 class Workflow {
     constructor(sections_list) {
         this.sections = []; // List of strings
@@ -107,11 +120,13 @@ class Workflow {
      * Disables the previous button if the step becomes 0 after executing
      * Enables the next button if the step is less than sections.length after executing
     */
-    go_prev() {
+    goPrev() {
 
-        if (this.step > 0) {
-            this.step--;
+        if (workflow.step <= 0) {
+            return;
         }
+
+        this.step--;
 
         document.getElementById(this.sections[this.step]).scrollIntoView({behavior: 'smooth'});
 
@@ -122,11 +137,12 @@ class Workflow {
         }
     }
 
-    go_next() {
-        if (this.step < this.sections.length - 2 ) {
-            this.step++;
+    goNext() {
+        if (this.step >= this.sections.length - 2 ) {
+            return;
         }
 
+        this.step++;
         document.getElementById(this.sections[this.step]).scrollIntoView({behavior: 'smooth'});
 
         if (this.step == this.sections.length - 1) {
@@ -136,15 +152,14 @@ class Workflow {
         }
     }
 
-    go_to(step_number) {
+    goTo(step_number) {
         while (step_number > this.step) {
-            this.go_next();
+            this.goNext();
         }
 
         while (step_number < this.step) {
-            this.go_prev();
+            this.goPrev();
         }
     }
 
 }
-

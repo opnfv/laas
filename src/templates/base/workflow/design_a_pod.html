@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load bootstrap4 %}
+{% block extrahead %}
+<script src="/static/js/workflows/common-models.js"></script>
+<script src="/static/js/workflows/workflow.js"></script>
+<script src="/static/js/workflows/design-a-pod.js"></script>
+{% endblock %}
+{% block content %}
+{% if dashboard == 'laas' %}
+
+<!-- Main Content -->
+<body>
+
+  <div class="workflow-container">
+    <div id="prev" class="row w-100 m-0">
+      <button class="btn btn-workflow-nav stretched-link m-0 p-0 mt-3" onclick="workflow.goPrev()" id="workflow-prev">
+        <div class="arrow arrow-up"></div>
+      </button>
+    </div>
+  
+    <div id="next" class="row w-100 m-0">
+      <button class="btn btn-workflow-nav stretched-link m-0 p-0 mb-3" onclick="workflow.goNext()" id="workflow-next">
+        <div class="arrow arrow-down"></div>
+      </button>
+    </div>
+  
+    <div class="scroll-container w-100 h-100 p-0">
+      <div class="scroll-area pt-5 mx-5" id="select_lab">
+        <!-- Ideally the 'Design a Pod' header would be anchored to the top of the page below the arrow -->
+        <h1 class="mt-4"><u>Design a Pod</u></h1> 
+        <h2 class="mt-4 mb-3">Select a Lab:</h2>
+        <div class="row card-deck" id="lab_cards">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+<script>
+  // Initializes objects for the workflow, adds event listeners to workflow elements, and resets the page to the default state
+
+  const workflow = new DesignWorkflow();
+  // Confirmation before leaving
+  window.onbeforeunload = function (e) {
+  var message = "Are you sure you want to leave? All progress will be lost.",
+  e = e || window.event;
+  // For IE and Firefox
+  if (e) {
+    e.returnValue = message;
+  }
+
+  // For Safari
+  return message;
+};
+</script>
+{% endif %}
+{% endblock %}
