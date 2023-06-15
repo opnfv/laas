@@ -68,18 +68,24 @@ class LibLaaSAPI {
 
     static getLabFlavors(lab_name) { // -> List<FlavorBlob>
         // return this.makeRequest(HTTP.GET, endpoint.FLAVORS, {"lab_name": lab_name});
-        let jsonObject = JSON.parse('{"flavor_id": "1234-56-1234", "name": "HPE Gen 9", "description": "placeholder"}')
+        let jsonObject = JSON.parse('{"flavor_id": "aaa-bbb-ccc", "name": "HPE Gen 9", "description": "placeholder", "interfaces": ["ens1", "ens2", "ens3"]}')
         return [new FlavorBlob(jsonObject)];
     }
 
     static getLabImages(lab_name) { // -> List<ImageBlob>
         // return this.makeRequest(HTTP.GET, endpoint.IMAGES, {"lab_name": lab_name});
-        let jsonObject = JSON.parse('{"image_id": "5566-32-1111", "name": "Arch Linux"}')
-        return [new ImageBlob(jsonObject)];
+        let jsonObject = JSON.parse('{"image_id": "111-222-333", "name": "Arch Linux"}')
+        let jsonObject2 = JSON.parse('{"image_id": "444-555-666", "name": "Oracle Linux"}')
+        return [new ImageBlob(jsonObject), new ImageBlob(jsonObject2)];
     }
 
-    static getTemplatesForUser(username) { // -> List<TemplateBlob>
-        return this.makeRequest(HTTP.GET, endpoint.TEMPLATES, {"username" : username});
+    /** Doesn't need to be passed a username because django will pull this from the request */
+    static getTemplatesForUser() { // -> List<TemplateBlob>
+        // return this.makeRequest(HTTP.GET, endpoint.TEMPLATES);
+
+        let jsonObject = JSON.parse('{"id":12345,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Single Host","pod_desc":"Default Template","pub":true,"host_list":[{"cifile":[],"hostname":"node","flavor":"aaa-bbb-ccc","image":"111-222-333"}, {"cifile":[],"hostname":"node2","flavor":"aaa-bbb-ccc","image":"111-222-333"}],"networks":[{"bondgroups":[{"connections":[{"iface":{"hostname":"node","name":"ens1"},"tagged":true},{"iface":{"hostname":"node","name":"ens2"},"tagged":false},{"iface":{"hostname":"node","name":"ens3"},"tagged":true}]}],"name":"private"}]}');
+        let jsonObject2 = JSON.parse('{"id":6789,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Other Host","pod_desc":"Different Template","pub":true,"host_list":[{"cifile":[],"hostname":"host1","flavor":"aaa-bbb-ccc","image":"111-222-333"}, {"cifile":[],"hostname":"host2","flavor":"aaa-bbb-ccc","image":"111-222-333"}, {"cifile":[],"hostname":"host3","flavor":"aaa-bbb-ccc","image":"111-222-333"}],"networks":[{"bondgroups":[{"connections":[{"iface":{"hostname":"host1","name":"ens1"},"tagged":true},{"iface":{"hostname":"host2","name":"ens2"},"tagged":false}]}],"name":"private"}]}');
+        return [new TemplateBlob(jsonObject), new TemplateBlob(jsonObject2)];
     }
 
     static saveDesignWorkflow(templateBlob) { // -> bool
@@ -114,6 +120,7 @@ class Workflow {
     constructor(sections_list) {
         this.sections = []; // List of strings
         this.step = 0; // Current step of the workflow
+        this.sections = sections_list;
     }
 
     /** Advances the workflow by one step and scrolls to that section 
@@ -131,14 +138,14 @@ class Workflow {
         document.getElementById(this.sections[this.step]).scrollIntoView({behavior: 'smooth'});
 
         if (this.step == 0) {
-            document.getElementById('workflow-prev').setAttribute('disabled', '');
+            document.getElementById('prev').setAttribute('disabled', '');
         } else if (this.step == this.sections.length - 2) {
-            document.getElementById('workflow-next').removeAttribute('disabled');
+            document.getElementById('next').removeAttribute('disabled');
         }
     }
 
     goNext() {
-        if (this.step >= this.sections.length - 2 ) {
+        if (this.step >= this.sections.length - 1 ) {
             return;
         }
 
@@ -146,9 +153,9 @@ class Workflow {
         document.getElementById(this.sections[this.step]).scrollIntoView({behavior: 'smooth'});
 
         if (this.step == this.sections.length - 1) {
-            document.getElementById('workflow-next').setAttribute('disabled', '');
+            document.getElementById('next').setAttribute('disabled', '');
         } else if (this.step == 1) {
-            document.getElementById('workflow-prev').removeAttribute('disabled');
+            document.getElementById('prev').removeAttribute('disabled');
         }
     }
 
