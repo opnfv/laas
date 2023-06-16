@@ -98,6 +98,8 @@ class NetworkBlob {
         // Seperate check so that bondgroups is never set to null
         if (bondgroups) {
             this.bondgroups = bondgroups;
+        } else {
+            this.addBondgroup(new BondgroupBlob({}));
         }
     }
 

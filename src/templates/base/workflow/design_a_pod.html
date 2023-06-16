@@ -61,14 +61,14 @@
     </div>
 
 
-   <!-- Configure Connections  TODO-->
+   <!-- Configure Connections-->
    <div class="scroll-area pt-5 mx-5" id="configure_connections">
       <h2 class="mt-4 mb-3">Configure Connections:</h2>
       <div class="row card-deck align-items-center" id="connection_cards">
       </div>
   </div>
 
-  <!-- Pod Details TODO-->
+  <!-- Pod Details-->
   <div class="scroll-area pt-5 mx-5" id="pod_details">
     <h2 class="mt-4 mb-3">Pod Details</h2>
     <div class="form-group">
@@ -85,8 +85,8 @@
       <div class="row align-items-center my-4">
         <div class="col-xl-6 col-md-8 col-11">
           <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="public_switch">
-            <label class="custom-control-label" for="public_switch">Make pod template public?</label>
+            <input type="checkbox" class="custom-control-input" id="pod-public-input">
+            <label class="custom-control-label" for="pod-public-input">Make pod template public?</label>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@
   </div>
 
 
-  <!-- Pod Summary TODO-->
+  <!-- Pod Summary-->
   <div class="scroll-area pt-5 mx-5" id="pod_summary">
     <h2 class="mt-4 mb-3">Pod Summary:</h2>
     <div class="row align-items-center">
@@ -119,8 +119,8 @@
       </div>
     </div>
     <div class="row align-items-center mt-5">
-      <div class="col-xl-2 col-md-3 col-5"><button class="btn btn-danger cancel-book-button p-0 w-100" onclick="work.delete_template()">Discard</button></div>
-      <div class="col-xl-2 col-md-3 col-5"><button class="btn btn-success cancel-book-button p-0 w-100" onclick = work.submit()>Create</button></div>
+      <div class="col-xl-2 col-md-3 col-5"><button class="btn btn-danger cancel-book-button p-0 w-100" onclick="workflow.onclickDiscardTemplate()">Discard</button></div>
+      <div class="col-xl-2 col-md-3 col-5"><button class="btn btn-success cancel-book-button p-0 w-100" onclick = "workflow.onclickSubmitTemplate()">Create</button></div>
     </div>
   </div>
 
@@ -190,7 +190,7 @@
         </table>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-success" data-dismiss="modal" id="connection-modal-submit" onclick="alert('todo')">Confirm</button>
+        <button class="btn btn-success" data-dismiss="modal" id="connection-modal-submit" onclick="workflow.onclickSubmitConnectionConfig()">Confirm</button>
       </div>
     </div>
   </div>

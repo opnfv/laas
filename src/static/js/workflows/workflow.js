@@ -19,6 +19,7 @@ const endpoint = {
     SAVE_DESIGN_WORKFLOW: "todo",
     SAVE_BOOKING_WORKFLOW: "todo",
     MAKE_TEMPLATE: "todo",
+    DELETE_TEMPLATE: "todo",
     MAKE_BOOKING: "todo",
 }
 
@@ -100,9 +101,14 @@ class LibLaaSAPI {
         return this.makeRequest(HTTP.POST, endpoint.MAKE_TEMPLATE, {"blob": templateBlob});
     }
 
+    static deleteTemplate(templateBlob) { // -> UUID or error?
+        return this.makeRequest(HTTP.DELETE, endpoint.DELETE_TEMPLATE, {"blob": templateBlob});
+    }
+
     static makeBooking(bookingBlob) { // -> UUID or error?
         return this.makeRequest(HTTP.POST, endpoint.MAKE_BOOKING, {"blob": bookingBlob});
     }
+    
 
 }
 

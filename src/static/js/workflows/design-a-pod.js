@@ -9,8 +9,15 @@ Functions as the "controller" part of MVC
  * Click methods are prefaced with 'onclick'.
  * Step initialization methods are prefaced with 'step'.
  */
+const steps = {
+  SELECT_LAB: 0,
+  ADD_RESOURCES: 1,
+  ADD_NETWORKS: 2,
+  CONFIGURE_CONNECTIONS: 3,
+  POD_DETAILS: 4,
+  POD_SUMMARY: 5
+}
 
-// todo list: reselect tagged to unselect, no more than 1 untagged per interface
 class DesignWorkflow extends Workflow {
     constructor(savedTemplateBlob) {
         super(["select_lab", "add_resources", "add_networks", "configure_connections", "pod_details", "pod_summary"])
@@ -21,21 +28,16 @@ class DesignWorkflow extends Workflow {
 
         // This is here to make reordering steps easier in the future.
         // Simply modify this object and the steps list.
-        this.steps = {
-            SELECT_LAB: 0,
-            ADD_RESOURCES: 1,
-            ADD_NETWORKS: 2,
-            CONFIGURE_CONNECTIONS: 3,
-            POD_DETAILS: 4,
-            POD_SUMMARY: 5
-        }
+
         this.templateBlob = new TemplateBlob({});
-        this.labFlavors; // List<FlavorBlob>
+        this.labFlavors; // Map<UUID, FlavorBlob>
         this.labImages;  // List<ImageBlob>
         this.userTemplates; // List<TemplateBlob>
         this.resourceBuilder; // ResourceBuilder
         this.connectionBuilder; // ConnectionBuilder
 
+        this.templateBlob.public = false;
+        this.setPodDetailEventListeners();
         this.startWorkflow();
 
     }
@@ -51,23 +53,33 @@ class DesignWorkflow extends Workflow {
     }
 
     resumeWorkflow() {
-        // todo
+        todo()
     }
 
     /** Initializes the select_lab step */
     startWorkflow() {
         const labs = LibLaaSAPI.getLabs();
         GUI.display_labs(labs);
+        document.getElementById(this.sections[0]).scrollIntoView({behavior: 'smooth'});
+    }
+
+    /** Adds the public network on start */
+    addDefaultNetwork() {
+      const new_network = new NetworkBlob({});
+      new_network.name = "public";
+      this.addNetworkToPod(new_network);
+      GUI.refreshNetworkStep(this.templateBlob.networks);
     }
 
     /** Takes an HTML element */
     onclickSelectLab(lab_card) {
-        this.step = this.steps.SELECT_LAB;
+        this.step = steps.SELECT_LAB;
 
         if (this.templateBlob.lab_name == null) { // Lab has not been selected yet
             this.templateBlob.lab_name = lab_card.id;
             lab_card.classList.add("selected_node");
             this.setLabDetails(this.templateBlob.lab_name);
+            this.addDefaultNetwork();
         } else { // Lab has been selected
             if(confirm('Unselecting a lab will reset all selected resources, are you sure?')) {
                 location.reload();
@@ -77,7 +89,13 @@ class DesignWorkflow extends Workflow {
 
     /** Calls the API to fetch flavors and images for a lab */
     setLabDetails(lab_name) {
-        this.labFlavors = LibLaaSAPI.getLabFlavors(lab_name);
+        const flavorsList = LibLaaSAPI.getLabFlavors(lab_name);
+        this.labFlavors = new Map(); // Map<UUID, FlavorBlob>
+
+        for (const fblob of flavorsList) {
+          this.labFlavors.set(fblob.flavor_id, fblob);
+        }
+
         this.labImages = LibLaaSAPI.getLabImages(lab_name);
         this.userTemplates = LibLaaSAPI.getTemplatesForUser();
     }
@@ -90,11 +108,11 @@ class DesignWorkflow extends Workflow {
       // Generate template cards
       // Show modal
 
-      this.step = this.steps.ADD_RESOURCES;
+      this.step = steps.ADD_RESOURCES;
 
       if (this.templateBlob.lab_name == null) {
           alert("Please select a lab before adding resources.");
-          this.goTo(this.steps.SELECT_LAB);
+          this.goTo(steps.SELECT_LAB);
           return;
       }
 
@@ -251,11 +269,10 @@ class DesignWorkflow extends Workflow {
 
         if (!copied_network) {
           copied_network = new NetworkBlob({"name": network.name});
-          copied_network.addBondgroup(new BondgroupBlob({}));
           this.templateBlob.networks.push(copied_network);
         }
 
-        // Need to add connections (todo - remove the hardcoded index)
+        // Need to add connections
         for (const existing_connection of network.bondgroups[0].connections) {
             const new_connection = new ConnectionBlob({});
             new_connection.tagged = existing_connection.tagged;
@@ -271,6 +288,7 @@ class DesignWorkflow extends Workflow {
         GUI.refreshHostStep(this.templateBlob.host_list, this.labFlavors, this.labImages);
         GUI.refreshNetworkStep(this.templateBlob.networks);
         GUI.refreshConnectionStep(this.templateBlob.host_list, this.templateBlob.networks);
+        GUI.refreshPodSummaryHosts(this.templateBlob.host_list, this.labFlavors, this.labImages)
         $('#resource_modal').modal('hide')
     }
 
@@ -279,12 +297,14 @@ class DesignWorkflow extends Workflow {
      * @param {String} hostname 
      */
     onclickDeleteHost(hostname) {
-      this.step = this.steps.ADD_RESOURCES;
+      this.step = steps.ADD_RESOURCES;
       for (let existing_host of this.templateBlob.host_list) {
         if (hostname == existing_host.hostname) {
           this.removeHostFromTemplateBlob(existing_host);
           GUI.refreshHostStep(this.templateBlob.host_list, this.labFlavors, this.labImages);
           GUI.refreshNetworkStep(this.templateBlob.networks);
+          GUI.refreshConnectionStep(this.templateBlob.host_list, this.templateBlob.networks);
+          GUI.refreshPodSummaryHosts(this.templateBlob.host_list, this.labFlavors, this.labImages);
           return;
         }
       }
@@ -301,11 +321,11 @@ class DesignWorkflow extends Workflow {
       // Prerequisite step checks
       // GUI stuff
 
-      this.step = this.steps.ADD_NETWORKS;
+      this.step = steps.ADD_NETWORKS;
 
       if (this.templateBlob.lab_name == null) {
           alert("Please select a lab before adding networks.");
-          this.goTo(this.steps.SELECT_LAB);
+          this.goTo(steps.SELECT_LAB);
           return;
       }
 
@@ -319,7 +339,7 @@ class DesignWorkflow extends Workflow {
 
     /** onclick handler for the adding_network_confirm button */
     onclickConfirmNetwork() {
-      this.step = this.steps.ADD_NETWORKS;
+      this.step = steps.ADD_NETWORKS;
 
       // Add the network
       // call the GUI to make the card (refresh the whole view to make it easier)
@@ -371,7 +391,7 @@ class DesignWorkflow extends Workflow {
      * Takes a network name as a parameter.
     */
     onclickDeleteNetwork(network_name) {
-      this.step = this.steps.ADD_NETWORKS;
+      this.step = steps.ADD_NETWORKS;
 
       for (let existing_network of this.templateBlob.networks) {
         if (network_name == existing_network.name) {
@@ -417,7 +437,7 @@ class DesignWorkflow extends Workflow {
     }
 
     onclickConfigureConnection(hostname) {
-      this.step = this.steps.CONFIGURE_CONNECTIONS;
+      this.step = steps.CONFIGURE_CONNECTIONS;
 
       const host = this.templateBlob.findHost(hostname);
       if (!host) {
@@ -436,9 +456,6 @@ class DesignWorkflow extends Workflow {
     }
 
     onclickSelectVlan(network_name, tagged, iface_name) {
-      // console.log(network_name)
-      // console.log(tagged)
-
       const x = this.connectionBuilder.ifaceConnections.get(iface_name); // i am out of variable names in my brain
       if (x.get(network_name) === tagged) {
         x.set(network_name, null);
@@ -448,14 +465,197 @@ class DesignWorkflow extends Workflow {
 
       GUI.refreshConnectionTable(this.connectionBuilder, iface_name);
     }
+
+    onclickSubmitConnectionConfig() {
+      this.applyConnectionConfigs();
+      GUI.refreshConnectionStep(this.templateBlob.host_list, this.templateBlob.networks);
+    }
+
+    /**
+     * Take the configs stored in the connectionBuilder and apply them to the networks in the templateBlob
+     */
+    applyConnectionConfigs() {
+      // This is slow and there really isn't a clean way to do this due to the structure of the networkblob
+      // const hostname = this.connectionBuilder.host.hostname;
+      // const connections = this.connectionBuilder.ifaceConnections;
+
+      const networkMap = new Map(); // Map<String, NetworkBlob>
+      // Invalidate connections on the hostname and build map of network name to networkBlob
+      for (const network of this.templateBlob.networks) {
+        networkMap.set(network.name, network); // To make accessing this network easier later
+        for (const bondgroup of network.bondgroups) {
+          bondgroup.connections = bondgroup.connections.filter(function(connection) {
+            return connection.iface.hostname != workflow.connectionBuilder.host.hostname;
+          })
+        }
+      }
+
+      for (const [iface_name, configs] of this.connectionBuilder.ifaceConnections) {
+        for (const [network_name, tagged] of configs) {
+          if (tagged != null) {
+            const targetNetwork = networkMap.get(network_name);
+            const newIfaceBlob = new IfaceBlob({});
+            newIfaceBlob.hostname = this.connectionBuilder.host.hostname;
+            newIfaceBlob.name = iface_name;
+  
+            const newConnectionBlob = new ConnectionBlob({});
+            newConnectionBlob.iface = newIfaceBlob;
+            newConnectionBlob.tagged = tagged;
+  
+  
+            targetNetwork.bondgroups[0].connections.push(newConnectionBlob)
+          }
+        }
+      }
+    }
+
+    /** Sets input validation event listeners and clears the value in case of caching*/
+    setPodDetailEventListeners() {
+      const pod_name_input = document.getElementById("pod-name-input");
+      const pod_desc_input = document.getElementById("pod-desc-input");
+      const pod_public_input = document.getElementById("pod-public-input");
+
+      pod_name_input.value = "";
+      pod_desc_input.value = "";
+      pod_public_input.checked = false;
+
+      pod_name_input.addEventListener('focusout', (event)=> {
+        workflow.onFocusOutPodNameInput(pod_name_input);
+      });
+
+      pod_name_input.addEventListener('focusin', (event)=> {
+        this.step = steps.POD_DETAILS;
+        GUI.unhighlightError(pod_name_input);
+        GUI.hidePodDetailsError();
+      });
+
+      pod_desc_input.addEventListener('focusout', (event)=> {
+        workflow.onFocusOutPodDescInput(pod_desc_input);
+      });
+
+      pod_desc_input.addEventListener('focusin', (event)=> {
+        this.step = steps.POD_DETAILS;
+        GUI.unhighlightError(pod_desc_input);
+        GUI.hidePodDetailsError();
+      });
+
+      pod_public_input.addEventListener('focusout', (event)=> {
+        this.step = steps.POD_DETAILS;
+        workflow.onFocusOutPodPublicInput(pod_public_input);
+      });
+    }
+
+    onFocusOutPodNameInput(element) {
+      const pod_name = element.value;
+      const validator = this.validatePodInput(pod_name, 53, "Pod name");
+
+      if (validator[0]) {
+        this.templateBlob.pod_name = pod_name;
+        GUI.refreshPodSummaryDetails(this.templateBlob.pod_name, this.templateBlob.pod_desc, this.templateBlob.public)
+      } else {
+        GUI.highlightError(element);
+        GUI.showPodDetailsError(validator[1]);
+      }
+    }
+
+    onFocusOutPodDescInput(element) {
+      const pod_desc = element.value;
+      const validator = this.validatePodInput(pod_desc, 255, "Pod description");
+
+      if (validator[0]) {
+        this.templateBlob.pod_desc = pod_desc;
+        GUI.refreshPodSummaryDetails(this.templateBlob.pod_name, this.templateBlob.pod_desc, this.templateBlob.public)
+      } else {
+        GUI.highlightError(element);
+        GUI.showPodDetailsError(validator[1]);
+      }
+
+    }
+
+    onFocusOutPodPublicInput(element) {
+      this.templateBlob.public = element.checked;
+      GUI.refreshPodSummaryDetails(this.templateBlob.pod_name, this.templateBlob.pod_desc, this.templateBlob.public)
+    }
+
+    /** Returns a tuple containing result and message (bool, String) */
+    validatePodInput(input, maxCharCount, form_name) {
+      let result = true;
+      let message = "valid"
+
+      if (input === '') {
+        message = form_name + ' cannot be empty.';
+        result = false;
+      }
+      else if (input.length > maxCharCount) {
+        message = form_name + ' cannot exceed ' + maxCharCount + ' characters.';
+        result = false;
+      } else if (!(input.match(/^[a-z0-9~@#$^*()_+=[\]{}|,.?': -!]+$/i))) {
+        message = form_name + ' contains invalid characters.';
+        result = false;
+      }
+
+      return [result, message]
+    }
+
+    onclickDiscardTemplate() {
+      this.step = steps.POD_SUMMARY;
+      if(confirm('Are you sure you wish to delete this Pod?')) {
+        LibLaaSAPI.deleteTemplate(this.templateBlob);
+        location.reload();
+      }
+    }
+
+    simpleStepValidation() {
+      let passed = true;
+      let message = "done";
+      let step = steps.POD_SUMMARY;
+
+      if (this.templateBlob.lab_name == null) {
+        passed = false;
+        message = "Please select a lab";
+        step = steps.SELECT_LAB;
+      } else if (this.templateBlob.host_list.length < 1 || this.templateBlob.host_list.length > 8) {
+        passed = false;
+        message = "Pods must contain at 1 to 8 hosts";
+        step = steps.ADD_RESOURCES;
+      } else if (this.templateBlob.networks.length < 1) {
+        passed = false;
+        message = "Pods must contain at least one network.";
+        step = steps.ADD_NETWORKS;
+      } else if (this.templateBlob.pod_name == null || this.templateBlob.pod_desc == null) {
+        passed = false;
+        message = "Please add a valid pod name and description.";
+        step = steps.POD_DETAILS;
+      }
+      return [passed, message, step];
+    }
+
+    onclickSubmitTemplate() {
+      this.step = steps.POD_SUMMARY;
+      const simpleValidation = this.simpleStepValidation();
+      if (!simpleValidation[0]) {
+        alert(simpleValidation[1])
+        this.goTo(simpleValidation[2]);
+        return;
+      }
+
+      // todo - make sure each host has at least one connection on any network.
+
+      if (confirm("Are you sure you wish to create this pod?")) {
+        let success =  LibLaaSAPI.makeTemplate(this.templateBlob);
+        if (success) {
+          window.location.href = "../../";
+        } else {
+          alert("Could not create template.")
+        }
+      }
+    }
 }
 
 /** View class that displays cards and generates HTML 
  * Functions as a namespace, does not hold state
 */
 class GUI {
-  // TODO: Hold state for refreshing elements
-
     /** Takes a list of LabBlobs and creates a card for each of them on the screen */
     static display_labs(labs) {
         const card_deck = document.getElementById('lab_cards');
@@ -562,7 +762,7 @@ class GUI {
     }
 
     /** Takes a ResourceBuilder and generates form fields */
-    static refreshConfigSection(resourceBuilder, flavor_list) {
+    static refreshConfigSection(resourceBuilder, flavors) {
       // Create a tab for head host in the selected template
       const tablist = document.getElementById('add_resource_tablist'); // ul
       tablist.innerHTML = "";
@@ -576,7 +776,7 @@ class GUI {
         btn_interface.setAttribute('href', "#");
         btn_interface.setAttribute('role', 'tab');
         btn_interface.setAttribute('data-toggle', 'tab'); 
-        btn_interface.innerText = globalGetFlavorById(host.flavor, flavor_list).name;
+        btn_interface.innerText = flavors.get(host.flavor).name;
 
         if (index == resourceBuilder.tab) {
           btn_interface.classList.add('active');
@@ -645,15 +845,31 @@ class GUI {
       return col;
     }
 
+    static highlightError(element) {
+      element.classList.add('invalid_field');
+    }
+
+    static unhighlightError(element) {
+      element.classList.remove("invalid_field");
+    }
+
+    static showPodDetailsError(message) {
+      document.getElementById('pod_details_error').innerText = message;
+    }
+
+    static hidePodDetailsError() {
+      document.getElementById('pod_details_error').innerText = ""
+    }
+
     /**
      * Refreshes the step and creates a card for each host in the hostlist
      * @param {List<HostConfigBlob>} hostlist 
      */
-    static refreshHostStep(hostlist, flavor_list, image_list) {
+    static refreshHostStep(hostlist, flavors, image_list) {
       const host_cards = document.getElementById('host_cards');
       host_cards.innerHTML = "";
       for (const host of hostlist) {
-        host_cards.appendChild(this.makeHostCard(host, flavor_list, image_list));
+        host_cards.appendChild(this.makeHostCard(host, flavors, image_list));
       }
 
       const plus_card = document.createElement("div");
@@ -672,13 +888,13 @@ class GUI {
      * Makes a host card element for a given host and returns a reference to the card
      * @param {HostConfigBlob} host 
      */
-    static makeHostCard(host, flavor_list, image_list) {
+    static makeHostCard(host, flavors, image_list) {
       const new_card = document.createElement("div");
       new_card.classList.add("col-xl-3", "col-md-6","col-12", "my-3");
       new_card.innerHTML = `
         <div class="card">
           <div class="card-header">
-            <h3 class="mt-2">` + globalGetFlavorById(host.flavor, flavor_list).name + `</h3>
+            <h3 class="mt-2">` + flavors.get(host.flavor).name + `</h3>
           </div>
           <ul class="list-group list-group-flush h-100">
             <li class="list-group-item">Hostname: ` + host.hostname + `</li>
@@ -773,7 +989,9 @@ class GUI {
         connection_cards.appendChild(new_card);
       }
 
+      let index = -1;
       for (const network of network_list) {
+        index++;
         for (const [hostname, connectionCard] of element_map) {
           const new_li = document.createElement('li');
           new_li.classList.add('list-group-item');
@@ -783,11 +1001,6 @@ class GUI {
           `
           connectionCard.appendChild(new_li)
         }
-
-
-        // for (const connection of network.bondgroups[0].connections) {
-        //   // todo wednesday
-        // }
 
         class ConnectionInfo {
           constructor(ifacename, tagged) {
@@ -811,7 +1024,7 @@ class GUI {
         if (existing_bondgroup) {
           for (const connection of existing_bondgroup.connections) {
             const connectionInfo = new ConnectionInfo(connection.iface.name, connection.tagged);
-            const network_ul = element_map.get(connection.iface.hostname).getElementsByClassName('connection-holder')[0];
+            const network_ul = element_map.get(connection.iface.hostname).getElementsByClassName('connection-holder')[index];
             const newListing = document.createElement('li')
             newListing.innerText = connectionInfo.toString()
             network_ul.appendChild(newListing);
@@ -889,7 +1102,6 @@ class GUI {
       `;
 
       const ifaceConfig = connectionBuilder.ifaceConnections.get(selected_iface_name); // Map<network_name, tagged>
-      console.log(ifaceConfig);
 
       for (const [network, tagged] of ifaceConfig) {
         // connections_table
@@ -931,7 +1143,65 @@ class GUI {
       return td;
     }
 
+    static refreshPodSummaryDetails(pod_name, pod_desc, isPublic) {
+      const list = document.getElementById('pod_summary_pod_details');
+      list.innerHTML = '';
+      const name_li = document.createElement('li');
+      name_li.innerText = 'Pod name: ' + pod_name;
+      list.appendChild(name_li);
 
+      const desc_li = document.createElement('li')
+      desc_li.innerText = 'Description: ' + pod_desc;
+      list.appendChild(desc_li);
+
+      const public_li = document.createElement('li');
+      public_li.innerText = 'Public: ' + isPublic;
+      list.appendChild(public_li);
+    }
+
+    static refreshPodSummaryHosts(host_list, flavors, image_list) {
+      const list = document.getElementById('pod_summary_hosts');
+      list.innerHTML = '';
+
+      for (const host of host_list) {
+        const new_li = document.createElement('li');
+        // new_li.innerText = hosts[i].hostname + ': ' + this.lab_flavor_from_uuid(hosts[i].flavor).name + ' (' + hosts[i].image + ')';
+        const details = `${host.hostname}: ${flavors.get(host.flavor).name}, ${globalGetImageById(host.image, image_list).name}`
+        new_li.innerText = details;
+        list.appendChild(new_li);
+      }
+    }
+
+    static update_pod_summary() {
+      // Takes a section (string) and updates the appropriate element's innertext
+
+      if (section == 'pod_details') {
+        const list = document.getElementById('pod_summary_pod_details');
+        list.innerHTML = '';
+        const name_li = document.createElement('li');
+        name_li.innerText = 'Pod name: ' + this.pod.pod_name;
+        list.appendChild(name_li);
+
+        const desc_li = document.createElement('li')
+        desc_li.innerText = 'Description: ' + this.pod.pod_desc;
+        list.appendChild(desc_li);
+
+        const public_li = document.createElement('li');
+        public_li.innerText = 'Public: ' + this.pod.is_public;
+        list.appendChild(public_li);
+      } else if (section == 'hosts') {
+        const list = document.getElementById('pod_summary_hosts');
+        list.innerHTML = '';
+        const hosts = this.pod.host_list;
+        for (let i = 0; i < this.pod.host_list.length; i++) {
+          const new_li = document.createElement('li');
+          new_li.innerText = hosts[i].hostname + ': ' + this.lab_flavor_from_uuid(hosts[i].flavor).name + ' (' + hosts[i].image + ')';
+          list.appendChild(new_li);
+        }
+      } else {
+        console.log(section + ' is not a valid section.');
+      }
+    }
 }
 
 /** Holds in-memory configurations for the add resource step */
@@ -955,13 +1225,12 @@ class ResourceBuilder {
  * Used in the configure connections widget
  */
 class ConnectionBuilder {
-  constructor(hostBlob, network_list, flavor_list) {
-    // todo - thursday finish this
+  constructor(hostBlob, network_list, flavors) {
     this.host = hostBlob;
     this.ifaceConnections = new Map(); // Map<iface_name, Map<network_name, tagged>>
     this.tab = 0; // Currently selected tab index the GUI
     // For each iface in the flavor, initialize the map
-    const ifaces = globalGetFlavorById(hostBlob.flavor, flavor_list).interfaces;
+    const ifaces = flavors.get(this.host.flavor).interfaces
     for (const ifacename of ifaces) {
       const default_connections = new Map();
       for (const network of network_list) {
@@ -990,23 +1259,17 @@ class ConnectionBuilder {
     this.ifaceConnections.get(iface_name).set(network_name, tagged);
   }
 
-  // commitConfigs() {???}
-}
-
-/** I don't like this but it works for now */
-function globalGetFlavorById(flavor_id, flavor_list) {
-
-  for (let flavor of flavor_list) {
-    if (flavor.flavor_id == flavor_id) {
-      return flavor;
-    }
-  }
 }
 
 function globalGetImageById(image_id, image_list) {
+  // todo - same thing as flavor map
   for (let image of image_list) {
     if (image.image_id == image_id) {
       return image;
     }
   }
+}
+
+function todo() {
+  alert('todo');
 }
