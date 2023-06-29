@@ -15,7 +15,7 @@ const endpoint = {
     LABS: "todo",
     FLAVORS: "todo",
     IMAGES: "todo",
-    TEMPLATES: "/template/...", // todo
+    TEMPLATES: "todo",
     SAVE_DESIGN_WORKFLOW: "todo",
     SAVE_BOOKING_WORKFLOW: "todo",
     MAKE_TEMPLATE: "todo",
@@ -31,6 +31,7 @@ class LibLaaSAPI {
     static async makeRequest(method, endpoint, workflow_data) {
         // await
         // We are going to resolve and error catch in this block
+        const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
 
         let response = new Promise((resolve, reject) => { // -> HttpResponse
             $.ajax(
@@ -39,6 +40,9 @@ class LibLaaSAPI {
               method: "POST",
               contentType: "application/json; charset=utf-8",
               dataType : 'json',
+              headers: {
+                'X-CSRFToken': token
+            },
               data: JSON.stringify(
                 {
                     "method": method,
@@ -86,7 +90,7 @@ class LibLaaSAPI {
 
         let jsonObject = JSON.parse('{"id":12345,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Single Host","pod_desc":"Default Template","pub":true,"host_list":[{"cifile":[],"hostname":"node","flavor":"aaa-bbb-ccc","image":"111-222-333"}, {"cifile":[],"hostname":"node2","flavor":"aaa-bbb-ccc","image":"111-222-333"}],"networks":[{"bondgroups":[{"connections":[{"iface":{"hostname":"node","name":"ens1"},"tagged":true},{"iface":{"hostname":"node","name":"ens2"},"tagged":false},{"iface":{"hostname":"node","name":"ens3"},"tagged":true}]}],"name":"private"}]}');
         let jsonObject2 = JSON.parse('{"id":6789,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Other Host","pod_desc":"Different Template","pub":true,"host_list":[{"cifile":[],"hostname":"host1","flavor":"aaa-bbb-ccc","image":"111-222-333"}, {"cifile":[],"hostname":"host2","flavor":"aaa-bbb-ccc","image":"111-222-333"}, {"cifile":[],"hostname":"host3","flavor":"aaa-bbb-ccc","image":"111-222-333"}],"networks":[{"bondgroups":[{"connections":[{"iface":{"hostname":"host1","name":"ens1"},"tagged":true},{"iface":{"hostname":"host2","name":"ens2"},"tagged":false}]}],"name":"private"}]}');
-        return [new TemplateBlob(jsonObject), new TemplateBlob(jsonObject2)];
+        return [new TemplateBlob(jsonObject), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2)];
     }
 
     static saveDesignWorkflow(templateBlob) { // -> bool
@@ -105,19 +109,19 @@ class LibLaaSAPI {
         return this.makeRequest(HTTP.DELETE, endpoint.DELETE_TEMPLATE, {"blob": templateBlob});
     }
 
-    static makeBooking(bookingBlob) { // -> UUID or error?
-        return this.makeRequest(HTTP.POST, endpoint.MAKE_BOOKING, {"blob": bookingBlob});
+    static makeBooking(bookingBlob, bookingMetaData) { // -> boolean
+        console.log("received blob:")
+        console.log(bookingBlob)
+        console.log("receieved meta:")
+        console.log(bookingMetaData)
+        return true
+        // return false
+        // return this.makeRequest(HTTP.POST, endpoint.MAKE_BOOKING, {"blob": bookingBlob});
     }
     
 
 }
 
-// class Section {
-//     constructor(elementId, number) {
-//         this.elementId = elementId;
-//         this.number = number;
-//     }
-// }
 
 /** Controller class that handles button inputs to navigate through the workflow and generate HTML dynamically 
  * Treat this as an abstract class and extend it in the appropriate workflow module.

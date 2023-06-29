@@ -10,6 +10,7 @@
 
 import json
 import math
+import os
 import traceback
 import sys
 from datetime import timedelta
@@ -21,6 +22,7 @@ from django.utils import timezone
 from django.views import View
 from django.http import HttpResponseNotFound
 from django.http.response import JsonResponse, HttpResponse
+import requests
 from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
@@ -409,3 +411,43 @@ def booking_details(request, booking_id=""):
     # return JsonResponse(str(details), safe=False)
     # todo - LL Integration
     return HttpResponse(status=404)
+
+
+""" Forwards a request to the LibLaaS API"""
+def liblaas_request(request) -> JsonResponse:
+
+    if request.method != 'POST':
+        return JsonResponse({"error" : "405 Method not allowed"})
+
+    liblaas_base_url = os.environ.get("LIBLAAS_BASE_URL")
+    post_data = json.loads(request.body)
+
+    http_method = post_data["method"]
+    liblaas_endpoint = post_data["endpoint"]
+    workflow_data = post_data["workflow_data"]
+
+    metadata = {
+        "username" : str(request.user),
+    }
+
+    payload = {
+        "metadata" : metadata,
+        "payload" : workflow_data
+    }
+
+    if (http_method == "GET"):
+        response = requests.get(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+    elif (http_method == "POST"):
+        response = requests.post(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload), headers={'Content-Type': 'application/json'})
+    elif (http_method == "DELETE"):
+        response = requests.delete(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+    elif (http_method == "PUT"):
+        response = requests.put(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+    else:
+        return JsonResponse({"error": "405 Unsupported method"})
+    try:
+        return JsonResponse(json.loads(response.content.decode('utf8')), safe=False)
+    except:
+        return JsonResponse({}) # todo - handle JSONDecode error
+        
+

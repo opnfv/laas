@@ -235,3 +235,16 @@ class MultipleSelectFilterField(forms.Field):
         except json.decoder.JSONDecodeError:
             pass
         raise ValidationError("content is not valid JSON")
+    
+class BookingMetaForm(forms.Form):
+
+    def __init__(self, *args, user_initial=[], owner=None, **kwargs):
+        super(BookingMetaForm, self).__init__(**kwargs)
+
+        self.fields['users'] = SearchableSelectMultipleField(
+            queryset=UserProfile.objects.select_related('user').exclude(user=owner),
+            initial=user_initial,
+            items=get_user_items(exclude=owner),
+            required=False,
+            **get_user_field_opts()
+        )
