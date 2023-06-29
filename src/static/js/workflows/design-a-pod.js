@@ -4,11 +4,7 @@ design-a-pod.js
 Functions as the "controller" part of MVC
 */
 
-/** Concrete controller class that handles button inputs from the user.
- * Holds the in-progress TemplateBlob.
- * Click methods are prefaced with 'onclick'.
- * Step initialization methods are prefaced with 'step'.
- */
+
 const steps = {
   SELECT_LAB: 0,
   ADD_RESOURCES: 1,
@@ -18,6 +14,11 @@ const steps = {
   POD_SUMMARY: 5
 }
 
+/** Concrete controller class that handles button inputs from the user.
+ * Holds the in-progress TemplateBlob.
+ * Click methods are prefaced with 'onclick'.
+ * Step initialization methods are prefaced with 'step'.
+ */
 class DesignWorkflow extends Workflow {
     constructor(savedTemplateBlob) {
         super(["select_lab", "add_resources", "add_networks", "configure_connections", "pod_details", "pod_summary"])
@@ -25,9 +26,6 @@ class DesignWorkflow extends Workflow {
         // if(savedTemplateBlob) {
         //     this.resume_workflow();
         // }
-
-        // This is here to make reordering steps easier in the future.
-        // Simply modify this object and the steps list.
 
         this.templateBlob = new TemplateBlob({});
         this.labFlavors; // Map<UUID, FlavorBlob>
@@ -37,9 +35,6 @@ class DesignWorkflow extends Workflow {
         this.connectionBuilder; // ConnectionBuilder
 
         this.templateBlob.public = false;
-        this.setPodDetailEventListeners();
-        this.startWorkflow();
-
     }
 
     /** Finds the templateBlob object in the userTemplates list based on a given uuid */
@@ -57,8 +52,9 @@ class DesignWorkflow extends Workflow {
     }
 
     /** Initializes the select_lab step */
-    startWorkflow() {
-        const labs = LibLaaSAPI.getLabs();
+    async startWorkflow() {
+        this.setPodDetailEventListeners();
+        const labs = await LibLaaSAPI.getLabs();
         GUI.display_labs(labs);
         document.getElementById(this.sections[0]).scrollIntoView({behavior: 'smooth'});
     }
@@ -67,18 +63,19 @@ class DesignWorkflow extends Workflow {
     addDefaultNetwork() {
       const new_network = new NetworkBlob({});
       new_network.name = "public";
+      new_network.public = true;
       this.addNetworkToPod(new_network);
       GUI.refreshNetworkStep(this.templateBlob.networks);
     }
 
     /** Takes an HTML element */
-    onclickSelectLab(lab_card) {
+    async onclickSelectLab(lab_card) {
         this.step = steps.SELECT_LAB;
 
         if (this.templateBlob.lab_name == null) { // Lab has not been selected yet
             this.templateBlob.lab_name = lab_card.id;
             lab_card.classList.add("selected_node");
-            this.setLabDetails(this.templateBlob.lab_name);
+            await this.setLabDetails(this.templateBlob.lab_name);
             this.addDefaultNetwork();
         } else { // Lab has been selected
             if(confirm('Unselecting a lab will reset all selected resources, are you sure?')) {
@@ -88,16 +85,16 @@ class DesignWorkflow extends Workflow {
     }
 
     /** Calls the API to fetch flavors and images for a lab */
-    setLabDetails(lab_name) {
-        const flavorsList = LibLaaSAPI.getLabFlavors(lab_name);
+    async setLabDetails(lab_name) {
+        const flavorsList = await LibLaaSAPI.getLabFlavors(lab_name);
         this.labFlavors = new Map(); // Map<UUID, FlavorBlob>
 
         for (const fblob of flavorsList) {
           this.labFlavors.set(fblob.flavor_id, fblob);
         }
 
-        this.labImages = LibLaaSAPI.getLabImages(lab_name);
-        this.userTemplates = LibLaaSAPI.getTemplatesForUser();
+        this.labImages = await LibLaaSAPI.getLabImages(lab_name);
+        this.userTemplates = await LibLaaSAPI.getTemplatesForUser();
     }
 
     /** Prepopulates fields and launches the modal */
@@ -114,6 +111,11 @@ class DesignWorkflow extends Workflow {
           alert("Please select a lab before adding resources.");
           this.goTo(steps.SELECT_LAB);
           return;
+      }
+
+      if (this.templateBlob.host_list.length >= 8) {
+        alert("You may not add more than 8 hosts to a single pod.")
+        return;
       }
 
       this.resourceBuilder = null;
@@ -346,6 +348,7 @@ class DesignWorkflow extends Workflow {
 
       const new_network = new NetworkBlob({});
       new_network.name = document.getElementById('network_input').value;
+      new_network.public = document.getElementById('network-public-input').checked;
       const error_message = this.addNetworkToPod(new_network);
 
       if (error_message == null) {
@@ -597,10 +600,10 @@ class DesignWorkflow extends Workflow {
       return [result, message]
     }
 
-    onclickDiscardTemplate() {
+    async onclickDiscardTemplate() {
       this.step = steps.POD_SUMMARY;
       if(confirm('Are you sure you wish to delete this Pod?')) {
-        LibLaaSAPI.deleteTemplate(this.templateBlob);
+        await LibLaaSAPI.deleteTemplate(this.templateBlob);
         location.reload();
       }
     }
@@ -616,7 +619,7 @@ class DesignWorkflow extends Workflow {
         step = steps.SELECT_LAB;
       } else if (this.templateBlob.host_list.length < 1 || this.templateBlob.host_list.length > 8) {
         passed = false;
-        message = "Pods must contain at 1 to 8 hosts";
+        message = "Pods must contain 1 to 8 hosts";
         step = steps.ADD_RESOURCES;
       } else if (this.templateBlob.networks.length < 1) {
         passed = false;
@@ -630,7 +633,7 @@ class DesignWorkflow extends Workflow {
       return [passed, message, step];
     }
 
-    onclickSubmitTemplate() {
+    async onclickSubmitTemplate() {
       this.step = steps.POD_SUMMARY;
       const simpleValidation = this.simpleStepValidation();
       if (!simpleValidation[0]) {
@@ -642,7 +645,7 @@ class DesignWorkflow extends Workflow {
       // todo - make sure each host has at least one connection on any network.
 
       if (confirm("Are you sure you wish to create this pod?")) {
-        let success =  LibLaaSAPI.makeTemplate(this.templateBlob);
+        let success =  await LibLaaSAPI.makeTemplate(this.templateBlob);
         if (success) {
           window.location.href = "../../";
         } else {
@@ -872,11 +875,18 @@ class GUI {
         host_cards.appendChild(this.makeHostCard(host, flavors, image_list));
       }
 
+      let span_class = ''
+      if (hostlist.length == 8) {
+        span_class = 'text-primary'
+      } else if (hostlist.length > 8) {
+        span_class = 'text-danger'
+      }
       const plus_card = document.createElement("div");
       plus_card.classList.add("col-xl-3", "col-md-6", "col-12");
       plus_card.id = "add_resource_plus_card";
       plus_card.innerHTML = `
       <div class="card align-items-center border-0">
+      <span class="` + span_class + `" id="resource-count">` + hostlist.length + `/ 8</span>
       <button class="btn btn-success add-button p-0" onclick="workflow.onclickAddResource()">+</button>
       </div>
       `
@@ -920,9 +930,14 @@ class GUI {
       new_card.innerHTML = 
         `<div class="card pb-0" id="new_network_card">
           <div class="card-body pb-0">
-            <div class="row justify-content-center my-5 mx-2">
+            <div class="justify-content-center my-5 mx-2">
               <input type="text" class="form-control col-12 mb-2 text-center" id="network_input" style="font-size: 1.75rem;" placeholder="Enter Network Name">
-              <span class="text-danger mt-n2" id="adding_network_error"></span>
+              <div class="custom-control custom-switch">
+              <input type="checkbox" class="custom-control-input" id="network-public-input">
+              <label class="custom-control-label" for="network-public-input">public?</label>
+              </div>
+              </br>
+            <p class="text-danger mt-n2" id="adding_network_error"></p>
             </div>
             <div class="row mb-3">
               <div class="col-6"><button class="btn btn-danger w-100" onclick="GUI.hide_network_input()">Delete</button></div>
@@ -958,12 +973,16 @@ class GUI {
       const network_plus_card = document.getElementById('add_network_plus_card');
       for (let network of network_list) { // NetworkBlobs
     
+          let pub_str = ' (private)';
+          if (network.public) {
+            pub_str = ' (public)'
+          }
           const new_card = document.createElement('div');
           new_card.classList.add("col-xl-3", "col-md-6","col-12", "my-3");
           new_card.innerHTML = `
               <div class="card">
                 <div class="text-center">
-                  <h3 class="py-5 my-4">` + network.name+ `</h3>
+                  <h3 class="py-5 my-4">` + network.name + pub_str +`</h3>
                 </div>
                 <div class="row mb-3 mx-3">
                     <button class="btn btn-danger w-100" id="delete_network_` + network.name + `" onclick="workflow.onclickDeleteNetwork('`+ network.name +`')">Delete</button>

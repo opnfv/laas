@@ -42,6 +42,7 @@
         <div class="row card-deck align-items-center" id="host_cards">
           <div class="col-xl-3 col-md-6 col-12" id="add_resource_plus_card">
             <div class="card align-items-center border-0">
+              <span class="" id="resource-count">0 / 8</span>
               <button class="btn btn-success add-button p-0" onclick="workflow.onclickAddResource()">+</button>
             </div>
           </div>
@@ -196,24 +197,17 @@
   </div>
 </div>
 
+<div class="hidden_form d-none">
+  <form id="token">
+      {% csrf_token %}
+  </form>
+</div>
+
 </body>
 
 <script>
-  // Initializes objects for the workflow, adds event listeners to workflow elements, and resets the page to the default state
-
   const workflow = new DesignWorkflow();
-  // Confirmation before leaving
-  window.onbeforeunload = function (e) {
-  var message = "Are you sure you want to leave? All progress will be lost.",
-  e = e || window.event;
-  // For IE and Firefox
-  if (e) {
-    e.returnValue = message;
-  }
-
-  // For Safari
-  return message;
-};
+  workflow.startWorkflow();
 </script>
 {% endif %}
 {% endblock %}

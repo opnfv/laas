@@ -56,10 +56,10 @@
         {% else %}
         {% block btnGrp %}
         <p>To get started, book a server below:</p>
-        <a class="btn btn-primary btn-lg d-flex flex-column justify-content-center align-content-center border p-4 btnAnuket" href="" >
+        <a class="btn btn-primary btn-lg d-flex flex-column justify-content-center align-content-center border p-4 btnAnuket" href="{% url 'workflow:book_a_pod' %}" >
             Book a Pod
         </a>
-        <a class="btn btn-primary btn-lg d-flex flex-column justify-content-center align-content-center border p-4 btnAnuket" href="" >
+        <a class="btn btn-primary btn-lg d-flex flex-column justify-content-center align-content-center border p-4 btnAnuket" href="{% url 'workflow:design_a_pod' %}" >
             Design a Pod
         </a>
         {% endblock btnGrp %}

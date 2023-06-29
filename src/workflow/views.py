@@ -10,6 +10,9 @@
 from django.shortcuts import render
 from laas_dashboard.settings import TEMPLATE_OVERRIDE
 from django.http import HttpResponse
+from django.http.response import JsonResponse
+from workflow.forms import BookingMetaForm
+from api.views import liblaas_request, make_booking
 
 
 def no_workflow(request):
@@ -31,5 +34,29 @@ def design_a_pod_view(request):
     
     if request.method == "POST":
         pass # todo - call an API endpoint on liblaas
+
+    return HttpResponse(status=405)
+
+def book_a_pod_view(request):
+    if request.method == "GET":
+        if not request.user.is_authenticated:
+            return login(request)
+        template = "workflow/book_a_pod.html"
+        context = {
+            "dashboard": str(TEMPLATE_OVERRIDE),
+            "form": BookingMetaForm(initial={}, user_initial=[], owner=request.user),
+        }
+        return render(request, template, context)
+    
+    if request.method == "POST":
+        return liblaas_request(request)
+
+    # Using PUT to signal that we do not want to talk to liblaas
+    if request.method == "PUT":
+        return JsonResponse(
+            data={},
+            status=make_booking(request).status_code,
+            safe=False
+        )
 
     return HttpResponse(status=405)

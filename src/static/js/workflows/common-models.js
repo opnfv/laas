@@ -171,6 +171,14 @@ class BookingBlob {
     }
 }
 
+class BookingMetaData {
+    constructor() {
+        this.purpose = null; // String
+        this.project = null; // String
+        this.length = 1; // Number
+    }
+}
+
 // Utility Classes
 class ImageBlob {
     constructor({image_id, name}) {
@@ -185,17 +193,15 @@ class ImageBlob {
 }
 
 class FlavorBlob {
-    constructor({flavor_id, name, description, interfaces}) {
+    constructor({flavor_id, name, interfaces}) {
         this.flavor_id; // UUID (String)
         this.name; // String
-        this.description; // String
         this.interfaces; // List<String>
 
         // Object destructuring
-        if (flavor_id || name || description) {
+        if (flavor_id || name) {
             this.flavor_id = flavor_id;
             this.name = name;
-            this.description = description;
         }
 
         if (interfaces) {

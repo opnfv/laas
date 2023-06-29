@@ -10,6 +10,7 @@
 
 import json
 import math
+import os
 import traceback
 import sys
 from datetime import timedelta
@@ -21,11 +22,13 @@ from django.utils import timezone
 from django.views import View
 from django.http import HttpResponseNotFound
 from django.http.response import JsonResponse, HttpResponse
+import requests
 from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 from api.forms import DowntimeForm
 from account.models import UserProfile, Lab
@@ -242,25 +245,28 @@ def extend_booking(request, booking_id="", days=""):
 
 @csrf_exempt
 def make_booking(request):
-    # token = auth_and_log(request, 'booking/makeBooking')
+    print("received call to make_booking")
+    metadata = json.loads(request.body)['bookingMetaData']
+    print(metadata)
+    
+    collaborators = metadata["collaborators"]
+    try:
+        booking = Booking.objects.create(
+        purpose=metadata["purpose"],
+        project=metadata['project'],
+        lab=Lab.objects.get(name='UNH_IOL'),
+        owner=request.user,
+        start=timezone.now(),
+        end=timezone.now() + timedelta(days=int(metadata['length'])),
+        )
 
-    # if isinstance(token, HttpResponse):
-    #     return token
-
-    # try:
-    #     booking = create_from_API(request.body, token.user)
-
-    # except Exception:
-    #     finalTrace = ''
-    #     exc_type, exc_value, exc_traceback = sys.exc_info()
-    #     for i in traceback.format_exception(exc_type, exc_value, exc_traceback):
-    #         finalTrace += '<br>' + i.strip()
-    #     return HttpResponse(finalTrace, status=400)
-
-    # sbooking = AutomationAPIManager.serialize_booking(booking)
-    # return JsonResponse(sbooking, safe=False)
-    # todo - LL Integration
-    return HttpResponse(status=404)
+        # Now add collabs
+        for c in collaborators:
+            booking.collaborators.add(User.objects.get(username=c))
+        return HttpResponse(status=200)
+    except Exception as error:
+        print(error)
+        return HttpResponse(status=500)
 
 
 """
@@ -409,3 +415,65 @@ def booking_details(request, booking_id=""):
     # return JsonResponse(str(details), safe=False)
     # todo - LL Integration
     return HttpResponse(status=404)
+
+
+""" Forwards a request to the LibLaaS API from a workflow """
+def liblaas_request(request) -> JsonResponse:
+
+    if request.method != 'POST':
+        return JsonResponse({"error" : "405 Method not allowed"})
+
+    liblaas_base_url = os.environ.get("LIBLAAS_BASE_URL")
+    post_data = json.loads(request.body)
+    print("post data is " + str(post_data))
+    http_method = post_data["method"]
+    liblaas_endpoint = post_data["endpoint"]
+    workflow_data = post_data["workflow_data"]
+
+    metadata = {
+        "username" : str(request.user),
+    }
+
+    payload = {
+        "metadata" : metadata,
+        "payload" : workflow_data
+    }
+    # # For debug only
+    # return JsonResponse(
+    # data={},
+    # status=200,
+    # safe=False
+    # )
+
+    try:
+        if (http_method == "GET"):
+            response = requests.get(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+        elif (http_method == "POST"):
+            response = requests.post(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload), headers={'Content-Type': 'application/json'})
+        elif (http_method == "DELETE"):
+            response = requests.delete(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+        elif (http_method == "PUT"):
+            response = requests.put(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+        else:
+            return JsonResponse(
+                data={},
+                status=405,
+                safe=False
+            )
+        try:
+            return JsonResponse(
+                data=json.loads(response.content.decode('utf8')),
+                status=200,
+                safe=False
+            )
+        except:
+            print("Json decode error!")
+            return JsonResponse({}) # todo - handle JSONDecode error
+    except:
+        return JsonResponse(
+            data={},
+            status=500,
+            safe=False
+        )
+        
+
