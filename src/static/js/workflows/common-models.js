@@ -197,6 +197,7 @@ class FlavorBlob {
         this.flavor_id; // UUID (String)
         this.name; // String
         this.interfaces; // List<String>
+        // images are added after
 
         // Object destructuring
         if (flavor_id || name) {

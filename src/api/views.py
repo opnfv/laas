@@ -419,7 +419,8 @@ def booking_details(request, booking_id=""):
 
 """ Forwards a request to the LibLaaS API from a workflow """
 def liblaas_request(request) -> JsonResponse:
-
+    print("handing liblaas request... ", request.method)
+    print(request.body)
     if request.method != 'POST':
         return JsonResponse({"error" : "405 Method not allowed"})
 
@@ -438,6 +439,10 @@ def liblaas_request(request) -> JsonResponse:
         "metadata" : metadata,
         "payload" : workflow_data
     }
+
+    # Fill in actual username
+    liblaas_endpoint = liblaas_endpoint.replace("[username]", metadata["username"])
+    print("processed endpoint is ", liblaas_endpoint)
     # # For debug only
     # return JsonResponse(
     # data={},
@@ -445,35 +450,30 @@ def liblaas_request(request) -> JsonResponse:
     # safe=False
     # )
 
-    try:
-        if (http_method == "GET"):
-            response = requests.get(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
-        elif (http_method == "POST"):
-            response = requests.post(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload), headers={'Content-Type': 'application/json'})
-        elif (http_method == "DELETE"):
-            response = requests.delete(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
-        elif (http_method == "PUT"):
-            response = requests.put(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
-        else:
-            return JsonResponse(
-                data={},
-                status=405,
-                safe=False
-            )
-        try:
-            return JsonResponse(
-                data=json.loads(response.content.decode('utf8')),
-                status=200,
-                safe=False
-            )
-        except:
-            print("Json decode error!")
-            return JsonResponse({}) # todo - handle JSONDecode error
-    except:
+    if (http_method == "GET"):
+        response = requests.get(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+    elif (http_method == "POST"):
+        response = requests.post(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload), headers={'Content-Type': 'application/json'})
+    elif (http_method == "DELETE"):
+        response = requests.delete(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+    elif (http_method == "PUT"):
+        response = requests.put(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+    else:
         return JsonResponse(
             data={},
-            status=500,
+            status=405,
             safe=False
         )
-        
+    try:
+        return JsonResponse(
+            data=json.loads(response.content.decode('utf8')),
+            status=200,
+            safe=False
+        )
+    except Exception as e:
+        print(e)
+        return JsonResponse({}) # todo - handle JSONDecode error
 
+def liblaas_templates(request):
+    request._body = b'{"method":"GET","endpoint":"template/list/[username]","workflow_data":{}}'
+    return liblaas_request(request)

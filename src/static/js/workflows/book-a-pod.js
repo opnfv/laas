@@ -120,7 +120,6 @@ const steps = {
         if (workflow.isValidCIFile(ci_textarea.value)) {
             workflow.bookingBlob.global_cifile = ci_textarea.value;
         } else {
-            // todo
             GUI.highlightError(ci_textarea);
         }
     }

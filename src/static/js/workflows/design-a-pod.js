@@ -29,7 +29,6 @@ class DesignWorkflow extends Workflow {
 
         this.templateBlob = new TemplateBlob({});
         this.labFlavors; // Map<UUID, FlavorBlob>
-        this.labImages;  // List<ImageBlob>
         this.userTemplates; // List<TemplateBlob>
         this.resourceBuilder; // ResourceBuilder
         this.connectionBuilder; // ConnectionBuilder
@@ -88,12 +87,16 @@ class DesignWorkflow extends Workflow {
     async setLabDetails(lab_name) {
         const flavorsList = await LibLaaSAPI.getLabFlavors(lab_name);
         this.labFlavors = new Map(); // Map<UUID, FlavorBlob>
+        this.labImages = new Map(); // Map<UUID, ImageBlob>
 
         for (const fblob of flavorsList) {
+          fblob.images = await LibLaaSAPI.getImagesForFlavor(fblob.flavor_id);
+          for (const iblob of fblob.images) {
+            this.labImages.set(iblob.image_id, iblob)
+          }
           this.labFlavors.set(fblob.flavor_id, fblob);
         }
 
-        this.labImages = await LibLaaSAPI.getLabImages(lab_name);
         this.userTemplates = await LibLaaSAPI.getTemplatesForUser();
     }
 
@@ -138,20 +141,20 @@ class DesignWorkflow extends Workflow {
       this.resourceBuilder = new ResourceBuilder(this.getTemplateById(template_id));
       GUI.highlightCard(card);
       GUI.refreshConfigSection(this.resourceBuilder, this.labFlavors);
-      GUI.refreshInputSection(this.resourceBuilder, this.labImages);
+      GUI.refreshInputSection(this.resourceBuilder, this.labFlavors);
     }
 
     onclickSelectNode(index) {
       this.resourceBuilder.tab = index;
-      GUI.refreshInputSection(this.resourceBuilder, this.labImages);
+      GUI.refreshInputSection(this.resourceBuilder, this.labFlavors);
     }
 
-    onclickSelectImage(image_index, card) {
+    onclickSelectImage(image_id, card) {
       const old_selection = document.querySelector("#image-cards .selected_node");
       if (old_selection) {
         GUI.unhighlightCard(old_selection);
       }
-      this.resourceBuilder.user_configs[this.resourceBuilder.tab].image = this.labImages[image_index].image_id;
+      this.resourceBuilder.user_configs[this.resourceBuilder.tab].image = image_id;
       GUI.highlightCard(card.childNodes[1]);
     }
 
@@ -182,7 +185,6 @@ class DesignWorkflow extends Workflow {
 
     /** Takes a hostname and a list of existing hosts and checks for duplicates in the existing hostlist*/
     isUniqueHostname(hostname, existing_hosts) {
-      // Todo for a new hire? Make this more efficient
       for (const existing_host of existing_hosts) {
         if (hostname == existing_host.hostname) {
           return false;
@@ -206,7 +208,7 @@ class DesignWorkflow extends Workflow {
         if (!result[0]) {
           this.resourceBuilder.tab = index;
           GUI.refreshConfigSection(this.resourceBuilder, this.labFlavors);
-          GUI.refreshInputSection(this.resourceBuilder, this.labImages);
+          GUI.refreshInputSection(this.resourceBuilder, this.labFlavors);
           GUI.showHostConfigErrorMessage(result[1]);
           return;
         }
@@ -215,7 +217,7 @@ class DesignWorkflow extends Workflow {
         if (!uniqueHost) {
           this.resourceBuilder.tab = index;
           GUI.refreshConfigSection(this.resourceBuilder, this.labFlavors);
-          GUI.refreshInputSection(this.resourceBuilder, this.labImages);
+          GUI.refreshInputSection(this.resourceBuilder, this.labFlavors);
           GUI.showHostConfigErrorMessage("Hostname '"+ host.hostname + "' already exists in Pod.");
           return;
         }
@@ -232,7 +234,7 @@ class DesignWorkflow extends Workflow {
           if (!uniqueConfigName) {
             this.resourceBuilder.tab = index;
             GUI.refreshConfigSection(this.resourceBuilder, this.labFlavors);
-            GUI.refreshInputSection(this.resourceBuilder, this.labImages);
+            GUI.refreshInputSection(this.resourceBuilder, this.labFlavors);
             GUI.showHostConfigErrorMessage("Hostname '"+ host.hostname + "' is a duplicate hostname.");
             return;
           }
@@ -789,17 +791,20 @@ class GUI {
       }
     }
 
-    static refreshInputSection(resourceBuilder, image_list) {
+    static refreshInputSection(resourceBuilder, flavor_map) {
             // config stuff
             const image_cards = document.getElementById('image-cards');
             const hostname_input = document.getElementById('hostname-input');
             const ci_textarea = document.getElementById('ci-textarea');
       
+            const tab_flavor_id = resourceBuilder.original_configs[resourceBuilder.tab].flavor;
+            const tab_flavor = flavor_map.get(tab_flavor_id);
+            const image_list = tab_flavor.images;
             image_cards.innerHTML = "";
-            for (let [index, image] of image_list.entries()) {
-              const new_image_card = this.makeImageCard(image);
-              new_image_card.setAttribute("onclick", "workflow.onclickSelectImage(" + index + ", this)");
-              if (resourceBuilder.user_configs[resourceBuilder.tab].image == image.image_id) {
+            for (let imageBlob of image_list) {
+              const new_image_card = this.makeImageCard(imageBlob);
+              new_image_card.setAttribute("onclick", "workflow.onclickSelectImage('" + imageBlob.image_id + "', this)");
+              if (resourceBuilder.user_configs[resourceBuilder.tab].image == imageBlob.image_id) {
                 GUI.highlightCard(new_image_card.childNodes[1]);
               }
               image_cards.appendChild(new_image_card);
@@ -868,11 +873,11 @@ class GUI {
      * Refreshes the step and creates a card for each host in the hostlist
      * @param {List<HostConfigBlob>} hostlist 
      */
-    static refreshHostStep(hostlist, flavors, image_list) {
+    static refreshHostStep(hostlist, flavors, images) {
       const host_cards = document.getElementById('host_cards');
       host_cards.innerHTML = "";
       for (const host of hostlist) {
-        host_cards.appendChild(this.makeHostCard(host, flavors, image_list));
+        host_cards.appendChild(this.makeHostCard(host, flavors, images));
       }
 
       let span_class = ''
@@ -898,7 +903,7 @@ class GUI {
      * Makes a host card element for a given host and returns a reference to the card
      * @param {HostConfigBlob} host 
      */
-    static makeHostCard(host, flavors, image_list) {
+    static makeHostCard(host, flavors, images) {
       const new_card = document.createElement("div");
       new_card.classList.add("col-xl-3", "col-md-6","col-12", "my-3");
       new_card.innerHTML = `
@@ -908,7 +913,7 @@ class GUI {
           </div>
           <ul class="list-group list-group-flush h-100">
             <li class="list-group-item">Hostname: ` + host.hostname + `</li>
-            <li class="list-group-item">Image: ` + globalGetImageById(host.image, image_list).name + `</li>
+            <li class="list-group-item">Image: ` + images.get(host.image).name + `</li>
           </ul>
           <div class="card-footer border-top-0">
             <button class="btn btn-danger w-100" id="delete-host-` + host.hostname + `" onclick="workflow.onclickDeleteHost('` + host.hostname +`')">Delete</button>
@@ -1178,14 +1183,14 @@ class GUI {
       list.appendChild(public_li);
     }
 
-    static refreshPodSummaryHosts(host_list, flavors, image_list) {
+    static refreshPodSummaryHosts(host_list, flavors, images) {
       const list = document.getElementById('pod_summary_hosts');
       list.innerHTML = '';
 
       for (const host of host_list) {
         const new_li = document.createElement('li');
         // new_li.innerText = hosts[i].hostname + ': ' + this.lab_flavor_from_uuid(hosts[i].flavor).name + ' (' + hosts[i].image + ')';
-        const details = `${host.hostname}: ${flavors.get(host.flavor).name}, ${globalGetImageById(host.image, image_list).name}`
+        const details = `${host.hostname}: ${flavors.get(host.flavor).name}, ${images.get(host.image).name}`
         new_li.innerText = details;
         list.appendChild(new_li);
       }
@@ -1278,15 +1283,6 @@ class ConnectionBuilder {
     this.ifaceConnections.get(iface_name).set(network_name, tagged);
   }
 
-}
-
-function globalGetImageById(image_id, image_list) {
-  // todo - same thing as flavor map
-  for (let image of image_list) {
-    if (image.image_id == image_id) {
-      return image;
-    }
-  }
 }
 
 function todo() {

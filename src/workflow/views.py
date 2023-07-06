@@ -33,7 +33,8 @@ def design_a_pod_view(request):
         return render(request, template, context)
     
     if request.method == "POST":
-        pass # todo - call an API endpoint on liblaas
+        print("forwarding request to liblaas...")
+        return liblaas_request(request)
 
     return HttpResponse(status=405)
 
@@ -49,6 +50,7 @@ def book_a_pod_view(request):
         return render(request, template, context)
     
     if request.method == "POST":
+        print("forwarding request to liblaas...")
         return liblaas_request(request)
 
     # Using PUT to signal that we do not want to talk to liblaas

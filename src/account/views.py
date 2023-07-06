@@ -30,7 +30,7 @@ from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 from account.forms import AccountSettingsForm
 from account.models import UserProfile
 from booking.models import Booking
-
+from api.views import liblaas_templates
 @method_decorator(login_required, name='dispatch')
 class AccountSettingsView(UpdateView):
     model = UserProfile
@@ -132,15 +132,9 @@ def account_resource_view(request):
         return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
     template = "account/resource_list.html"
 
-    active_bundles = [book.resource for book in Booking.objects.filter(
-        owner=request.user, end__gte=timezone.now(), resource__template__temporary=False)]
-    active_resources = [bundle.template.id for bundle in active_bundles]
-    # resource_list = list(ResourceTemplate.objects.filter(owner=request.user, temporary=False))
-    # todo - LL Integration
+    r = liblaas_templates(request)
     context = {
-        "resources": [],
-        # "resources": resource_list,
-        "active_resources": active_resources,
+        "templates": [],
         "title": "My Resources"
     }
     return render(request, template, context=context)

@@ -12,15 +12,15 @@ const HTTP = {
 }
 
 const endpoint = {
-    LABS: "todo",
+    LABS: "todo", // Not implemented
     FLAVORS: "flavor/",
-    IMAGES: "todo",
-    TEMPLATES: "todo",
-    SAVE_DESIGN_WORKFLOW: "todo",
-    SAVE_BOOKING_WORKFLOW: "todo",
-    MAKE_TEMPLATE: "todo",
-    DELETE_TEMPLATE: "todo",
-    MAKE_BOOKING: "todo",
+    IMAGES: "images/",
+    TEMPLATES: "template/list/[username]",
+    SAVE_DESIGN_WORKFLOW: "todo", // Post MVP
+    SAVE_BOOKING_WORKFLOW: "todo", // Post MVP
+    MAKE_TEMPLATE: "/template/create", // todo - figure out how to pass blob
+    DELETE_TEMPLATE: "todo", // Post MVP
+    MAKE_BOOKING: "/booking/create",
 }
 
 /** Functions as a namespace for static methods that post to the dashboard, then send an HttpRequest to LibLaas, then receive the response */
@@ -29,6 +29,7 @@ class LibLaaSAPI {
     /** POSTs to dashboard, which then auths and logs the requests, makes the request to LibLaaS, and passes the result back to here.
     Treat this as a private function. Only use the async functions when outside of this class */
     static makeRequest(method, endpoint, workflow_data) {
+        console.log("Making request: %s, %s, %s", method, endpoint, workflow_data.toString())
         const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
         return new Promise((resolve, reject) => {// -> HttpResponse
             $.ajax(
@@ -67,24 +68,50 @@ class LibLaaSAPI {
 
     static async getLabFlavors(lab_name) { // -> List<FlavorBlob>
         // return this.makeRequest(HTTP.GET, endpoint.FLAVORS, {"lab_name": lab_name});
-        let jsonObject = JSON.parse('{"flavor_id": "aaa-bbb-ccc", "name": "HPE Gen 9", "description": "placeholder", "interfaces": ["ens1", "ens2", "ens3"]}')
-        return [new FlavorBlob(jsonObject)];
+        const data = await this.handleResponse(this.makeRequest(HTTP.GET, endpoint.FLAVORS, {"lab_name": lab_name}));
+        let flavors = [];
+        if (data) {
+            for (const d of data) {
+                flavors.push(new FlavorBlob(d))
+            }
+        } else {
+            apiError("flavors")
+        }
+        return flavors;
+        // let jsonObject = JSON.parse('{"flavor_id": "aaa-bbb-ccc", "name": "HPE Gen 9", "description": "placeholder", "interfaces": ["ens1", "ens2", "ens3"]}')
+        // return [new FlavorBlob(jsonObject)];
     }
 
-    static async getLabImages(lab_name) { // -> List<ImageBlob>
-        // return this.makeRequest(HTTP.GET, endpoint.IMAGES, {"lab_name": lab_name});
-        let jsonObject = JSON.parse('{"image_id": "111-222-333", "name": "Arch Linux"}')
-        let jsonObject2 = JSON.parse('{"image_id": "444-555-666", "name": "Oracle Linux"}')
-        return [new ImageBlob(jsonObject), new ImageBlob(jsonObject2)];
+    static async getImagesForFlavor(flavor_id) {
+        let full_endpoint = endpoint.FLAVORS + flavor_id + '/[username]/' + endpoint.IMAGES;
+        const data =  await this.handleResponse(this.makeRequest(HTTP.GET, full_endpoint, {}));
+        let images = []
+
+        if (data) {
+            for (const d of data) {
+                images.push(new ImageBlob(d));
+            }
+        } else {
+            apiError("images")
+        }
+
+        return images;
     }
 
     /** Doesn't need to be passed a username because django will pull this from the request */
     static async getTemplatesForUser() { // -> List<TemplateBlob>
-        // return this.makeRequest(HTTP.GET, endpoint.TEMPLATES);
+        const data = await this.handleResponse(this.makeRequest(HTTP.GET, endpoint.TEMPLATES, {}))
+        let templates = []
 
-        let jsonObject = JSON.parse('{"id":12345,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Single Host","pod_desc":"Default Template","pub":true,"host_list":[{"cifile":[],"hostname":"node","flavor":"aaa-bbb-ccc","image":"111-222-333"}, {"cifile":[],"hostname":"node2","flavor":"aaa-bbb-ccc","image":"111-222-333"}],"networks":[{"bondgroups":[{"connections":[{"iface":{"hostname":"node","name":"ens1"},"tagged":true},{"iface":{"hostname":"node","name":"ens2"},"tagged":false},{"iface":{"hostname":"node","name":"ens3"},"tagged":true}]}],"name":"private"}]}');
-        let jsonObject2 = JSON.parse('{"id":6789,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Other Host","pod_desc":"Different Template","pub":true,"host_list":[{"cifile":[],"hostname":"host1","flavor":"aaa-bbb-ccc","image":"111-222-333"}, {"cifile":[],"hostname":"host2","flavor":"aaa-bbb-ccc","image":"111-222-333"}, {"cifile":[],"hostname":"host3","flavor":"aaa-bbb-ccc","image":"111-222-333"}],"networks":[{"bondgroups":[{"connections":[{"iface":{"hostname":"host1","name":"ens1"},"tagged":true},{"iface":{"hostname":"host2","name":"ens2"},"tagged":false}]}],"name":"private"}]}');
-        return [new TemplateBlob(jsonObject), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2), new TemplateBlob(jsonObject2)];
+        if (data)
+        for (const d of data) {
+            templates.push(new TemplateBlob(d))
+        } else {
+            apiError("templates")
+        }
+        return templates;
+        // let jsonObject = JSON.parse('{"id":12345,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Single Host","pod_desc":"Default Template","pub":true,"host_list":[{"cifile":[],"hostname":"node","flavor":"1ca6169c-a857-43c6-80b7-09b608c0daec","image":"3fc3833e-7b8b-4748-ab44-eacec8d14f8b"}],"networks":[{"bondgroups":[{"connections":[{"iface":{"hostname":"node","name":"eno49"},"tagged":true}]}],"name":"public"}]}');
+        // return [new TemplateBlob(jsonObject)];
     }
 
     static async saveDesignWorkflow(templateBlob) { // -> bool
@@ -95,11 +122,11 @@ class LibLaaSAPI {
         return await this.handleResponse(this.makeRequest(HTTP.PUT, endpoint.SAVE_BOOKING_WORKFLOW, {"blob": bookingBlob}));
     }
 
-    static async makeTemplate(templateBlob) { // -> UUID or error?
+    static async makeTemplate(templateBlob) { // -> UUID or null
         return await this.handleResponse(this.makeRequest(HTTP.POST, endpoint.MAKE_TEMPLATE, {"blob": templateBlob}));
     }
 
-    static async deleteTemplate(templateBlob) { // -> UUID or error?
+    static async deleteTemplate(templateBlob) { // -> UUID or null
         return await this.handleResponse(this.makeRequest(HTTP.DELETE, endpoint.DELETE_TEMPLATE, {"blob": templateBlob}));
     }
 
@@ -218,3 +245,7 @@ class Workflow {
     }
 
 }
+
+function apiError(info) {
+    alert("Unable to fetch " + info +". Please try again later or contact support.")
+  }
