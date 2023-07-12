@@ -429,35 +429,20 @@ def liblaas_request(request) -> JsonResponse:
     print("post data is " + str(post_data))
     http_method = post_data["method"]
     liblaas_endpoint = post_data["endpoint"]
-    workflow_data = post_data["workflow_data"]
-
-    metadata = {
-        "username" : str(request.user),
-    }
-
-    payload = {
-        "metadata" : metadata,
-        "payload" : workflow_data
-    }
-
+    payload = post_data["workflow_data"]
     # Fill in actual username
-    liblaas_endpoint = liblaas_endpoint.replace("[username]", metadata["username"])
+    liblaas_endpoint = liblaas_endpoint.replace("[username]", str(request.user))
+    liblaas_endpoint = liblaas_base_url + liblaas_endpoint
     print("processed endpoint is ", liblaas_endpoint)
-    # # For debug only
-    # return JsonResponse(
-    # data={},
-    # status=200,
-    # safe=False
-    # )
 
     if (http_method == "GET"):
-        response = requests.get(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+        response = requests.get(liblaas_endpoint, data=json.dumps(payload))
     elif (http_method == "POST"):
-        response = requests.post(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload), headers={'Content-Type': 'application/json'})
+        response = requests.post(liblaas_endpoint, data=json.dumps(payload), headers={'Content-Type': 'application/json'})
     elif (http_method == "DELETE"):
-        response = requests.delete(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+        response = requests.delete(liblaas_endpoint, data=json.dumps(payload))
     elif (http_method == "PUT"):
-        response = requests.put(liblaas_base_url + liblaas_endpoint, data=json.dumps(payload))
+        response = requests.put(liblaas_endpoint, data=json.dumps(payload))
     else:
         return JsonResponse(
             data={},
@@ -471,8 +456,13 @@ def liblaas_request(request) -> JsonResponse:
             safe=False
         )
     except Exception as e:
+        print("fail")
         print(e)
-        return JsonResponse({}) # todo - handle JSONDecode error
+        return JsonResponse(
+            data = {},
+            status=500,
+            safe=False
+        )
 
 def liblaas_templates(request):
     request._body = b'{"method":"GET","endpoint":"template/list/[username]","workflow_data":{}}'

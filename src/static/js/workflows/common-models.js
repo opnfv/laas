@@ -7,33 +7,22 @@ Functions as the "model" part of MVC
 // Provided by the LibLaaS API
 // TemplateBlob classes
 class TemplateBlob {
-    constructor({id, owner, lab_name, pod_name, pod_desc, pub, host_list, networks}) {
-        this.id = null; // UUID (String)
-        this.owner = null; // String
-        this.lab_name = null; // String
-        this.pod_name = null; // String
-        this.pod_desc = null; // String
-        this.public = null; // bool
+    constructor(incomingBlob) {
+        this.id = incomingBlob.id; // UUID (String)
+        this.owner = incomingBlob.owner; // String
+        this.lab_name = incomingBlob.lab_name; // String
+        this.pod_name = incomingBlob.pod_name; // String
+        this.pod_desc = incomingBlob.pod_desc; // String
+        this["public"] = incomingBlob["public"]; // bool
         this.host_list = []; // List<HostConfigBlob>
         this.networks = []; // List<NetworkBlob>
 
-        // Object destructuring
-        if (id || owner) {
-            this.id = id;
-            this.owner = owner
-            this.lab_name = lab_name;
-            this.pod_name = pod_name;
-            this.pod_desc = pod_desc;
-            this.public = pub
+        if (incomingBlob.host_list) {
+            this.host_list = incomingBlob.host_list;
         }
 
-        // Separated so that the lists are never set to null
-        if (host_list) {
-            this.host_list = host_list;
-        }
-
-        if (networks) {
-            this.networks = networks;
+        if (incomingBlob.networks) {
+            this.networks = incomingBlob.networks;
         }
     }
 
@@ -70,103 +59,74 @@ class TemplateBlob {
 }
 
 class HostConfigBlob {
-    constructor({hostname, flavor, image, cifile}) {
-        this.hostname; // String 
-        this.flavor; // UUID (String)
-        this.image; // UUID (String)
-        this.cifile = []; // List<String> 
+    constructor(incomingBlob) {
+        this.hostname = incomingBlob.hostname; // String 
+        this.flavor = incomingBlob.flavor; // UUID (String)
+        this.image = incomingBlob.image; // UUID (String)
+        this.cifile = []; // List<String>
+        this.bondgroups = []; // List<BondgroupBlob>
 
-        if (hostname) {
-            this.hostname = hostname;
-            this.flavor = flavor;
-            this.image = image;
-            this.cifile = cifile;
+        if (incomingBlob.cifile) {
+            this.cifile = incomingBlob.cifile;
+        }
+
+        if (incomingBlob.bondgroups) {
+            this.bondgroups = incomingBlob.bondgroups;
         }
     }
 }
 
 class NetworkBlob {
-    constructor({name, bondgroups}) {
-        this.name; //String
-        this.bondgroups = []; //List<BondgroupBlob>,
+    constructor(incomingBlob) {
+        this.name = incomingBlob.name;
+        this['public'] = incomingBlob['public'];
 
-        // Object destructuring
-        if (name) {
-            this.name = name;
-        }
-
-        // Seperate check so that bondgroups is never set to null
-        if (bondgroups) {
-            this.bondgroups = bondgroups;
-        } else {
-            this.addBondgroup(new BondgroupBlob({}));
-        }
-    }
-
-    /** Takes a BondgroupBlob and adds to the list. Creates an empty list first if null */
-    addBondgroup(bg) {
-        if (this.bondgroups == null) {
-            this.bondgroups = [];
-        }
-
-        this.bondgroups.push(bg);
     }
 }
 
+/** One bondgroup per interface at this time. */
 class BondgroupBlob {
-    constructor({connections}) {
+    constructor(incomingBlob) {
         this.connections = []; //List<ConnectionBlob>
+        this.ifaces = []; // List<IfaceBlob> (will only contain the one iface for now)
 
-        if (connections) {
-            this.connections = connections;
+        if (incomingBlob.connections) {
+            this.connections = incomingBlob.connections;
+        }
+
+        if (incomingBlob.ifaces) {
+            this.ifaces = incomingBlob.ifaces;
         }
     }
 
-    /** Takes a ConnectionBlob and adds to the list. Creates an empty list first if null */
-    addConnection(conn) {
-        if (this.connections == null) {
-            this.connections = [];
-        }
-
-        this.connections.push(conn);
-    }
 }
 
 class ConnectionBlob {
-    constructor({iface, tagged}) {
-        this.iface; // IfaceBlob,
-        this.tagged; // bool,
-
-        if (iface || tagged) {
-            this.iface = iface;
-            this.tagged = tagged;
-        }
+    constructor(incomingBlob) {
+        this.tagged = incomingBlob.tagged; // bool,
+        this.connects_to = incomingBlob.connects_to; // String
     }
 }
 
-class IfaceBlob {
-    constructor({hostname, name}) {
-        this.hostname; // String,
-        this.name; // String,
-
-        if (hostname || name) {
-            this.hostname = hostname;
-            this.name = name;
-        }
+class InterfaceBlob {
+    constructor(incomingBlob) {
+        this.name = incomingBlob.name; // String,
+        this.speed = incomingBlob.speed;
+        this.cardtype = incomingBlob.cardtype;
     }
 }
 
 // BookingClasses
 class BookingBlob {
-    constructor({template_id, allowed_users, global_cifile}) {
-        this.template_id; // UUID (String)
-        this.allowed_users = []; // List<String>,
-        this.global_cifile; // String,
+    // constructor({template_id, allowed_users, global_cifile}) {
+        constructor(incomingBlob) {
 
-        if (template_id || allowed_users || global_cifile) {
-            this.template_id = template_id;
-            this.allowed_users = allowed_users;
-            this.global_cifile = global_cifile;
+        this.template_id = incomingBlob.template_id; // UUID (String)
+        this.global_cifile = incomingBlob.global_cifile; // String,
+        this.allowed_users = []; // List<String>,
+
+        if (incomingBlob.allowed_users) {
+            this.allowed_users = incomingBlob.allowed_users;
         }
     }
 }
@@ -181,50 +141,32 @@ class BookingMetaData {
 
 // Utility Classes
 class ImageBlob {
-    constructor({image_id, name}) {
-        this.image_id; // UUID (String)
-        this.name // String,
-
-        if (image_id || name) {
-            this.image_id = image_id;
-            this.name = name;
-        }
+    constructor(incomingBlob) {
+        this.image_id = incomingBlob.image_id; // UUID (String)
+        this.name = incomingBlob.name; // String,
     }
 }
 
 class FlavorBlob {
-    constructor({flavor_id, name, interfaces}) {
-        this.flavor_id; // UUID (String)
-        this.name; // String
-        this.interfaces; // List<String>
+    constructor(incomingBlob) {
+        this.flavor_id = incomingBlob.flavor_id; // UUID (String)
+        this.name = incomingBlob.name; // String
+        this.interfaces = []; // List<String>
         // images are added after
 
-        // Object destructuring
-        if (flavor_id || name) {
-            this.flavor_id = flavor_id;
-            this.name = name;
-        }
-
-        if (interfaces) {
-            this.interfaces = interfaces;
+        if (incomingBlob.interfaces) {
+            this.interfaces = incomingBlob.interfaces;
         }
     }
 
 }
 
 class LabBlob {
-    constructor({name, description, location, status}) {
-        this.name; // String
-        this.description; // String
-        this.location; //String
-        this.status; // Number
+    constructor(incomingBlob) {
+        this.name = incomingBlob.name; // String
+        this.description = incomingBlob.description; // String
+        this.location = incomingBlob.location; //String
+        this.status = incomingBlob.status; // Number
 
-        // Object destructuring
-        if (name || description || location || status) {
-            this.name = name;
-            this.description = description;
-            this.location = location;
-            this.status = status;
-        }
     }
 }

@@ -18,9 +18,9 @@ const endpoint = {
     TEMPLATES: "template/list/[username]",
     SAVE_DESIGN_WORKFLOW: "todo", // Post MVP
     SAVE_BOOKING_WORKFLOW: "todo", // Post MVP
-    MAKE_TEMPLATE: "/template/create", // todo - figure out how to pass blob
+    MAKE_TEMPLATE: "template/create",
     DELETE_TEMPLATE: "todo", // Post MVP
-    MAKE_BOOKING: "/booking/create",
+    MAKE_BOOKING: "booking/create",
 }
 
 /** Functions as a namespace for static methods that post to the dashboard, then send an HttpRequest to LibLaas, then receive the response */
@@ -67,7 +67,6 @@ class LibLaaSAPI {
     }
 
     static async getLabFlavors(lab_name) { // -> List<FlavorBlob>
-        // return this.makeRequest(HTTP.GET, endpoint.FLAVORS, {"lab_name": lab_name});
         const data = await this.handleResponse(this.makeRequest(HTTP.GET, endpoint.FLAVORS, {"lab_name": lab_name}));
         let flavors = [];
         if (data) {
@@ -96,6 +95,9 @@ class LibLaaSAPI {
         }
 
         return images;
+        // let jsonObject = JSON.parse('{"image_id": "111-222-333", "name": "Arch Linux"}')
+        // let jsonObject2 = JSON.parse('{"image_id": "444-555-666", "name": "Oracle Linux"}')
+        // return [new ImageBlob(jsonObject), new ImageBlob(jsonObject2)];
     }
 
     /** Doesn't need to be passed a username because django will pull this from the request */
@@ -110,28 +112,35 @@ class LibLaaSAPI {
             apiError("templates")
         }
         return templates;
-        // let jsonObject = JSON.parse('{"id":12345,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Single Host","pod_desc":"Default Template","pub":true,"host_list":[{"cifile":[],"hostname":"node","flavor":"1ca6169c-a857-43c6-80b7-09b608c0daec","image":"3fc3833e-7b8b-4748-ab44-eacec8d14f8b"}],"networks":[{"bondgroups":[{"connections":[{"iface":{"hostname":"node","name":"eno49"},"tagged":true}]}],"name":"public"}]}');
-        // return [new TemplateBlob(jsonObject)];
+        // let jsonObject = JSON.parse('{"id": "12345", "owner":"jchoquette", "lab_name":"UNH_IOL","pod_name":"test pod","pod_desc":"for e2e testing","public":false,"host_list":[{"hostname":"test-node","flavor":"1ca6169c-a857-43c6-80b7-09b608c0daec","image":"3fc3833e-7b8b-4748-ab44-eacec8d14f8b","cifile":[],"bondgroups":[{"connections":[{"tagged":true,"connects_to":"public"}],"ifaces":[{"name":"eno49","speed":{"value":10000,"unit":"BitsPerSecond"},"cardtype":"Unknown"}]}]}],"networks":[{"name":"public","public":true}]}')
+        // let jsonObject2 = JSON.parse('{"id":6789,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Other Host","pod_desc":"Default Template","public":false,"host_list":[{"cifile":["some ci data goes here"],"hostname":"node","flavor":"aaa-bbb-ccc","image":"111-222-333", "bondgroups":[{"connections": [{"tagged": false, "connects_to": "private"}], "ifaces": [{"name": "ens2"}]}]}],"networks":[{"name": "private", "public": false}]}');
+
+        return [new TemplateBlob(jsonObject)];
     }
 
     static async saveDesignWorkflow(templateBlob) { // -> bool
+        templateBlob.owner = user;
         return await this.handleResponse(this.makeRequest(HTTP.PUT, endpoint.SAVE_DESIGN_WORKFLOW))
     }
 
     static async saveBookingWorkflow(bookingBlob) { // -> bool
-        return await this.handleResponse(this.makeRequest(HTTP.PUT, endpoint.SAVE_BOOKING_WORKFLOW, {"blob": bookingBlob}));
+        bookingBlob.owner = user;
+        return await this.handleResponse(this.makeRequest(HTTP.PUT, endpoint.SAVE_BOOKING_WORKFLOW, bookingBlob));
     }
 
     static async makeTemplate(templateBlob) { // -> UUID or null
-        return await this.handleResponse(this.makeRequest(HTTP.POST, endpoint.MAKE_TEMPLATE, {"blob": templateBlob}));
+        templateBlob.owner = user;
+        console.log(JSON.stringify(templateBlob))
+        return await this.handleResponse(this.makeRequest(HTTP.POST, endpoint.MAKE_TEMPLATE, templateBlob));
     }
 
     static async deleteTemplate(templateBlob) { // -> UUID or null
-        return await this.handleResponse(this.makeRequest(HTTP.DELETE, endpoint.DELETE_TEMPLATE, {"blob": templateBlob}));
+        return await this.handleResponse(this.makeRequest(HTTP.DELETE, endpoint.DELETE_TEMPLATE, templateBlob));
     }
 
     static async makeBooking(bookingBlob, bookingMetaData) {
-        let liblaasResponse = await this.handleResponse(this.makeRequest(HTTP.POST, endpoint.MAKE_BOOKING, {"blob": bookingBlob}));
+        bookingBlob.owner = user;
+        let liblaasResponse = await this.handleResponse(this.makeRequest(HTTP.POST, endpoint.MAKE_BOOKING,  bookingBlob));
         if (liblaasResponse) {
             return await this.handleResponse(this.createDashboardBooking("abcdefg", bookingMetaData, bookingBlob.allowed_users));
         }
