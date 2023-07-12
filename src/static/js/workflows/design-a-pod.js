@@ -31,7 +31,6 @@ class DesignWorkflow extends Workflow {
         this.labFlavors; // Map<UUID, FlavorBlob>
         this.userTemplates; // List<TemplateBlob>
         this.resourceBuilder; // ResourceBuilder
-        this.connectionBuilder; // ConnectionBuilder
 
         this.templateBlob.public = false;
     }
@@ -251,47 +250,17 @@ class DesignWorkflow extends Workflow {
         this.templateBlob.host_list.push(new_host);
       }
 
-      // Create convert map for applying config hostnames to preconfigured networks
-      // Map from original to config name
-      // Pretty sure this is O(n^2) because of the way JS lists work
-      const convertmap = new Map();
-      for (let i = 0; i < this.resourceBuilder.original_configs.length; i++) {
-        convertmap.set(this.resourceBuilder.original_configs[i].hostname, this.resourceBuilder.user_configs[i].hostname);
-      }
-
-      // Preconfigure networks
-      for (const network of this.resourceBuilder.networks) {
-        // Check if the network exists
-        // If it doesn't, create it
-
-        // If it does, point to it
-
-        // Either way, add the connections to the bondgroup
-
-
-        let copied_network = this.templateBlob.findNetwork(network.name);
-
-        if (!copied_network) {
-          copied_network = new NetworkBlob({"name": network.name});
-          this.templateBlob.networks.push(copied_network);
+      // Add networks
+      for (const n of this.resourceBuilder.networks) {
+        if (!this.templateBlob.findNetwork(n.name)) {
+          this.templateBlob.networks.push(n);
         }
-
-        // Need to add connections
-        for (const existing_connection of network.bondgroups[0].connections) {
-            const new_connection = new ConnectionBlob({});
-            new_connection.tagged = existing_connection.tagged;
-            new_connection.iface = new IfaceBlob(existing_connection.iface);
-            new_connection.iface.hostname = convertmap.get(new_connection.iface.hostname);
-            copied_network.bondgroups[0].connections.push(new_connection);
-        }
-        
       }
-
 
         // We are done
         GUI.refreshHostStep(this.templateBlob.host_list, this.labFlavors, this.labImages);
         GUI.refreshNetworkStep(this.templateBlob.networks);
-        GUI.refreshConnectionStep(this.templateBlob.host_list, this.templateBlob.networks);
+        GUI.refreshConnectionStep(this.templateBlob.host_list);
         GUI.refreshPodSummaryHosts(this.templateBlob.host_list, this.labFlavors, this.labImages)
         $('#resource_modal').modal('hide')
     }
@@ -307,7 +276,7 @@ class DesignWorkflow extends Workflow {
           this.removeHostFromTemplateBlob(existing_host);
           GUI.refreshHostStep(this.templateBlob.host_list, this.labFlavors, this.labImages);
           GUI.refreshNetworkStep(this.templateBlob.networks);
-          GUI.refreshConnectionStep(this.templateBlob.host_list, this.templateBlob.networks);
+          GUI.refreshConnectionStep(this.templateBlob.host_list);
           GUI.refreshPodSummaryHosts(this.templateBlob.host_list, this.labFlavors, this.labImages);
           return;
         }
@@ -355,7 +324,7 @@ class DesignWorkflow extends Workflow {
 
       if (error_message == null) {
         GUI.refreshNetworkStep(this.templateBlob.networks);
-        GUI.refreshConnectionStep(this.templateBlob.host_list, this.templateBlob.networks);
+        GUI.refreshConnectionStep(this.templateBlob.host_list);
       } else {
         GUI.display_add_network_error(error_message);
       }
@@ -401,8 +370,9 @@ class DesignWorkflow extends Workflow {
       for (let existing_network of this.templateBlob.networks) {
         if (network_name == existing_network.name) {
           this.removeNetworkFromTemplateBlob(existing_network);
+          this.removeConnectionsOnNetwork(existing_network.name)
           GUI.refreshNetworkStep(this.templateBlob.networks);
-          GUI.refreshConnectionStep(this.templateBlob.host_list, this.templateBlob.networks);
+          GUI.refreshConnectionStep(this.templateBlob.host_list);
           return;
         }
       }
@@ -415,6 +385,14 @@ class DesignWorkflow extends Workflow {
       this.templateBlob.networks = this.templateBlob.networks.filter(network => network !== network_to_remove);
     }
 
+    removeConnectionsOnNetwork(network_name) {
+      for (const host of this.templateBlob.host_list) {
+        for (const bg of host.bondgroups) {
+          bg.connections = bg.connections.filter((connection) => connection.connects_to != network_name)
+        }
+      }
+    }
+
     /**
      * Rebuilds the hostlist without the chosen host
      * Also removes all connections from this host's interfaces
@@ -422,23 +400,6 @@ class DesignWorkflow extends Workflow {
      */
     removeHostFromTemplateBlob(hostBlob) {
       this.templateBlob.host_list = this.templateBlob.host_list.filter(host => host !== hostBlob);
-
-      // Needs to go through every network, every bondgroup (realistically only [0]), connection, and interface, and somehow bubble up the deletion
-
-      for (const network of this.templateBlob.networks) {
-        for (const bondgroup of network.bondgroups) {
-          let to_remove_list = [];
-          for (let connection of bondgroup.connections) {
-            if (connection.iface.hostname == hostBlob.hostname) {
-              to_remove_list.push(connection);
-            }
-          }
-          for (let target of to_remove_list) {
-            // This probably has terrible time complexity but it works for now
-            bondgroup.connections = bondgroup.connections.filter(conn => conn !== target);
-          }
-        }
-      }
     }
 
     onclickConfigureConnection(hostname) {
@@ -449,69 +410,30 @@ class DesignWorkflow extends Workflow {
         alert("host not found error");
       }
 
-      this.connectionBuilder = new ConnectionBuilder(host, this.templateBlob.networks, this.labFlavors);
-      GUI.refreshConnectionModal(this.connectionBuilder);
+      this.connectionTemp = new ConnectionTemp(host, this.templateBlob.networks, this.labFlavors.get(host.flavor).interfaces);
+      GUI.refreshConnectionModal(this.connectionTemp);
       $("#connection_modal").modal('toggle');
     }
 
     onclickSelectIfaceTab(tab_index) {
-      this.connectionBuilder.tab = tab_index
-      // this.connectionBuilder.ifaceConnections().get(iface_name)
-      GUI.refreshConnectionModal(this.connectionBuilder);
+      this.connectionTemp.selected_index = tab_index;
+      GUI.refreshConnectionModal(this.connectionTemp);
     }
 
     onclickSelectVlan(network_name, tagged, iface_name) {
-      const x = this.connectionBuilder.ifaceConnections.get(iface_name); // i am out of variable names in my brain
+      const x = this.connectionTemp.config.get(iface_name);
       if (x.get(network_name) === tagged) {
         x.set(network_name, null);
       } else {
         x.set(network_name, tagged);
       }
 
-      GUI.refreshConnectionTable(this.connectionBuilder, iface_name);
+      GUI.refreshConnectionTable(this.connectionTemp);
     }
 
     onclickSubmitConnectionConfig() {
-      this.applyConnectionConfigs();
-      GUI.refreshConnectionStep(this.templateBlob.host_list, this.templateBlob.networks);
-    }
-
-    /**
-     * Take the configs stored in the connectionBuilder and apply them to the networks in the templateBlob
-     */
-    applyConnectionConfigs() {
-      // This is slow and there really isn't a clean way to do this due to the structure of the networkblob
-      // const hostname = this.connectionBuilder.host.hostname;
-      // const connections = this.connectionBuilder.ifaceConnections;
-
-      const networkMap = new Map(); // Map<String, NetworkBlob>
-      // Invalidate connections on the hostname and build map of network name to networkBlob
-      for (const network of this.templateBlob.networks) {
-        networkMap.set(network.name, network); // To make accessing this network easier later
-        for (const bondgroup of network.bondgroups) {
-          bondgroup.connections = bondgroup.connections.filter(function(connection) {
-            return connection.iface.hostname != workflow.connectionBuilder.host.hostname;
-          })
-        }
-      }
-
-      for (const [iface_name, configs] of this.connectionBuilder.ifaceConnections) {
-        for (const [network_name, tagged] of configs) {
-          if (tagged != null) {
-            const targetNetwork = networkMap.get(network_name);
-            const newIfaceBlob = new IfaceBlob({});
-            newIfaceBlob.hostname = this.connectionBuilder.host.hostname;
-            newIfaceBlob.name = iface_name;
-  
-            const newConnectionBlob = new ConnectionBlob({});
-            newConnectionBlob.iface = newIfaceBlob;
-            newConnectionBlob.tagged = tagged;
-  
-  
-            targetNetwork.bondgroups[0].connections.push(newConnectionBlob)
-          }
-        }
-      }
+      this.connectionTemp.applyConfigs();
+      GUI.refreshConnectionStep(this.templateBlob.host_list);
     }
 
     /** Sets input validation event listeners and clears the value in case of caching*/
@@ -1002,100 +924,77 @@ class GUI {
       document.getElementById("adding_network_error").innerHTML = error_message;
     }
 
-    static refreshConnectionStep(host_list, network_list) {
+    static refreshConnectionStep(host_list) {
       const connection_cards = document.getElementById('connection_cards');
       connection_cards.innerHTML = "";
-      
-      const element_map = new Map(); // Maps hostname to connectionCard scroll body
+
       for (const host of host_list) {
-        const new_card = this.makeConnectionCard(host.hostname);
-        element_map.set(host.hostname, new_card.getElementsByClassName('list-group-flush')[0]);
-        connection_cards.appendChild(new_card);
-      }
-
-      let index = -1;
-      for (const network of network_list) {
-        index++;
-        for (const [hostname, connectionCard] of element_map) {
-          const new_li = document.createElement('li');
-          new_li.classList.add('list-group-item');
-          new_li.innerHTML = `
-          <h5>` + network.name + `</h5>
-          <ul class='connection-holder'></ul>
-          `
-          connectionCard.appendChild(new_li)
-        }
-
-        class ConnectionInfo {
-          constructor(ifacename, tagged) {
-            this.ifacename = ifacename;
-            this.tagged = tagged;
-          }
-
-          toString() {
-            let taggedString = "No Connection";
-            if (this.tagged === true) {
-              taggedString = "tagged"
-            } else if (this.tagged === false) {
-              taggedString = "untagged"
-            }
-
-            return this.ifacename + ": " + taggedString
-          }
-        }
-
-        const existing_bondgroup = network.bondgroups[0]
-        if (existing_bondgroup) {
-          for (const connection of existing_bondgroup.connections) {
-            const connectionInfo = new ConnectionInfo(connection.iface.name, connection.tagged);
-            const network_ul = element_map.get(connection.iface.hostname).getElementsByClassName('connection-holder')[index];
-            const newListing = document.createElement('li')
-            newListing.innerText = connectionInfo.toString()
-            network_ul.appendChild(newListing);
-          }
-        }
-      
+        connection_cards.appendChild(this.makeConnectionCard(host));
       }
 
     }
 
 
     /** Makes a blank connection card that does not contain interface details */
-    static makeConnectionCard(hostname) {
+    static makeConnectionCard(host) {
       const new_card = document.createElement('div');
       new_card.classList.add("col-xl-3", "col-md-6","col-11", "my-3");
-      new_card.id = 'connection-' + hostname;
-      new_card.innerHTML = `
-        <div class="card">
-          <div class="card-header text-center p-0">
-            <h3 class="mt-2">` + hostname + `</h3>
-          </div>
-          <div class="card-body card-body-scroll p-0">
-            <ul class="list-group list-group-flush h-100" id="connections-list-` + hostname + `">
-          </div>
-          <div class="card-footer">
-            <button class="btn btn-info w-100" id="configure-connection-` + hostname + `" onclick="workflow.onclickConfigureConnection('` + hostname + `')">Configure</button>
-          </div>
-        </div>`;
+
+        const card_div = document.createElement('div');
+        card_div.classList.add('card');
+        new_card.appendChild(card_div);
+
+        const card_header = document.createElement('div');
+        card_header.classList.add('card-header', 'text-center', 'p-0');
+        card_header.innerHTML = `<h3 class="mt-2">` + host.hostname + `</h3>`
+
+        const card_body = document.createElement('div');
+        card_body.classList.add('card-body', 'card-body-scroll', 'p-0');
+        const bondgroup_list = document.createElement('ul');
+        bondgroup_list.classList.add('list-group', 'list-group-flush', 'h-100')
+        card_body.appendChild(bondgroup_list)
+
+        const card_footer = document.createElement('div');
+        card_footer.classList.add('card-footer');
+        card_footer.innerHTML = `<button class="btn btn-info w-100" onclick="workflow.onclickConfigureConnection('` + host.hostname + `')">Configure</button>`
+
+        card_div.appendChild(card_header);
+        card_div.appendChild(card_body);
+        card_div.appendChild(card_footer);
+
+        for (const bg of host.bondgroups) {
+          const outer_block = document.createElement('li');
+          outer_block.classList.add('list-group-item');
+          outer_block.innerHTML = `
+          <h5>` + bg.ifaces[0].name + `</h5>`
+
+          const inner_block = document.createElement('ul');
+          inner_block.classList.add('connection-holder');
+          outer_block.appendChild(inner_block)
+          for (const c of bg.connections) {
+            const connection_li = document.createElement('li');
+            connection_li.innerText = c.connects_to + `: ` + c.tagged;
+            inner_block.appendChild(connection_li);
+          }
+          bondgroup_list.appendChild(outer_block)
+        }
 
       return new_card;
     }
 
     /** */
-    static refreshConnectionModal(connectionBuilder) {
-      const selected_interface_name = this.refreshConnectionTabs(connectionBuilder);
-      this.refreshConnectionTable(connectionBuilder, selected_interface_name);
+    static refreshConnectionModal(connectionTemp) {
+      this.refreshConnectionTabs(connectionTemp.iface_list, connectionTemp.selected_index);
+      this.refreshConnectionTable(connectionTemp);
     }
 
     /** Displays a tab in the connections modal for each interface
      * Returns the name of the currently selected interface for use in the connections table
     */
-    static refreshConnectionTabs (connectionBuilder) {
+    static refreshConnectionTabs (iface_list, iface_index) {
       const tablist_ul = document.getElementById('configure-connections-tablist');
       tablist_ul.innerHTML = '';
-      let selected_interface_name;
-      let index = 0; // Not sure if there is a better way to capture an index while iterating through a map
-      for (const [iface_name] of connectionBuilder.ifaceConnections) {
+      for (const [index, iface_name] of iface_list.entries()) {
         const li_interface = document.createElement('li');
         li_interface.classList.add('nav-item');
         const btn_interface = document.createElement('a');
@@ -1107,16 +1006,13 @@ class GUI {
         btn_interface.innerText = iface_name;
         li_interface.appendChild(btn_interface);
         tablist_ul.appendChild(li_interface);
-        if (index++ == connectionBuilder.tab) {
-          selected_interface_name = iface_name;
+        if (index == iface_index) {
           btn_interface.classList.add('active');
         }
       }
-
-      return selected_interface_name;
     }
 
-    static refreshConnectionTable(connectionBuilder, selected_iface_name) {
+    static refreshConnectionTable(connectionTemp) {
       const connections_table = document.getElementById('connections_widget');
       connections_table.innerHTML =`
       <tr>
@@ -1125,18 +1021,16 @@ class GUI {
       </tr>
       `;
 
-      const ifaceConfig = connectionBuilder.ifaceConnections.get(selected_iface_name); // Map<network_name, tagged>
-
-      for (const [network, tagged] of ifaceConfig) {
-        // connections_table
+      const selected_iface_name = connectionTemp.iface_list[connectionTemp.selected_index];
+      const iface_config = connectionTemp.config.get(selected_iface_name);
+      for (const network of connectionTemp.networks) {
+        const tagged = iface_config.get(network.name);
         const new_row = document.createElement('tr');
-
         const td_network = document.createElement('td');
-        td_network.innerText = network;
+        td_network.innerText = network.name;
         new_row.appendChild(td_network);
-
-        new_row.appendChild(this.makeTagTd(true, network, tagged === true, selected_iface_name));
-        new_row.appendChild(this.makeTagTd(false, network, tagged === false, selected_iface_name));
+        new_row.appendChild(this.makeTagTd(true, network.name, tagged === true, selected_iface_name));
+        new_row.appendChild(this.makeTagTd(false, network.name, tagged === false, selected_iface_name));
         connections_table.appendChild(new_row);
       }
 
@@ -1245,44 +1139,45 @@ class ResourceBuilder {
   }
 }
 
-/**
- * Used in the configure connections widget
- */
-class ConnectionBuilder {
-  constructor(hostBlob, network_list, flavors) {
-    this.host = hostBlob;
-    this.ifaceConnections = new Map(); // Map<iface_name, Map<network_name, tagged>>
-    this.tab = 0; // Currently selected tab index the GUI
-    // For each iface in the flavor, initialize the map
-    const ifaces = flavors.get(this.host.flavor).interfaces
-    for (const ifacename of ifaces) {
-      const default_connections = new Map();
-      for (const network of network_list) {
-        default_connections.set(network.name, null);
-      }
-      this.ifaceConnections.set(ifacename, default_connections);
+class ConnectionTemp {
+  // keep track of user inputs, commits to host bondgroups after user clicks submit
+  constructor(host, networks, iface_list) {
+    this.host = host; // reference
+    this.config = new Map(); // Map<iface_name, Map<network_name, tagged>}>
+    this.iface_list = iface_list; // List<String>
+    for (const i of iface_list) {
+      this.config.set(i, new Map())
     }
 
-    // Go through the given network_list, build ifaceconnections
-    for (const network of network_list) {
-      // Build existing connections
-      for (const bondgroup of network.bondgroups) {
-        for (const connection of bondgroup.connections) {
-          // Need check every single connection to see if its the host we are looking for
-          if (connection.iface.hostname == this.host.hostname) {
-            const existing_configs = this.ifaceConnections.get(connection.iface.name);
-            existing_configs.set(network.name, connection.tagged);
+    // set initial mappings
+    for (const ebg of host.bondgroups) {
+      // if (ebg.ifaces[0].name)
+      const iface_config = this.config.get(ebg.ifaces[0].name);
+      for (const c of ebg.connections) {
+        iface_config.set(c.connects_to, c.tagged)
+      }
+    }
+    this.networks = networks; // List<NetworkBlob>
+    this.selected_index = 0;
+  }
+
+
+  /** Replaces the old configs in the hostconfigblob with the ones set in this.config */
+  applyConfigs() {
+    this.host.bondgroups = [];
+    for (const [key, value] of this.config) {
+      if (value.size > 0) {
+        const new_bg = new BondgroupBlob({});
+        this.host.bondgroups.push(new_bg)
+        new_bg.ifaces.push({"name": key});
+        for (const [network, tagged] of value) {
+          if (tagged != null) {
+            new_bg.connections.push(new ConnectionBlob({"tagged": tagged, "connects_to": network}))
           }
         }
       }
     }
   }
-
-
-  updateConnection(iface_name, network_name, tagged) {
-    this.ifaceConnections.get(iface_name).set(network_name, tagged);
-  }
-
 }
 
 function todo() {

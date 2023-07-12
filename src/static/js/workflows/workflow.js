@@ -67,7 +67,6 @@ class LibLaaSAPI {
     }
 
     static async getLabFlavors(lab_name) { // -> List<FlavorBlob>
-        // return this.makeRequest(HTTP.GET, endpoint.FLAVORS, {"lab_name": lab_name});
         const data = await this.handleResponse(this.makeRequest(HTTP.GET, endpoint.FLAVORS, {"lab_name": lab_name}));
         let flavors = [];
         if (data) {
@@ -96,6 +95,9 @@ class LibLaaSAPI {
         }
 
         return images;
+        // let jsonObject = JSON.parse('{"image_id": "111-222-333", "name": "Arch Linux"}')
+        // let jsonObject2 = JSON.parse('{"image_id": "444-555-666", "name": "Oracle Linux"}')
+        // return [new ImageBlob(jsonObject), new ImageBlob(jsonObject2)];
     }
 
     /** Doesn't need to be passed a username because django will pull this from the request */
@@ -110,8 +112,10 @@ class LibLaaSAPI {
             apiError("templates")
         }
         return templates;
-        // let jsonObject = JSON.parse('{"id":12345,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Single Host","pod_desc":"Default Template","pub":true,"host_list":[{"cifile":[],"hostname":"node","flavor":"1ca6169c-a857-43c6-80b7-09b608c0daec","image":"3fc3833e-7b8b-4748-ab44-eacec8d14f8b"}],"networks":[{"bondgroups":[{"connections":[{"iface":{"hostname":"node","name":"eno49"},"tagged":true}]}],"name":"public"}]}');
-        // return [new TemplateBlob(jsonObject)];
+        // let jsonObject = JSON.parse('{"id":12345,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Single Host","pod_desc":"Default Template","public":true,"host_list":[{"cifile":[],"hostname":"node","flavor":"aaa-bbb-ccc","image":"111-222-333", "bondgroups":[{"connections": [{"tagged": true, "connects_to": "public"}], "ifaces": [{"name": "ens1"}]}]}],"networks":[{"name": "public", "public": true}]}');
+        // let jsonObject2 = JSON.parse('{"id":6789,"owner":"jchoquette","lab_name":"UNH_IOL","pod_name":"Other Host","pod_desc":"Default Template","public":false,"host_list":[{"cifile":["some ci data goes here"],"hostname":"node","flavor":"aaa-bbb-ccc","image":"111-222-333", "bondgroups":[{"connections": [{"tagged": false, "connects_to": "private"}], "ifaces": [{"name": "ens2"}]}]}],"networks":[{"name": "private", "public": false}]}');
+
+        // return [new TemplateBlob(jsonObject), new TemplateBlob(jsonObject2)];
     }
 
     static async saveDesignWorkflow(templateBlob) { // -> bool
