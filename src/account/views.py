@@ -9,6 +9,7 @@
 ##############################################################################
 
 
+import json
 import os
 
 from django.utils import timezone
@@ -30,7 +31,7 @@ from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 from account.forms import AccountSettingsForm
 from account.models import UserProfile
 from booking.models import Booking
-from api.views import liblaas_templates
+from api.views import delete_template, liblaas_templates
 @method_decorator(login_required, name='dispatch')
 class AccountSettingsView(UpdateView):
     model = UserProfile
@@ -132,12 +133,21 @@ def account_resource_view(request):
         return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
     template = "account/resource_list.html"
 
-    r = liblaas_templates(request)
-    context = {
-        "templates": [],
-        "title": "My Resources"
-    }
-    return render(request, template, context=context)
+    if request.method == "GET":
+
+        r = liblaas_templates(request)
+        usable_templates = r.json()
+        user_templates = [ t for t in usable_templates if t["owner"] == str(request.user)]
+        context = {
+            "templates": user_templates,
+            "title": "My Resources"
+        }
+        return render(request, template, context=context)
+    
+    if request.method == "POST":
+        return delete_template(request)
+    
+    return HttpResponse(status_code=405)
 
 
 def account_booking_view(request):

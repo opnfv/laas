@@ -571,7 +571,7 @@ class DesignWorkflow extends Workflow {
       if (confirm("Are you sure you wish to create this pod?")) {
         let success =  await LibLaaSAPI.makeTemplate(this.templateBlob);
         if (success) {
-          window.location.href = "../../";
+          window.location.href = "../../accounts/my/resources/";
         } else {
           alert("Could not create template.")
         }

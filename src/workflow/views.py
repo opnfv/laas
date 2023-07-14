@@ -7,6 +7,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
 
+import json
 from django.shortcuts import render
 from laas_dashboard.settings import TEMPLATE_OVERRIDE
 from django.http import HttpResponse
@@ -55,10 +56,6 @@ def book_a_pod_view(request):
 
     # Using PUT to signal that we do not want to talk to liblaas
     if request.method == "PUT":
-        return JsonResponse(
-            data={},
-            status=make_booking(request).status_code,
-            safe=False
-        )
+        return make_booking(request)
 
     return HttpResponse(status=405)

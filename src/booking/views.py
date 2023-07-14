@@ -19,6 +19,7 @@ from django.db.models import Q
 from django.urls import reverse
 
 from account.models import Downtime, Lab
+from api.views import get_booking_status
 from booking.models import Booking
 
 class BookingView(TemplateView):
@@ -77,16 +78,17 @@ def booking_detail_view(request, booking_id):
         return render(request, "dashboard/login.html", {'title': 'Authentication Required'})
 
     booking = get_object_or_404(Booking, id=booking_id)
+    statuses = get_booking_status(booking)
     allowed_users = set(list(booking.collaborators.all()))
     allowed_users.add(booking.owner)
     if user not in allowed_users:
         return render(request, "dashboard/login.html", {'title': 'This page is private'})
-
+    
     context = {
         'title': 'Booking Details',
         'booking': booking,
-        'pdf': booking.pdf,
-        'user_id': user.id,
+        'statuses': statuses,
+        'collab_string': ', '.join(map(str, booking.collaborators.all()))
     }
 
     return render(
