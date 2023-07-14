@@ -19,7 +19,6 @@ const steps = {
         // }
 
         this.bookingBlob = new BookingBlob({});
-        this.bookingMetaData = new BookingMetaData();
         this.userTemplates = null;
     }
 
@@ -135,8 +134,8 @@ const steps = {
         const input = document.getElementById('input_purpose');
         const valid = workflow.isValidPurpose(input.value);
         if (valid[0]) {
-            workflow.bookingMetaData.purpose = input.value;
-            GUI.refreshSummaryDetails(workflow.bookingMetaData)
+            workflow.bookingBlob.metadata.purpose = input.value;
+            GUI.refreshSummaryDetails(workflow.bookingBlob.metadata)
         } else {
             GUI.showDetailsError(valid[1])
             GUI.highlightError(input);
@@ -155,8 +154,8 @@ const steps = {
         const input = document.getElementById('input_project');
         const valid = workflow.isValidProject(input.value);
         if (valid[0]) {
-            workflow.bookingMetaData.project = input.value;
-            GUI.refreshSummaryDetails(workflow.bookingMetaData)
+            workflow.bookingBlob.metadata.project = input.value;
+            GUI.refreshSummaryDetails(workflow.bookingBlob.metadata)
         } else {
             GUI.showDetailsError(valid[1])
             GUI.highlightError(input);
@@ -174,8 +173,8 @@ const steps = {
         this.step = steps.BOOKING_DETAILS
         const counter = document.getElementById("booking_details_day_counter")
         const input = document.getElementById('input_length')
-        workflow.bookingMetaData.length = input.value
-        GUI.refreshSummaryDetails(workflow.bookingMetaData)
+        workflow.bookingBlob.metadata.length = input.value
+        GUI.refreshSummaryDetails(workflow.bookingBlob.metadata)
         counter.innerText = "Days: " + input.value
     }
 
@@ -214,7 +213,7 @@ const steps = {
         let section = steps.BOOKING_SUMMARY
 
         const blob = this.bookingBlob;
-        const meta = this.bookingMetaData;
+        const meta = blob.metadata;
 
         if (blob.template_id == null) {
             passed = false;
@@ -249,7 +248,7 @@ const steps = {
             return
         }
         if (confirm("Are you sure you would like to create this booking?")) {
-            const response = await LibLaaSAPI.makeBooking(this.bookingBlob, this.bookingMetaData);
+            const response = await LibLaaSAPI.makeBooking(this.bookingBlob);
             if (response) {
                 alert("The booking has been successfully created.")
                 window.location.href = "../../";

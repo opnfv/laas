@@ -122,11 +122,20 @@ class BookingBlob {
         constructor(incomingBlob) {
 
         this.template_id = incomingBlob.template_id; // UUID (String)
-        this.global_cifile = incomingBlob.global_cifile; // String,
+        this.global_cifile = ""; // String,
         this.allowed_users = []; // List<String>,
+        this.metadata = new BookingMetaData();
 
         if (incomingBlob.allowed_users) {
             this.allowed_users = incomingBlob.allowed_users;
+        }
+
+        if (incomingBlob.global_cifile) {
+            this.global_cifile = incomingBlob.global_cifile;
+        }
+
+        if (incomingBlob.metadata) {
+            this.metadata = incomingBlob.meta;  
         }
     }
 }

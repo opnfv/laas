@@ -465,5 +465,24 @@ def liblaas_request(request) -> JsonResponse:
         )
 
 def liblaas_templates(request):
-    request._body = b'{"method":"GET","endpoint":"template/list/[username]","workflow_data":{}}'
-    return liblaas_request(request)
+    liblaas_url = os.environ.get("LIBLAAS_BASE_URL") + "template/list/" + str(request.user)
+    print("api call to " + liblaas_url)
+    return requests.get(liblaas_url)
+
+def delete_template(request):
+    endpoint = json.loads(request.body)["endpoint"]
+    liblaas_url = os.environ.get("LIBLAAS_BASE_URL") + endpoint
+    print("api call to ", liblaas_url)
+    try:
+        response = requests.delete(liblaas_url)
+        return JsonResponse(
+            data={},
+            status=response.status_code,
+            safe=False
+        )
+    except:
+        return JsonResponse(
+            data={},
+            status=500,
+            safe=False
+        )

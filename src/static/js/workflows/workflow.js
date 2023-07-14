@@ -19,7 +19,7 @@ const endpoint = {
     SAVE_DESIGN_WORKFLOW: "todo", // Post MVP
     SAVE_BOOKING_WORKFLOW: "todo", // Post MVP
     MAKE_TEMPLATE: "template/create",
-    DELETE_TEMPLATE: "todo", // Post MVP
+    DELETE_TEMPLATE: "template",
     MAKE_BOOKING: "booking/create",
 }
 
@@ -134,17 +134,16 @@ class LibLaaSAPI {
         return await this.handleResponse(this.makeRequest(HTTP.POST, endpoint.MAKE_TEMPLATE, templateBlob));
     }
 
-    static async deleteTemplate(templateBlob) { // -> UUID or null
-        return await this.handleResponse(this.makeRequest(HTTP.DELETE, endpoint.DELETE_TEMPLATE, templateBlob));
+    static async deleteTemplate(template_id) { // -> UUID or null
+        return await this.handleResponse(this.makeRequest(HTTP.DELETE, endpoint.DELETE_TEMPLATE + "/" + template_id, {}));
     }
 
-    static async makeBooking(bookingBlob, bookingMetaData) {
+    static async makeBooking(bookingBlob) {
         bookingBlob.owner = user;
         let liblaasResponse = await this.handleResponse(this.makeRequest(HTTP.POST, endpoint.MAKE_BOOKING,  bookingBlob));
         if (liblaasResponse) {
-            return await this.handleResponse(this.createDashboardBooking("abcdefg", bookingMetaData, bookingBlob.allowed_users));
+            return await this.handleResponse(this.createDashboardBooking(liblaasResponse, bookingBlob.metadata, bookingBlob.allowed_users));
         }
-        console.log("No LL response... Returning null")
         return null
     }
 
