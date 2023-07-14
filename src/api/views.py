@@ -246,27 +246,75 @@ def extend_booking(request, booking_id="", days=""):
 @csrf_exempt
 def make_booking(request):
     print("received call to make_booking")
-    metadata = json.loads(request.body)['bookingMetaData']
-    print(metadata)
+    data = json.loads(request.body)
+    print("incoming data is ", data)
+
+    allowed_users = list(data["allowed_users"])
+    allowed_users.append(str(request.user))
+
+    bookingBlob = {
+        "template_id": data["template_id"],
+        "allowed_users": allowed_users,
+        "global_cifile": data["global_cifile"],
+        "metadata": {
+            "booking_id": None, # fill in after creating django object
+            "owner": str(request.user),
+            "lab": "UNH_IOL",
+            "purpose": data["metadata"]["purpose"],
+            "project": data["metadata"]["project"],
+            "length": data["metadata"]["length"]
+        }
+    }
     
-    collaborators = metadata["collaborators"]
+    print("allowed users are ", bookingBlob["allowed_users"])
     try:
         booking = Booking.objects.create(
-        purpose=metadata["purpose"],
-        project=metadata['project'],
+        purpose=bookingBlob["metadata"]["purpose"],
+        project=bookingBlob["metadata"]['project'],
         lab=Lab.objects.get(name='UNH_IOL'),
         owner=request.user,
         start=timezone.now(),
-        end=timezone.now() + timedelta(days=int(metadata['length'])),
+        end=timezone.now() + timedelta(days=int(bookingBlob["metadata"]['length'])),
         )
+        print("successfully created booking object with id ", booking.id)
 
         # Now add collabs
-        for c in collaborators:
-            booking.collaborators.add(User.objects.get(username=c))
-        return HttpResponse(status=200)
+        for c in bookingBlob["allowed_users"]:
+            if c != bookingBlob["metadata"]["owner"]: # Don't add self as a collab
+                booking.collaborators.add(User.objects.get(username=c))
+        print("successfully added collabs")
+
+        # Now create it in liblaas
+        bookingBlob["metadata"]["booking_id"] = str(booking.id)
+        liblaas_endpoint = os.environ.get("LIBLAAS_BASE_URL") + 'booking/create'
+        liblaas_response = requests.post(liblaas_endpoint, data=json.dumps(bookingBlob), headers={'Content-Type': 'application/json'})
+        if liblaas_response.status_code != 200:
+            print("received non success from liblaas")
+            return JsonResponse(
+            data={},
+            status=500,
+            safe=False
+        ) 
+        aggregateId = json.loads(liblaas_response.content)
+        print("successfully created aggregate in liblaas")
+
+        # Now update the agg_id
+        booking.aggregateId = aggregateId
+        booking.save()
+        print("sucessfully updated aggreagateId in booking object")
+
+        return JsonResponse(
+            data = {"bookingId": booking.id},
+            status=200,
+            safe=False
+        )
     except Exception as error:
         print(error)
-        return HttpResponse(status=500)
+        return JsonResponse(
+            data={},
+            status=500,
+            safe=False
+        ) 
 
 
 """
@@ -465,5 +513,24 @@ def liblaas_request(request) -> JsonResponse:
         )
 
 def liblaas_templates(request):
-    request._body = b'{"method":"GET","endpoint":"template/list/[username]","workflow_data":{}}'
-    return liblaas_request(request)
+    liblaas_url = os.environ.get("LIBLAAS_BASE_URL") + "template/list/" + str(request.user)
+    print("api call to " + liblaas_url)
+    return requests.get(liblaas_url)
+
+def delete_template(request):
+    endpoint = json.loads(request.body)["endpoint"]
+    liblaas_url = os.environ.get("LIBLAAS_BASE_URL") + endpoint
+    print("api call to ", liblaas_url)
+    try:
+        response = requests.delete(liblaas_url)
+        return JsonResponse(
+            data={},
+            status=response.status_code,
+            safe=False
+        )
+    except:
+        return JsonResponse(
+            data={},
+            status=500,
+            safe=False
+        )

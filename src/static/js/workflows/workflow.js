@@ -19,7 +19,7 @@ const endpoint = {
     SAVE_DESIGN_WORKFLOW: "todo", // Post MVP
     SAVE_BOOKING_WORKFLOW: "todo", // Post MVP
     MAKE_TEMPLATE: "template/create",
-    DELETE_TEMPLATE: "todo", // Post MVP
+    DELETE_TEMPLATE: "template",
     MAKE_BOOKING: "booking/create",
 }
 
@@ -134,18 +134,13 @@ class LibLaaSAPI {
         return await this.handleResponse(this.makeRequest(HTTP.POST, endpoint.MAKE_TEMPLATE, templateBlob));
     }
 
-    static async deleteTemplate(templateBlob) { // -> UUID or null
-        return await this.handleResponse(this.makeRequest(HTTP.DELETE, endpoint.DELETE_TEMPLATE, templateBlob));
+    static async deleteTemplate(template_id) { // -> UUID or null
+        return await this.handleResponse(this.makeRequest(HTTP.DELETE, endpoint.DELETE_TEMPLATE + "/" + template_id, {}));
     }
 
-    static async makeBooking(bookingBlob, bookingMetaData) {
-        bookingBlob.owner = user;
-        let liblaasResponse = await this.handleResponse(this.makeRequest(HTTP.POST, endpoint.MAKE_BOOKING,  bookingBlob));
-        if (liblaasResponse) {
-            return await this.handleResponse(this.createDashboardBooking("abcdefg", bookingMetaData, bookingBlob.allowed_users));
-        }
-        console.log("No LL response... Returning null")
-        return null
+    /** PUT to the dashboard with the bookingBlob. Dashboard will fill in lab and owner, make the django model, then hit liblaas, then come back and fill in the agg_id  */
+    static async makeBooking(bookingBlob) {
+        return await this.handleResponse(this.createDashboardBooking(bookingBlob));
     }
 
     /** Wraps a call in a try / catch, processes the result, and returns the response or null if it failed */
@@ -160,7 +155,7 @@ class LibLaaSAPI {
     }
 
     /** Uses PUT instead of POST to tell the dashboard that we want to create a dashboard booking instead of a liblaas request */
-    static createDashboardBooking(aggregateId, bookingMetaData, collaborators) {
+    static createDashboardBooking(bookingBlob) {
         const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
         return new Promise((resolve, reject) => { // -> HttpResponse
             $.ajax(
@@ -173,16 +168,7 @@ class LibLaaSAPI {
                 'X-CSRFToken': token
             },
               data: JSON.stringify(
-                {
-                    "bookingMetaData": {
-                        "aggregateId": aggregateId,
-                        "purpose": bookingMetaData.purpose,
-                        "project": bookingMetaData.project,
-                        "length": bookingMetaData.length,
-                        "collaborators": collaborators
-                    }
-                }
-              ),
+                bookingBlob),
               timeout: 10000,
               success: (response) => {
                 resolve(response);

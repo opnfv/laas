@@ -85,8 +85,6 @@ def booking_detail_view(request, booking_id):
     context = {
         'title': 'Booking Details',
         'booking': booking,
-        'pdf': booking.pdf,
-        'user_id': user.id,
     }
 
     return render(

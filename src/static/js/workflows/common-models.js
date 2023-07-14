@@ -122,20 +122,37 @@ class BookingBlob {
         constructor(incomingBlob) {
 
         this.template_id = incomingBlob.template_id; // UUID (String)
-        this.global_cifile = incomingBlob.global_cifile; // String,
-        this.allowed_users = []; // List<String>,
+        this.allowed_users = []; // List<String>
+        this.global_cifile = ""; // String
+        this.metadata = new BookingMetaDataBlob({});
 
         if (incomingBlob.allowed_users) {
             this.allowed_users = incomingBlob.allowed_users;
         }
+
+        if (incomingBlob.global_cifile) {
+            this.global_cifile = incomingBlob.global_cifile;
+        }
+
+        if (incomingBlob.metadata) {
+            this.metadata = incomingBlob.metadata;
+        }
     }
 }
 
-class BookingMetaData {
-    constructor() {
-        this.purpose = null; // String
-        this.project = null; // String
-        this.length = 1; // Number
+
+class BookingMetaDataBlob {
+    constructor(incomingBlob) {
+        this.booking_id = incomingBlob.booking_id; // String
+        this.owner = incomingBlob.owner; // String
+        this.lab = incomingBlob.lab; // String
+        this.purpose = incomingBlob.purpose; // String
+        this.project = incomingBlob.project; // String
+        this.length = 1 // Number
+
+        if (incomingBlob.length) {
+            this.length = incomingBlob.length;
+        }
     }
 }
 
