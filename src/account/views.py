@@ -185,17 +185,16 @@ def template_delete_view(request, resource_id=None):
 
 
 def booking_cancel_view(request, booking_id=None):
-    # if not request.user.is_authenticated:
-    #     return HttpResponse('no')  # 403?
-    # booking = get_object_or_404(Booking, pk=booking_id)
-    # if not request.user.id == booking.owner.id:
-    #     return HttpResponse('no')  # 403?
+    if not request.user.is_authenticated:
+        return HttpResponse('no')  # 403?
+    booking = get_object_or_404(Booking, pk=booking_id)
+    if not request.user.id == booking.owner.id:
+        return HttpResponse('no')  # 403?
 
-    # if booking.end < timezone.now():  # booking already over
-    #     return HttpResponse('')
+    if booking.end < timezone.now():  # booking already over
+        return HttpResponse('')
 
-    # booking.end = timezone.now()
-    # booking.save()
-    # return HttpResponse('')
-    return HttpResponse(status=404) # todo - LL Integration
+    booking.end = timezone.now()
+    booking.save()
+    return HttpResponse('')
 

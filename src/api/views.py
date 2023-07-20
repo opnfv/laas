@@ -544,3 +544,13 @@ def get_booking_status(bookingObject):
     except:
         print("failed to get status")
         return []
+    
+def liblaas_end_booking(aggregateId):
+    liblaas_url = os.environ.get('LIBLAAS_BASE_URL') + "booking/" + str(aggregateId) + "/end"
+    print("Ending booking at ", liblaas_url)
+    response = requests.delete(liblaas_url)
+    try:
+        return response
+    except:
+        print("failed to end booking")
+        return HttpResponse(status=500)

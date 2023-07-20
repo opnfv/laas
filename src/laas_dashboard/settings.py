@@ -221,14 +221,10 @@ CELERY_BROKER_URL = 'amqp://' + RABBITMQ_DEFAULT_USER + ':' + RABBITMQ_DEFAULT_P
 
 CELERY_BEAT_SCHEDULE = {
     # Keeping commented as an example for the future
-    # 'booking_poll': {
-    #     'task': 'dashboard.tasks.booking_poll',
-    #     'schedule': timedelta(minutes=1)
-    # },
-    # 'free_hosts': {
-    #     'task': 'dashboard.tasks.free_hosts',
-    #     'schedule': timedelta(minutes=1)
-    # }
+    'booking_poll': {
+        'task': 'dashboard.tasks.end_expired_bookings',
+        'schedule': timedelta(minutes=1)
+    }
 }
 
 # Notifier Settings

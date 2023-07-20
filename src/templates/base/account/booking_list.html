@@ -96,7 +96,7 @@
         current_booking_id = booking_id;
     }
 
-    function submit_cancel_form() {
+    async function submit_cancel_form() {
         var ajaxForm = $("#booking_cancel_form");
         var formData = ajaxForm.serialize();
         req = new XMLHttpRequest();
@@ -105,6 +105,8 @@
         req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         req.onerror = function() { alert("problem submitting form"); }
         req.send(formData);
+        await new Promise(r => setTimeout(r, 500)); // Quickest solution I could come up with to give liblaas time to mark it as deleted until we do an api rework
+        location.reload();
     }
 </script>
 
