@@ -23,6 +23,8 @@ from django.views import View
 from django.http import HttpResponseNotFound
 from django.http.response import JsonResponse, HttpResponse
 import requests
+from api.utils import ipa_set_ssh, ipa_set_company
+from dashboard.views import landing_view
 from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
@@ -51,7 +53,7 @@ Most functions let you GET or POST to the same endpoint, and
 the correct thing will happen
 """
 
-
+liblaas_base_url = os.environ.get('LIBLAAS_BASE_URL')
 @method_decorator(login_required, name='dispatch')
 class GenerateTokenView(View):
     def get(self, request, *args, **kwargs):
@@ -554,3 +556,59 @@ def liblaas_end_booking(aggregateId):
     except:
         print("failed to end booking")
         return HttpResponse(status=500)
+    
+def ipa_create_account(request):
+    # Called when no username was found
+    # Only allow if user does not have a linked ipa account
+    profile =  UserProfile.objects.get(user=request.user)
+    if (profile.ipa_username):
+        return HttpResponse(status=401)
+
+    post_data = request.POST
+    user = {
+        'uid': str(request.user),
+        'givenname': post_data['first_name'],
+        'sn': post_data['last_name'],
+        'cn': post_data['first_name'] + " " + post_data['last_name'],
+        'mail': post_data['email'],
+        'ou': post_data['company'],
+        'random': True
+    }
+
+    # print("processed user is", json.dumps(user))
+    try:
+        response = requests.post(liblaas_base_url + "user/create", data=json.dumps(user), headers={'Content-Type': 'application/json'})
+        profile.ipa_username = user['uid']
+        print("Saving ipa username", profile.ipa_username)
+        profile.save()
+        return redirect("dashboard:index")
+    except Exception as e:
+        print(e)
+        return redirect("dashboard:index")
+    
+def ipa_confirm_account(request):
+    # Called when username was found and email matches
+    profile =  UserProfile.objects.get(user=request.user)
+    if (profile.ipa_username):
+        return HttpResponse(status=401)
+    
+    profile.ipa_username = str(request.user)
+    print("Saving ipa username", profile.ipa_username)
+    profile.save()
+    return redirect("dashboard:index")
+
+def ipa_name_conflict(request):
+    # Called when username was found but emails do not match
+    # Need to ask user to input alternate username
+    # To verify username is not taken, call query_username and accept if returns None
+    pass
+
+def ipa_set_company_from_workflow(request):
+    profile = UserProfile.objects.get(user=request.user)
+    ipa_set_company(profile, request.POST["company"])
+    return redirect("workflow:book_a_pod")
+
+def ipa_add_ssh_from_workflow(request):
+    profile = UserProfile.objects.get(user=request.user)
+    ipa_set_ssh(profile, request.POST["ssh_public_key"])
+    return redirect("workflow:book_a_pod")

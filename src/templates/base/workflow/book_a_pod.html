@@ -111,11 +111,43 @@
       {% csrf_token %}
   </form>
 </div>
+
+<div class="modal fade" id="ipa-modal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Welcome to LaaS 3.0</h5>
+        <button class="close" onclick="window.location.href = '../../'"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body" id="add_resource_modal_body">
+          <p>Please update your information before creating a booking.</p>
+          <form action="{{prereq_validator.action}}" method="post">
+              {% csrf_token %}
+              {{ prereq_validator.form }}
+              <div class="form-group">
+                  <input class="btn btn-success" name="submitButton" type="submit" value="Save">
+              </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 
 <script>
-    const user = "{{user}}"
-    const workflow = new BookingWorkflow();
-    workflow.startWorkflow();
+  let user;
+  let workflow;
+  $(window).on('load', function() {
+    if ({{prereq_validator.exists}}) {
+        $('#ipa-modal').modal({backdrop: 'static', keyboard: false});
+        $('#ipa-modal').modal('show');
+    } else {
+      user = "{{user}}"
+      workflow = new BookingWorkflow();
+      workflow.startWorkflow();
+    }
+    });
+
+
   </script>
 {% endblock %}

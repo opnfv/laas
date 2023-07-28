@@ -16,8 +16,10 @@ from django.db.models import Q
 from datetime import datetime
 import pytz
 
-from account.models import Lab
+from account.models import Lab, UserProfile
+from api.utils import get_ipa_migration_form
 from booking.models import Booking
+from dashboard.forms import *
 
 
 from laas_dashboard import settings
@@ -72,14 +74,23 @@ def host_profile_detail_view(request):
 
 def landing_view(request):
     user = request.user
+    ipa_migrator = {
+        "exists": "false" # Jinja moment
+    }
     if not user.is_anonymous:
         bookings = Booking.objects.filter(
             Q(owner=user) | Q(collaborators=user),
             end__gte=datetime.now(pytz.utc)
         )
+        profile = UserProfile.objects.get(user=user)
+        if (not profile.ipa_username):
+             ipa_migrator = get_ipa_migration_form(user, profile)
+             ipa_migrator["exists"] = "true"
+
     else:
         bookings = None
 
+    print("IPA migrator is", ipa_migrator)
     LFID = True if settings.AUTH_SETTING == 'LFID' else False
     return render(
         request,
@@ -87,10 +98,10 @@ def landing_view(request):
         {
             'title': "Welcome to the Lab as a Service Dashboard",
             'bookings': bookings,
-            'LFID': LFID
+            'LFID': LFID,
+            'ipa_migrator': ipa_migrator,
         }
     )
-
 
 class LandingView(TemplateView):
     template_name = "dashboard/landing.html"
