@@ -17,7 +17,8 @@ from datetime import datetime
 import pytz
 
 from account.models import Lab, UserProfile
-from api.utils import get_ipa_migration_form
+from api.utils import get_ipa_migration_form, ipa_query_user
+from api.views import ipa_conflict_account
 from booking.models import Booking
 from dashboard.forms import *
 
@@ -92,16 +93,37 @@ def landing_view(request):
 
     print("IPA migrator is", ipa_migrator)
     LFID = True if settings.AUTH_SETTING == 'LFID' else False
-    return render(
-        request,
-        'dashboard/landing.html',
-        {
-            'title': "Welcome to the Lab as a Service Dashboard",
-            'bookings': bookings,
-            'LFID': LFID,
-            'ipa_migrator': ipa_migrator,
-        }
-    )
+
+    if request.method == "GET":
+        return render(
+            request,
+            'dashboard/landing.html',
+            {
+                'title': "Welcome to the Lab as a Service Dashboard",
+                'bookings': bookings,
+                'LFID': LFID,
+                'ipa_migrator': ipa_migrator,
+            }
+        )
+    
+    # Using this for the special case in the ipa_migrator
+    if request.method == 'POST':
+        existing_profile = ipa_query_user(request.POST['ipa_username'])
+        print("exists already?", existing_profile != None)
+        if (existing_profile != None):
+            return render(
+                request,
+                'dashboard/landing.html',
+                {
+                    'title': "Welcome to the Lab as a Service Dashboard",
+                    'bookings': bookings,
+                    'LFID': LFID,
+                    'ipa_migrator': ipa_migrator,
+                    'error': "Username is already taken"
+                }
+            )
+        else:
+            return ipa_conflict_account(request)
 
 class LandingView(TemplateView):
     template_name = "dashboard/landing.html"

@@ -73,6 +73,7 @@
             <p>{{ ipa_migrator.message }}</p>
             <form action="{{ipa_migrator.action}}" method="post">
                 {% csrf_token %}
+                <p class="text-danger">{{error}}</p>
                 {{ ipa_migrator.form }}
                 <div class="form-group">
                     <input class="btn btn-success" name="submitButton" type="submit" value="{{ipa_migrator.button}}">

@@ -23,9 +23,7 @@ from django.views import View
 from django.http import HttpResponseNotFound
 from django.http.response import JsonResponse, HttpResponse
 import requests
-from api.utils import ipa_set_ssh, ipa_set_company
-from dashboard.views import landing_view
-from rest_framework import viewsets
+from api.utils import ipa_query_user, ipa_set_ssh, ipa_set_company
 from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
@@ -251,16 +249,27 @@ def make_booking(request):
     data = json.loads(request.body)
     print("incoming data is ", data)
 
-    allowed_users = list(data["allowed_users"])
-    allowed_users.append(str(request.user))
+    # todo - test this
+    ipa_users = list(UserProfile.objects.get(user=request.user).ipa_username) # add owner's ipa username to list of allowed users to be sent to liblaas
+
+    for user in list(data["allowed_users"]):
+        collab_profile = UserProfile.objects.get(user=User.objects.get(username=user))
+        if (collab_profile.ipa_username == "" or collab_profile.ipa_username == None):
+            return JsonResponse(
+            data={},
+            status=406, # Not good practice but a quick solution until blob validation is fully supported within django instead of the frontend
+            safe=False
+        )
+        else:
+            ipa_users.append(collab_profile.ipa_username)
 
     bookingBlob = {
         "template_id": data["template_id"],
-        "allowed_users": allowed_users,
+        "allowed_users": ipa_users,
         "global_cifile": data["global_cifile"],
         "metadata": {
             "booking_id": None, # fill in after creating django object
-            "owner": str(request.user),
+            "owner": UserProfile.objects.get(user=request.user).ipa_username,
             "lab": "UNH_IOL",
             "purpose": data["metadata"]["purpose"],
             "project": data["metadata"]["project"],
@@ -281,9 +290,8 @@ def make_booking(request):
         print("successfully created booking object with id ", booking.id)
 
         # Now add collabs
-        for c in bookingBlob["allowed_users"]:
-            if c != bookingBlob["metadata"]["owner"]: # Don't add self as a collab
-                booking.collaborators.add(User.objects.get(username=c))
+        for c in list(data["allowed_users"]):
+            booking.collaborators.add(User.objects.get(username=c))
         print("successfully added collabs")
 
         # Now create it in liblaas
@@ -481,7 +489,7 @@ def liblaas_request(request) -> JsonResponse:
     liblaas_endpoint = post_data["endpoint"]
     payload = post_data["workflow_data"]
     # Fill in actual username
-    liblaas_endpoint = liblaas_endpoint.replace("[username]", str(request.user))
+    liblaas_endpoint = liblaas_endpoint.replace("[username]", UserProfile.objects.get(user=request.user).ipa_username)
     liblaas_endpoint = liblaas_base_url + liblaas_endpoint
     print("processed endpoint is ", liblaas_endpoint)
 
@@ -515,7 +523,7 @@ def liblaas_request(request) -> JsonResponse:
         )
 
 def liblaas_templates(request):
-    liblaas_url = os.environ.get("LIBLAAS_BASE_URL") + "template/list/" + str(request.user)
+    liblaas_url = os.environ.get("LIBLAAS_BASE_URL") + "template/list/" + UserProfile.objects.get(user=request.user).ipa_username
     print("api call to " + liblaas_url)
     return requests.get(liblaas_url)
 
@@ -575,7 +583,6 @@ def ipa_create_account(request):
         'random': True
     }
 
-    # print("processed user is", json.dumps(user))
     try:
         response = requests.post(liblaas_base_url + "user/create", data=json.dumps(user), headers={'Content-Type': 'application/json'})
         profile.ipa_username = user['uid']
@@ -597,11 +604,36 @@ def ipa_confirm_account(request):
     profile.save()
     return redirect("dashboard:index")
 
-def ipa_name_conflict(request):
+def ipa_conflict_account(request):
     # Called when username was found but emails do not match
     # Need to ask user to input alternate username
     # To verify username is not taken, call query_username and accept if returns None
-    pass
+    print("ipa conflict account")
+    profile =  UserProfile.objects.get(user=request.user)
+    print("profile is", profile)
+    if (profile.ipa_username):
+        return HttpResponse(status=401)
+
+    post_data = request.POST
+    user = {
+        'uid': post_data['ipa_username'],
+        'givenname': post_data['first_name'],
+        'sn': post_data['last_name'],
+        'cn': post_data['first_name'] + " " + post_data['last_name'],
+        'mail': post_data['email'],
+        'ou': post_data['company'],
+        'random': True,
+    }
+
+    try:
+        response = requests.post(liblaas_base_url + "user/create", data=json.dumps(user), headers={'Content-Type': 'application/json'})
+        profile.ipa_username = user['uid']
+        print("Saving ipa username", profile.ipa_username)
+        profile.save()
+        return redirect("dashboard:index")
+    except Exception as e:
+        print(e)
+        return redirect("dashboard:index")
 
 def ipa_set_company_from_workflow(request):
     profile = UserProfile.objects.get(user=request.user)
@@ -610,5 +642,7 @@ def ipa_set_company_from_workflow(request):
 
 def ipa_add_ssh_from_workflow(request):
     profile = UserProfile.objects.get(user=request.user)
-    ipa_set_ssh(profile, request.POST["ssh_public_key"])
+    key_as_list = []
+    key_as_list.append(request.POST["ssh_public_key"])
+    ipa_set_ssh(profile, key_as_list)
     return redirect("workflow:book_a_pod")

@@ -49,10 +49,10 @@ def get_ipa_migration_form(user, profile):
         # User is found and emails don't match
             print("User is found and emails don't match")
             return {
-                "form": None,
-                "message": "Weird case",
-                "action": "todo",
-                "button": "Create"
+                "form": ConflictIPAAcountForm(initial={'first_name': first_name, 'last_name': last_name, 'email': dashboard_email}),
+                "message": "Our records indicate that you do not currently have an account in our IPA system, or your emails do not match. Please enter the following details to enroll your account.",
+                "action": "/",
+                "button": "Submit"
             }
     else:
     # User is not found
