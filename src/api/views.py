@@ -250,9 +250,10 @@ def make_booking(request):
     print("incoming data is ", data)
 
     # todo - test this
-    ipa_users = list(UserProfile.objects.get(user=request.user).ipa_username) # add owner's ipa username to list of allowed users to be sent to liblaas
+    ipa_users = []
+    ipa_users.append(UserProfile.objects.get(user=request.user).ipa_username) # add owner's ipa username to list of allowed users to be sent to liblaas
 
-    for user in list(data["allowed_users"]):
+    for user in data["allowed_users"]:
         collab_profile = UserProfile.objects.get(user=User.objects.get(username=user))
         if (collab_profile.ipa_username == "" or collab_profile.ipa_username == None):
             return JsonResponse(
@@ -298,8 +299,10 @@ def make_booking(request):
         bookingBlob["metadata"]["booking_id"] = str(booking.id)
         liblaas_endpoint = os.environ.get("LIBLAAS_BASE_URL") + 'booking/create'
         liblaas_response = requests.post(liblaas_endpoint, data=json.dumps(bookingBlob), headers={'Content-Type': 'application/json'})
+        print("response from liblaas is", vars(liblaas_response))
         if liblaas_response.status_code != 200:
-            print("received non success from liblaas")
+            print("received non success from liblaas, deleting booking from dashboard")
+            booking.delete()
             return JsonResponse(
             data={},
             status=500,
