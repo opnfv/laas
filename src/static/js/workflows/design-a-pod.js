@@ -89,7 +89,6 @@ class DesignWorkflow extends Workflow {
         this.labImages = new Map(); // Map<UUID, ImageBlob>
 
         for (const fblob of flavorsList) {
-          fblob.images = await LibLaaSAPI.getImagesForFlavor(fblob.flavor_id);
           for (const iblob of fblob.images) {
             this.labImages.set(iblob.image_id, iblob)
           }
