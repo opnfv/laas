@@ -547,6 +547,11 @@ def delete_template(request):
             status=500,
             safe=False
         )
+    
+def booking_status(request, booking_id):
+    print("booking id is", booking_id)
+    statuses = get_booking_status(Booking.objects.get(id=booking_id))
+    return HttpResponse(json.dumps(statuses))
 
 def get_booking_status(bookingObject):
     liblaas_url =  os.environ.get("LIBLAAS_BASE_URL") + "booking/" + bookingObject.aggregateId + "/status"

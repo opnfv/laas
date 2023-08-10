@@ -91,7 +91,7 @@ code {
                         <td>
                             {{ host.hostname }}
                         </td>
-                        <td>
+                        <td id="{{host.instance_id}}">
                             {{ host.status }}
                         </td>
                     </tr>
@@ -101,5 +101,34 @@ code {
         </div>
     </div>
 </div>
+
+<script>
+setInterval(function(){
+   fetchBookingStatus();
+}, 5000);
+
+
+async function fetchBookingStatus() {
+        req = new XMLHttpRequest();
+        var url = "status";
+        req.open("GET", url, true);
+        req.onerror = function() { alert("oops"); }
+        req.onreadystatechange = function() {
+            if(req.readyState === 4) {
+            statuses = JSON.parse(req.responseText)
+            console.log("New statuses: ")
+            console.log(statuses)
+            updateStatuses(statuses)
+            }
+        }
+        req.send();
+}
+
+async function updateStatuses(statuses) {
+    for (const s of statuses) {
+        document.getElementById(s.instance_id).innerText = s.status
+    }
+}
+</script>
 
 {% endblock content %}
