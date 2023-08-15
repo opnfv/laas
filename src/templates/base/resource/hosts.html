@@ -5,6 +5,7 @@
     <thead>
     <tr>
         <th>Name</th>
+        <th>Architecture</th>
         <th>Profile</th>
         <th>Booked</th>
         <th>Working</th>
@@ -17,13 +18,14 @@
                 {{ host.name }}
             </td>
             <td>
-                <a href="profiles/{{ host.profile.id }}">{{ host.profile }}</a>
+                {{ host.arch }}
             </td>
             <td>
-                {{ host.booked|yesno:"Yes,No" }}
+                <a href="../profile/{{ host.flavor.id }}">{{ host.flavor.name }}</a>
             </td>
             <td>
-                {{ host.working|yesno:"Yes,No" }}
+            </td>
+            <td>
             </td>
         </tr>
     {% endfor %}

@@ -230,12 +230,13 @@ class Workflow {
     }
 
     goTo(step_number) {
-        while (step_number > this.step) {
-            this.goNext();
-        }
-
-        while (step_number < this.step) {
-            this.goPrev();
+        if (step_number < 0) return;
+        this.step = step_number
+        document.getElementById(this.sections[this.step]).scrollIntoView({behavior: 'smooth'});
+        if (this.step == this.sections.length - 1) {
+            document.getElementById('next').setAttribute('disabled', '');
+        } else if (this.step == 1) {
+            document.getElementById('prev').removeAttribute('disabled');
         }
     }
 
@@ -245,9 +246,11 @@ function apiError(info) {
     showError("Unable to fetch " + info +". Please try again later or contact support.")
   }
 
-function showError(message) {
+// global variable needed for a scrollintoview bug affecting chrome
+let alert_destination = -1;
+function showError(message, destination) {
+    alert_destination = destination;
     const text = document.getElementById('alert_modal_message');
-
     text.innerText = message;
     $("#alert_modal").modal('show');
 }
