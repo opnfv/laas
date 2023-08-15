@@ -120,7 +120,7 @@ class DesignWorkflow extends Workflow {
       }
 
       this.resourceBuilder = null;
-      GUI.refreshAddHostModal(this.userTemplates);
+      GUI.refreshAddHostModal(this.userTemplates, this.labFlavors);
       $("#resource_modal").modal('toggle');
 
     }
@@ -247,6 +247,7 @@ class DesignWorkflow extends Workflow {
       for (const [index, host] of this.resourceBuilder.user_configs.entries()) {
         const new_host = new HostConfigBlob(host);
         this.templateBlob.host_list.push(new_host);
+        this.labFlavors.get(host.flavor).available_count--      
       }
 
       // Add networks
@@ -273,6 +274,7 @@ class DesignWorkflow extends Workflow {
       for (let existing_host of this.templateBlob.host_list) {
         if (hostname == existing_host.hostname) {
           this.removeHostFromTemplateBlob(existing_host);
+          this.labFlavors.get(existing_host.flavor).available_count++;
           GUI.refreshHostStep(this.templateBlob.host_list, this.labFlavors, this.labImages);
           GUI.refreshNetworkStep(this.templateBlob.networks);
           GUI.refreshConnectionStep(this.templateBlob.host_list);
@@ -631,7 +633,7 @@ class GUI {
     /** Resets the host modal inner html 
      * Takes a list of templateBlobs
     */
-    static refreshAddHostModal(template_list) {
+    static refreshAddHostModal(template_list, flavor_map) {
       document.getElementById('add_resource_modal_body').innerHTML = `
       <h2>Resource</h2>
       <div id="template-cards" class="row align-items-center justify-content-start">
@@ -662,13 +664,39 @@ class GUI {
       const template_cards = document.getElementById('template-cards');
 
       for (let template of template_list) {
-        template_cards.appendChild(this.makeTemplateCard(template));
+        template_cards.appendChild(this.makeTemplateCard(template, this.calculateAvailability(template, flavor_map)));
       }
+    }
+
+    static calculateAvailability(templateBlob, flavor_map) {
+      const local_map = new Map()
+
+      // Map flavor uuid to amount in template
+      for (const host of templateBlob.host_list) {
+          const existing_count = local_map.get(host.flavor)
+          if (existing_count) {
+              local_map.set(host.flavor, existing_count + 1)
+          } else {
+              local_map.set(host.flavor, 1)
+          }
+      }
+
+      let lowest_count = Number.POSITIVE_INFINITY;
+      for (const [key, val] of local_map) {
+          const curr_count =  Math.floor(flavor_map.get(key).available_count / val)
+          if (curr_count < lowest_count) {
+              lowest_count = curr_count;
+          }
+      }
+
+      return lowest_count;
     }
 
 
     /** Makes a card to be displayed in the add resource modal for a given templateBlob */
-    static makeTemplateCard(templateBlob) {
+    static makeTemplateCard(templateBlob, available_count) {
+      let color = available_count > 0 ? 'text-success' : 'text-danger';
+      let disabled = available_count == 0 ? 'disabled = "true"' : '';
         const col = document.createElement('div');
         col.classList.add('col-12', 'col-md-6', 'col-xl-3', 'my-3');
         col.innerHTML=  `
@@ -678,9 +706,10 @@ class GUI {
             </div>
             <div class="card-body">
                 <p class="grid-item-description">` + templateBlob.pod_desc +`</p>
+                <p class="grid-item-description ` + color + `">Resources available:` + available_count +`</p>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-success grid-item-select-btn w-100 stretched-link" 
+                <button type="button"` + disabled + `class="btn btn-success grid-item-select-btn w-100 stretched-link" 
                 onclick="workflow.onclickSelectTemplate('` + templateBlob.id + `', this.parentNode.parentNode)">Select</button>
             </div>
           </div>
