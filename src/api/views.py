@@ -297,7 +297,7 @@ def make_booking(request):
 
         # Now create it in liblaas
         bookingBlob["metadata"]["booking_id"] = str(booking.id)
-        liblaas_endpoint = os.environ.get("LIBLAAS_BASE_URL") + 'booking/create'
+        liblaas_endpoint = liblaas_base_url + 'booking/create'
         liblaas_response = requests.post(liblaas_endpoint, data=json.dumps(bookingBlob), headers={'Content-Type': 'application/json'})
         print("response from liblaas is", vars(liblaas_response))
         if liblaas_response.status_code != 200:
@@ -485,7 +485,6 @@ def liblaas_request(request) -> JsonResponse:
     if request.method != 'POST':
         return JsonResponse({"error" : "405 Method not allowed"})
 
-    liblaas_base_url = os.environ.get("LIBLAAS_BASE_URL")
     post_data = json.loads(request.body)
     print("post data is " + str(post_data))
     http_method = post_data["method"]
@@ -526,13 +525,13 @@ def liblaas_request(request) -> JsonResponse:
         )
 
 def liblaas_templates(request):
-    liblaas_url = os.environ.get("LIBLAAS_BASE_URL") + "template/list/" + UserProfile.objects.get(user=request.user).ipa_username
+    liblaas_url = liblaas_base_url + "template/list/" + UserProfile.objects.get(user=request.user).ipa_username
     print("api call to " + liblaas_url)
     return requests.get(liblaas_url)
 
 def delete_template(request):
     endpoint = json.loads(request.body)["endpoint"]
-    liblaas_url = os.environ.get("LIBLAAS_BASE_URL") + endpoint
+    liblaas_url = liblaas_base_url + endpoint
     print("api call to ", liblaas_url)
     try:
         response = requests.delete(liblaas_url)
@@ -554,7 +553,7 @@ def booking_status(request, booking_id):
     return HttpResponse(json.dumps(statuses))
 
 def get_booking_status(bookingObject):
-    liblaas_url =  os.environ.get("LIBLAAS_BASE_URL") + "booking/" + bookingObject.aggregateId + "/status"
+    liblaas_url =  liblaas_base_url + "booking/" + bookingObject.aggregateId + "/status"
     print("Getting booking status at: ", liblaas_url)
     response = requests.get(liblaas_url)
     try:
@@ -564,7 +563,7 @@ def get_booking_status(bookingObject):
         return []
     
 def liblaas_end_booking(aggregateId):
-    liblaas_url = os.environ.get('LIBLAAS_BASE_URL') + "booking/" + str(aggregateId) + "/end"
+    liblaas_url = liblaas_base_url + "booking/" + str(aggregateId) + "/end"
     print("Ending booking at ", liblaas_url)
     response = requests.delete(liblaas_url)
     try:
@@ -654,3 +653,45 @@ def ipa_add_ssh_from_workflow(request):
     key_as_list.append(request.POST["ssh_public_key"])
     ipa_set_ssh(profile, key_as_list)
     return redirect("workflow:book_a_pod")
+
+def list_hosts(request):
+    if request.method != "GET":
+        return HttpResponse(status=405)
+    
+    dashboard = 'lfedge' if liblaas_base_url == 'lfedge' else 'anuket'
+    
+    liblaas_url = os.environ.get('LIBLAAS_BASE_URL') + "flavor/hosts/" + dashboard
+    print("Listing hosts at ", liblaas_url)
+    response = requests.get(liblaas_url)
+    try:
+        return JsonResponse(
+            data = json.loads(response.content),
+            status=200,
+            safe=False
+        )
+    except Exception as e:
+        print("Failed to list hosts!", e)
+        return JsonResponse(
+            data = {},
+            status=500,
+            safe=False
+        )
+
+def list_flavors(request):
+  if (request.method) != "GET":
+    return HttpResponse(status=405) 
+  
+  response = requests.get(liblaas_base_url + "flavor")
+  try:
+    return JsonResponse(
+        data = json.loads(response.content),
+        status=200,
+        safe=False
+    )
+  except Exception as e:
+    print("Failed to list flavors!", e)
+    return JsonResponse(
+        data = {},
+        status=500,
+        safe=False
+    )

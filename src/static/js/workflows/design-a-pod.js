@@ -109,13 +109,12 @@ class DesignWorkflow extends Workflow {
       this.step = steps.ADD_RESOURCES;
 
       if (this.templateBlob.lab_name == null) {
-          showError("Please select a lab before adding resources.");
-          this.goTo(steps.SELECT_LAB);
+          showError("Please select a lab before adding resources.", steps.SELECT_LAB);
           return;
       }
 
       if (this.templateBlob.host_list.length >= 8) {
-        showError("You may not add more than 8 hosts to a single pod.")
+        showError("You may not add more than 8 hosts to a single pod.", -1)
         return;
       }
 
@@ -283,7 +282,7 @@ class DesignWorkflow extends Workflow {
         }
       }
 
-      showError("didnt remove");
+      showError("didnt remove", -1);
     }
 
 
@@ -298,8 +297,7 @@ class DesignWorkflow extends Workflow {
       this.step = steps.ADD_NETWORKS;
 
       if (this.templateBlob.lab_name == null) {
-          showError("Please select a lab before adding networks.");
-          this.goTo(steps.SELECT_LAB);
+          showError("Please select a lab before adding networks.", steps.SELECT_LAB);
           return;
       }
 
@@ -562,8 +560,7 @@ class DesignWorkflow extends Workflow {
       this.step = steps.POD_SUMMARY;
       const simpleValidation = this.simpleStepValidation();
       if (!simpleValidation[0]) {
-        showError(simpleValidation[1])
-        this.goTo(simpleValidation[2]);
+        showError(simpleValidation[1], simpleValidation[2])
         return;
       }
 

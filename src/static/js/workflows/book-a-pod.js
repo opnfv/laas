@@ -247,24 +247,22 @@ const steps = {
     async onclickConfirm() {
         const complete = this.isCompleteBookingInfo();
         if (!complete[0]) {
-            showError(complete[1]);
-            this.step = complete[2]
-            document.getElementById(this.sections[complete[2]]).scrollIntoView({behavior: 'smooth'});
+            showError(complete[1], complete[2]);
             return
         }
 
         const response = await LibLaaSAPI.makeBooking(this.bookingBlob);
         if (!response) {
-            showError("The resources for this booking are unavailable at this time.")
+            showError("The resources for this booking are unavailable at this time.", -1)
         }
         if (response.bookingId) {
-            showError("The booking has been successfully created.")
+            showError("The booking has been successfully created.", -1)
             window.location.href = "../../booking/detail/" + response.bookingId + "/";
         } else {
             if (response.status == 406) {
-                showError("One or more collaborators is missing SSH keys or has not configured their IPA account.")
+                showError("One or more collaborators is missing SSH keys or has not configured their IPA account.", -1)
             } else {
-                showError("The booking could not be created at this time.")
+                showError("The booking could not be created at this time.", -1)
             }
         }
         // if (confirm("Are you sure you would like to create this booking?")) {
