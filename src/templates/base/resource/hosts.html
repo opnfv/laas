@@ -12,7 +12,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for host in hosts %}
+        {% for host in hosts %}
         <tr>
             <td>
                 {{ host.name }}
@@ -24,8 +24,18 @@
                 <a href="../profile/{{ host.flavor.id }}">{{ host.flavor.name }}</a>
             </td>
             <td>
+            {% if host.allocation != null %}
+            Yes
+            {% else %}
+            No
+            {% endif %}
             </td>
             <td>
+            {% if host.allocation.reason == "maintenance" %}
+            No
+            {% else %}
+            Yes
+            {% endif %}
             </td>
         </tr>
     {% endfor %}
