@@ -129,8 +129,6 @@ async function fetchBookingStatus() {
         req.onreadystatechange = function() {
             if(req.readyState === 4) {
             statuses = JSON.parse(req.responseText)
-            console.log("New statuses: ")
-            console.log(statuses)
             updateStatuses(statuses)
             }
         }

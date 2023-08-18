@@ -34,6 +34,7 @@ from api.forms import DowntimeForm
 from account.models import UserProfile, Lab
 from booking.models import Booking
 from api.models import LabManagerTracker,AutomationAPIManager, APILog
+from api.utils import  get_booking_prereqs_validator
 
 import yaml
 import uuid
@@ -255,14 +256,27 @@ def make_booking(request):
 
     for user in data["allowed_users"]:
         collab_profile = UserProfile.objects.get(user=User.objects.get(username=user))
-        if (collab_profile.ipa_username == "" or collab_profile.ipa_username == None):
-            return JsonResponse(
-            data={},
-            status=406, # Not good practice but a quick solution until blob validation is fully supported within django instead of the frontend
-            safe=False
-        )
-        else:
+        prereq_validator = get_booking_prereqs_validator(collab_profile)
+
+        if prereq_validator["result"] == -1:
+            # All good
             ipa_users.append(collab_profile.ipa_username)
+        else:
+            message = "There is an issue with one of your chosen collaborators."
+            if prereq_validator["result"] == 0:
+                # No IPA username
+                message = str(collab_profile) + " has not linked their IPA account yet. Please ask them to log into the LaaS dashboard, or remove them from the booking to continue."
+            elif prereq_validator["result"] == 1:
+                # No Company
+                message = str(collab_profile) + " has not set their company yet. Please ask them to log into the LaaS dashboard, go to the settings page and add it. Otherwise, remove them from the booking to continue."
+            elif prereq_validator["result"] == 2:
+                # No SSH
+                message = str(collab_profile) + " has not added an SSH public key yet. Please ask them to log into the LaaS dashboard, go to the settings page and add it. Otherwise, remove them from the booking to continue."
+            return JsonResponse(
+                data={"message": message, "error": True},
+                status=200,
+                safe=False
+            )
 
     bookingBlob = {
         "template_id": data["template_id"],

@@ -245,29 +245,35 @@ const steps = {
 
     /** Async / await is more infectious than I thought, so all functions that rely on an API call will need to be async */
     async onclickConfirm() {
+        // disable button
+        const button = document.getElementById("booking-confirm-button");
+        $("html").css("cursor", "wait");
+        button.setAttribute('disabled', 'true');
         const complete = this.isCompleteBookingInfo();
         if (!complete[0]) {
             showError(complete[1], complete[2]);
+            $("html").css("cursor", "default");
+            button.removeAttribute('disabled');
             return
         }
 
         const response = await LibLaaSAPI.makeBooking(this.bookingBlob);
         if (!response) {
-            showError("The resources for this booking are unavailable at this time.", -1)
+            showError("The selected resources for this booking are unavailable at this time. Please select a different resource or try again later.", -1)
         }
         if (response.bookingId) {
             showError("The booking has been successfully created.", -1)
-            window.location.href = "../../booking/detail/" + response.bookingId + "/";
+            window.location.href = "../../booking/detail/" + response.bookingId + "/"; // todo
+            return;
         } else {
-            if (response.status == 406) {
-                showError("One or more collaborators is missing SSH keys or has not configured their IPA account.", -1)
+            if (response.error == true) {
+                showError(response.message, -1)
             } else {
                 showError("The booking could not be created at this time.", -1)
             }
         }
-        // if (confirm("Are you sure you would like to create this booking?")) {
-
-        // }
+        $("html").css("cursor", "default");
+        button.removeAttribute('disabled');
     }
   }
 

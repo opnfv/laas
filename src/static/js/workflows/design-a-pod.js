@@ -693,7 +693,7 @@ class GUI {
     /** Makes a card to be displayed in the add resource modal for a given templateBlob */
     static makeTemplateCard(templateBlob, available_count) {
       let color = available_count > 0 ? 'text-success' : 'text-danger';
-      let disabled = available_count == 0 ? 'disabled = "true"' : '';
+      // let disabled = available_count == 0 ? 'disabled = "true"' : '';
         const col = document.createElement('div');
         col.classList.add('col-12', 'col-md-6', 'col-xl-3', 'my-3');
         col.innerHTML=  `
@@ -706,7 +706,7 @@ class GUI {
                 <p class="grid-item-description ` + color + `">Resources available:` + available_count +`</p>
             </div>
             <div class="card-footer">
-                <button type="button"` + disabled + `class="btn btn-success grid-item-select-btn w-100 stretched-link" 
+                <button type="button" class="btn btn-success grid-item-select-btn w-100 stretched-link" 
                 onclick="workflow.onclickSelectTemplate('` + templateBlob.id + `', this.parentNode.parentNode)">Select</button>
             </div>
           </div>

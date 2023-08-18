@@ -29,7 +29,6 @@ class LibLaaSAPI {
     /** POSTs to dashboard, which then auths and logs the requests, makes the request to LibLaaS, and passes the result back to here.
     Treat this as a private function. Only use the async functions when outside of this class */
     static makeRequest(method, endpoint, workflow_data) {
-        console.log("Making request: %s, %s, %s", method, endpoint, workflow_data.toString())
         const token = document.getElementsByName('csrfmiddlewaretoken')[0].value
         return new Promise((resolve, reject) => {// -> HttpResponse
             $.ajax(
@@ -130,7 +129,6 @@ class LibLaaSAPI {
 
     static async makeTemplate(templateBlob) { // -> UUID or null
         templateBlob.owner = user;
-        console.log(JSON.stringify(templateBlob))
         return await this.handleResponse(this.makeRequest(HTTP.POST, endpoint.MAKE_TEMPLATE, templateBlob));
     }
 
