@@ -37,6 +37,9 @@ services:
             - laas-media:/media
         expose:
             - "8000"
+        networks:
+            - laascii-net
+            - default
 
     postgres:
         restart: always
@@ -68,3 +71,7 @@ volumes:
     laas-static:
     laas-data:
         external: true
+networks:
+  laascii-net:
+    name: laascii-net
+    external: true
