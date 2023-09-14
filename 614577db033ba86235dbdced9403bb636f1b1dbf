@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2045097_08d16bef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7797
+      },
+      "writtenOn": "2023-09-14T20:26:02Z",
+      "side": 1,
+      "message": "The change is not as big as it looks. I also fixed the indentation in this file, so that\u0027s where most of the diff comes from. This change fixes the login drop down behaving differently on the landing page from the rest of the pages, as well as an empty box displaying in the dropdown",
+      "revId": "614577db033ba86235dbdced9403bb636f1b1dbf",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5"
+    }
+  ]
+}
