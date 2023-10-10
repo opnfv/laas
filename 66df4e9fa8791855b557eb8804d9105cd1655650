@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eea714ab_fc6a6d56",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2023-10-10T16:05:06Z",
+      "side": 1,
+      "message": "I am leaving the IOL, so am updating contact information",
+      "revId": "66df4e9fa8791855b557eb8804d9105cd1655650",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5"
+    }
+  ]
+}
