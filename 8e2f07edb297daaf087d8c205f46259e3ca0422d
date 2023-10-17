@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "404024c7_922ec26b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2023-10-17T19:39:00Z",
+      "side": 1,
+      "message": "Better approach. This is outside of the critical path, so if any booking doesn\u0027t have a lab then its details view *could* break but any booking that is special enough for that to be the case requires alternative viewing approaches anyway. Waiting for +1 Verified",
+      "revId": "8e2f07edb297daaf087d8c205f46259e3ca0422d",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5"
+    }
+  ]
+}
