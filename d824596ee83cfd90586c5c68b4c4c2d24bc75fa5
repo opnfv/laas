@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2788c6d3_d5f0135f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7081
+      },
+      "writtenOn": "2023-10-17T19:31:38Z",
+      "side": 1,
+      "message": "Tested in local instance, low risk since even if that field is None it won\u0027t fail",
+      "revId": "d824596ee83cfd90586c5c68b4c4c2d24bc75fa5",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5"
+    }
+  ]
+}
