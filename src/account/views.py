@@ -171,10 +171,10 @@ def account_delete_resource(request):
     template_id = data["template_id"]
 
     if not canDeleteTemplate(template_id, UserProfile.objects.get(user=request.user).ipa_username):
-        return HttpResponse(status=401)    
+        return HttpResponse(status=401)
 
     response = template_delete_template(template_id)
-    if (response.status_code == 200):
+    if (response):
         return HttpResponse(status=200)
 
 
@@ -233,7 +233,7 @@ def account_cancel_booking(request):
     booking.end = timezone.now()
     booking.save()
 
-    if (response.status_code == 200):
+    if (response):
         return HttpResponse(status=200)
 
     return HttpResponse(status=500)
