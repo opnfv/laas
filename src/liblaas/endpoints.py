@@ -110,7 +110,7 @@ def request_create_booking(request) -> HttpResponse:
     # Create booking in liblaas
     bookingBlob["metadata"]["booking_id"] = str(booking.id)
     liblaas_response = booking_create_booking(bookingBlob)
-    if liblaas_response.status_code != 200:
+    if not liblaas_response:
         print("received non success from liblaas, deleting booking from dashboard")
         booking.delete()
         return JsonResponse(

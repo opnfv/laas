@@ -188,7 +188,7 @@ code {
             dataType: 'text',
         })
         .done(function(response) {
-            updateStatuses(response)
+            updateStatuses(JSON.parse(response))
         })
     }
 
