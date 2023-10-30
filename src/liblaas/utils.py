@@ -32,7 +32,7 @@ def validate_collaborators(collab_list: list[str]) -> dict:
             result["message"] = f"{str(collab_profile)} has not added an SSH public key yet. Please ask them to log into the LaaS dashboard, go to the settings page and add it. Otherwise, remove them from the booking to continue."
             return result
         
-        result["valid"] = True
+    result["valid"] = True
 
     return result
 
