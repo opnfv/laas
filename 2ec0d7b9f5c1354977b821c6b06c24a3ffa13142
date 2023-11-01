@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf37a6e4_98c42bdc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3543
+      },
+      "writtenOn": "2023-11-01T17:47:46Z",
+      "side": 1,
+      "message": "Verification is expected to fail for this change.",
+      "revId": "2ec0d7b9f5c1354977b821c6b06c24a3ffa13142",
+      "serverId": "bbac25d2-bf60-4904-9ba8-a72fc000d6c5"
+    }
+  ]
+}
